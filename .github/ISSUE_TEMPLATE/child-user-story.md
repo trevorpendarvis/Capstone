@@ -10,12 +10,7 @@ assignees: ''
 From epic: #
 
 Acceptance Criteria:
--
--
--
 
 Note:
-- 
--
 
-Test Engineer: Nicholas Spaulding:
+Test Engineer: Nicholas Spaulding
