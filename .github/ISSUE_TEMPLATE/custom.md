@@ -9,13 +9,6 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this story!
-  - type: markdown
-    attributes:
-      value: |
-        Epic: **#**
-        Label **client**: **client**
-        Label **store**: **store admin**
-        Label **corporate**: **chain admin**
 ---
 
 
