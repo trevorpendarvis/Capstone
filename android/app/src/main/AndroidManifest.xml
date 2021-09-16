@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.monkey_management">
+    package="com.example.capstone">
    <application
-        android:label="monkey_management"
+        android:label="capstone"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

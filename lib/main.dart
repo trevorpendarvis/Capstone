@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:monkey_management/view/auth_view/auth_screen.dart';
@@ -12,6 +13,8 @@ import 'package:provider/provider.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     final Future<FirebaseApp> _initialization = Firebase.initializeApp();
@@ -23,7 +26,22 @@ class MyApp extends StatelessWidget {
         future: _initialization,
         builder: (context, appSnapshot) {
           return MaterialApp(
-            // debugShowCheckedModeBanner: false,
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              // brightness: Brightness.dark,
+              primaryColor: Colors.indigoAccent,
+              accentColor: Colors.amber,
+              primarySwatch: Colors.green,
+              backgroundColor: Colors.pinkAccent,
+              // accentColorBrightness: Brightness.dark,
+              // buttonTheme: ButtonTheme.of(context).copyWith(
+              //   buttonColor: Colors.amber,
+              //   textTheme: ButtonTextTheme.primary,
+              //   shape: RoundedRectangleBorder(
+              //     borderRadius: BorderRadius.circular(20),
+              //   ),
+              // ),
+            ),
             title: "Monkey Management",
             home: appSnapshot.connectionState != ConnectionState.done
                 ? SplashScreen()

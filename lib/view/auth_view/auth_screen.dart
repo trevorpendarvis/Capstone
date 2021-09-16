@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:monkey_management/view/auth_view/auth_form.dart';
 
-
 class AuthScreen extends StatefulWidget {
   @override
   _AuthScreenState createState() => _AuthScreenState();
@@ -45,12 +44,11 @@ class _AuthScreenState extends State<AuthScreen> {
           password: password,
         );
 
-        await FirebaseFirestore.instance
-            .collection('accounts')
-            .doc(authResult.user!.uid)
-            .collection('info')
-            .doc()
-            .set({'user_name': username, 'email': email});
+        await FirebaseFirestore.instance.collection('accounts').doc(authResult.user!.uid).set({
+          'user_name': username,
+          'email': email,
+          'account_type' : 'CLIENT'
+        });
 
         print('Sign in');
         setState(() {
