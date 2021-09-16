@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "627002373322",
+    "project_id": "monkey-management-d6a5d",
+    "storage_bucket": "monkey-management-d6a5d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627002373322:android:a0fd565a6702662cc4f033",
+        "android_client_info": {
+          "package_name": "com.example.monkey_management"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "627002373322-qijdks43qc6tlnnnilj0dg7b0i3bhqnk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn-rB82LFhIAeCR2RnaHbgI7MOHZ42K20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "627002373322-qijdks43qc6tlnnnilj0dg7b0i3bhqnk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "627002373322-ahr43lbmqgn1qu7m83fc4updo5fsdseq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.monkeyManagement"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

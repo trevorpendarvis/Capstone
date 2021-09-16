@@ -1,4 +1,4 @@
-package com.example.monkey_management
+package com.example.capstone
 
 import io.flutter.embedding.android.FlutterActivity
 
