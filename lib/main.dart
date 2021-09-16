@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:monkey_management/view/auth_view/auth_screen.dart';
-import 'package:monkey_management/view/main_screen.dart';
+import 'package:monkey_management/view/common_view/main_screen.dart';
 import 'package:monkey_management/view/auth_view/signin_screen.dart';
-import 'package:monkey_management/view/splash_screen.dart';
+import 'package:monkey_management/view/common_view/splash_screen.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
