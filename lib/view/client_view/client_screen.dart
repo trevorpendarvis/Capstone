@@ -13,7 +13,6 @@ class _ClientScreenState extends State<ClientScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      drawer: MyDrawer(),
       body: Center(child: Text('This is the client screen'),),
     );
   }

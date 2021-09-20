@@ -1,11 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:monkey_management/controller/firebase_controller.dart';
-import 'package:monkey_management/model/data.dart';
-import 'package:monkey_management/view/client_view/client_screen.dart';
-import 'package:monkey_management/view/common_view/splash_screen.dart';
-import 'package:monkey_management/view/store_view/store_screen.dart';
+
 
 class MainScreen extends StatefulWidget {
   static const routeName = '/main-screen';
