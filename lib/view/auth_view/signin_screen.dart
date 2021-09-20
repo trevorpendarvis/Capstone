@@ -1,4 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:monkey_management/controller/firebase_controller.dart';
+import 'package:monkey_management/model/data.dart';
+import 'package:monkey_management/view/client_view/client_screen.dart';
+import 'package:monkey_management/view/store_view/store_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   static const routeName = "/signInScreen";
@@ -64,14 +69,32 @@ class Controller {
   Controller(this.state);
   String? email;
   String? password;
+  late AccountType accountType;
 
-  void signIn() {
+  Future<void> signIn() async {
     if (!state.formkey.currentState!.validate()) {
       return;
     }
     state.formkey.currentState!.save();
-    print('Email: $email');
-    print('Password: $password');
+
+    User? user = await FirebaseController.signIn(email: email!, password: password!);
+
+    if (user != null) {
+      accountType = await FirebaseController.getAccountType();
+
+      if (accountType == AccountType.STORE) {
+        Navigator.pushNamed(state.context, StoreScreen.routeName);
+      }
+      else if (accountType == AccountType.CLIENT) {
+        Navigator.pushNamed(state.context, ClientScreen.routeName);
+      }
+      else {
+        print('error');
+      }
+    }
+    else {
+      print('error');
+    }
   }
 
   String? validEmail(String? value) {
