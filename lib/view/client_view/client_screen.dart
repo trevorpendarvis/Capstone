@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:monkey_management/view/common_view/my_drawer.dart';
 
 class ClientScreen extends StatefulWidget {
+  static const routeName = "/client_screen";
+
   const ClientScreen({Key? key}) : super(key: key);
 
   @override
