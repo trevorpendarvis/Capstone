@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/data.dart';
+import 'package:monkey_management/view/auth_view/signup_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
 import 'package:monkey_management/view/store_view/store_screen.dart';
 
@@ -55,7 +56,15 @@ class SignInState extends State<SignInScreen> {
                   child: Text(
                     'Sign In',
                     style: TextStyle(fontSize: 20.0, color: Colors.white),
-                  ))
+                  ),),
+              SizedBox(
+                height: 15.0,
+              ),
+              ElevatedButton(
+                onPressed: con!.signUp,
+                child: Text("Create a new account",
+                    style: Theme.of(context).textTheme.button),
+              ),
             ],
           ),
         ),
@@ -117,5 +126,10 @@ class Controller {
 
   void onSavedPassword(String? value) {
     this.password = value;
+  }
+
+  void signUp() {
+    //navigate to sign up screen.
+    Navigator.pushNamed(state.context, SignUpScreen.routeName);
   }
 }
