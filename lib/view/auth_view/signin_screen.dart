@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
+import 'package:monkey_management/view/common_view/mydialog_screen.dart';
 import 'package:monkey_management/view/store_view/store_screen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -33,8 +34,17 @@ class SignInState extends State<SignInScreen> {
           key: formkey,
           child: Column(
             children: [
-              Stack(
-                children: [Image.asset('assets/images/MM.png')],
+              Container(
+                constraints: BoxConstraints.expand(
+                  height: 200.0,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                ),
+                child: Image.asset(
+                  'assets/images/MM.png',
+                  fit: BoxFit.cover,
+                ),
               ),
               TextFormField(
                 decoration: InputDecoration(hintText: "Email"),
@@ -75,24 +85,23 @@ class Controller {
     if (!state.formkey.currentState!.validate()) {
       return;
     }
+    MyDialog.progessStart(state.context);
     state.formkey.currentState!.save();
 
-    User? user = await FirebaseController.signIn(email: email!, password: password!);
+    User? user =
+        await FirebaseController.signIn(email: email!, password: password!);
 
     if (user != null) {
       accountType = await FirebaseController.getAccountType();
-
+      MyDialog.progessEnd(state.context);
       if (accountType == AccountType.STORE) {
         Navigator.pushNamed(state.context, StoreScreen.routeName);
-      }
-      else if (accountType == AccountType.CLIENT) {
+      } else if (accountType == AccountType.CLIENT) {
         Navigator.pushNamed(state.context, ClientScreen.routeName);
-      }
-      else {
+      } else {
         print('error');
       }
-    }
-    else {
+    } else {
       print('error');
     }
   }
