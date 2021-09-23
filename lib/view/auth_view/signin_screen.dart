@@ -4,7 +4,7 @@ import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/view/auth_view/signup_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
-import 'package:monkey_management/view/common_view/mydialog_screen.dart';
+import 'package:monkey_management/view/common_view/mydialog.dart';
 import 'package:monkey_management/view/store_view/store_screen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -28,7 +28,10 @@ class SignInState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign In'),
+        title: Center(
+          child: Text('Sign In'),
+        ),
+        backgroundColor: Colors.grey[850],
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -40,33 +43,41 @@ class SignInState extends State<SignInScreen> {
                   height: 200.0,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.grey,
+                  color: Colors.grey[850],
                 ),
                 child: Image.asset(
                   'assets/images/MM.png',
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                 ),
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
               ),
               TextFormField(
-                decoration: InputDecoration(hintText: "Email"),
+                decoration: InputDecoration(
+                  hintText: "Email",
+                  border: OutlineInputBorder(),
+                ),
                 autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
                 validator: con?.validEmail,
                 onSaved: con?.onSavedEmail,
               ),
               TextFormField(
-                decoration: InputDecoration(hintText: "Password"),
+                decoration: InputDecoration(
+                  hintText: "Password",
+                  border: OutlineInputBorder(),
+                ),
                 autocorrect: false,
                 obscureText: true,
                 validator: con?.validPassword,
                 onSaved: con?.onSavedPassword,
               ),
               ElevatedButton(
-                  onPressed: con!.signIn,
-                  child: Text(
-                    'Sign In',
-                    style: TextStyle(fontSize: 20.0, color: Colors.white),
-                  ),),
+                onPressed: con!.signIn,
+                child: Text(
+                  'Sign In',
+                  style: TextStyle(fontSize: 20.0, color: Colors.white),
+                ),
+              ),
               SizedBox(
                 height: 15.0,
               ),
@@ -94,15 +105,15 @@ class Controller {
     if (!state.formkey.currentState!.validate()) {
       return;
     }
-    MyDialog.progessStart(state.context);
-    state.formkey.currentState!.save();
 
+    state.formkey.currentState!.save();
+    MyDialog.circularProgressStart(state.context);
     User? user =
         await FirebaseController.signIn(email: email!, password: password!);
 
     if (user != null) {
       accountType = await FirebaseController.getAccountType();
-      MyDialog.progessEnd(state.context);
+      MyDialog.circularProgressStop(state.context);
       if (accountType == AccountType.STORE) {
         Navigator.pushNamed(state.context, StoreScreen.routeName);
       } else if (accountType == AccountType.CLIENT) {

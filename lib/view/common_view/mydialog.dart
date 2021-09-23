@@ -21,23 +21,24 @@ class MyDialog {
     @required BuildContext? context,
     @required String? title,
     @required String? content,
-  }) {
+  }) async {
     showDialog(
-      context: context!,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(title!),
-        content: Text(content!),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              "OK",
-              style: Theme.of(context).textTheme.button,
-            ),
-          ),
-        ],
-      ),
-    );
+        context: context!,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(title!),
+            content: Text(content!),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  "OK",
+                  style: Theme.of(context).textTheme.button,
+                ),
+              ),
+            ],
+          );
+        });
   }
 }

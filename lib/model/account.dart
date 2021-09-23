@@ -1,3 +1,1 @@
-class Account {
-
-}
+class Account {}
