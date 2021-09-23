@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:monkey_management/view/auth_view/signup_screen.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
+import 'package:monkey_management/view/store_view/store_general_info_screen.dart';
 import 'package:monkey_management/view/store_view/store_screen.dart';
 
 void main() async {
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         ClientScreen.routeName: (context) => ClientScreen(),
         ClientGeneralInfoScreen.routeName: (context) =>
             ClientGeneralInfoScreen(),
+        StoreGeneralInfoScreen.routeName: (context) => StoreGeneralInfoScreen(),
         //ProfileScreen.routeName: (context) => ProfileScreen(),
       },
     );

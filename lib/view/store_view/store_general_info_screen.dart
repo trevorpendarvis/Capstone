@@ -1,22 +1,20 @@
-import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
-import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/model/profile.dart';
-import 'package:monkey_management/view/client_view/client_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
+import 'package:monkey_management/view/store_view/store_screen.dart';
 
-class ClientGeneralInfoScreen extends StatefulWidget {
-  static const routeName = '/ClientGeneralInfoScreen';
+class StoreGeneralInfoScreen extends StatefulWidget {
+  static const routeName = '/storeGeneralInfoScreen';
   @override
   State<StatefulWidget> createState() {
-    return ClientGeneralInfoState();
+    return StoreGeneralInfoState();
   }
 }
 
-class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
+class StoreGeneralInfoState extends State<StoreGeneralInfoScreen> {
   Controller? con;
   var formKey = GlobalKey<FormState>();
   String? email;
@@ -29,7 +27,6 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
   }
 
   void render(fn) => setState(fn);
-
   @override
   Widget build(BuildContext context) {
     Map? args = ModalRoute.of(context)!.settings.arguments as Map?;
@@ -38,12 +35,12 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
     print('Email: $email');
     print('Password: $password');
     return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text('Monkey Management')),
-        backgroundColor: Colors.grey[850],
-      ),
-      body: SingleChildScrollView(
-        child: Form(
+        appBar: AppBar(
+          title: Center(child: Text('Monkey Management')),
+          backgroundColor: Colors.grey[850],
+        ),
+        body: SingleChildScrollView(
+            child: Form(
           key: formKey,
           child: Column(
             children: [
@@ -51,22 +48,23 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
                 margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: "First Name",
+                    hintText: "Name",
                     border: OutlineInputBorder(),
                   ),
-                  validator: con?.validateFirstName,
-                  onSaved: con?.saveFirstName,
+                  validator: con?.validateName,
+                  onSaved: con?.saveName,
                 ),
               ),
               Container(
                 margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: "Last Name",
+                    hintText: "Phone Number",
                     border: OutlineInputBorder(),
                   ),
-                  validator: con?.validateLastName,
-                  onSaved: con?.saveLastName,
+                  keyboardType: TextInputType.phone,
+                  validator: con?.validateNumber,
+                  onSaved: con?.saveNumber,
                 ),
               ),
               Container(
@@ -81,27 +79,25 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
                 ),
               ),
               ElevatedButton(
-                onPressed: con?.onSave,
+                onPressed: con?.onSaved,
                 child:
                     Text("Finish", style: Theme.of(context).textTheme.button),
               ),
             ],
           ),
-        ),
-      ),
-    );
+        )));
   }
 }
 
 class Controller {
-  ClientGeneralInfoState state;
+  StoreGeneralInfoState state;
   Controller(this.state);
-  String? firstName;
-  String? lastName;
-  String? address;
   User? user;
+  String? name;
+  String? address;
+  String? number;
 
-  Future<void> onSave() async {
+  Future<void> onSaved() async {
     if (!state.formKey.currentState!.validate()) {
       return;
     }
@@ -109,11 +105,11 @@ class Controller {
     MyDialog.circularProgressStart(state.context);
     state.formKey.currentState!.save();
     Profile p = new Profile();
-    p.accountType = 'CLIENT';
-    p.firstName = firstName;
-    p.lastName = lastName;
+    p.accountType = 'STORE';
+    p.firstName = name;
     p.address = address;
     p.email = state.email;
+    p.phone = number;
 
     try {
       user = await FirebaseController.signIn(
@@ -123,12 +119,24 @@ class Controller {
 
       await FirebaseController.addProfile(p);
       MyDialog.circularProgressStop(state.context);
-      Navigator.pushReplacementNamed(state.context, ClientScreen.routeName,
+      Navigator.pushReplacementNamed(state.context, StoreScreen.routeName,
           arguments: {'profile': p, 'user': user});
     } catch (e) {
       MyDialog.circularProgressStop(state.context);
       MyDialog.info(context: state.context, title: 'Error', content: '$e');
     }
+  }
+
+  String? validateNumber(String? value) {
+    if (value == null || value.length < 7) {
+      return 'Not a valid phone number';
+    } else {
+      return null;
+    }
+  }
+
+  void saveNumber(String? value) {
+    this.number = value;
   }
 
   String? validateAddress(String? value) {
@@ -143,27 +151,15 @@ class Controller {
     this.address = value;
   }
 
-  String? validateLastName(String? value) {
+  String? validateName(String? value) {
     if (value!.length == 0) {
-      return 'Please enter your last name';
+      return 'Please enter your stores';
     } else {
       return null;
     }
   }
 
-  void saveLastName(String? value) {
-    this.lastName = value;
-  }
-
-  String? validateFirstName(String? value) {
-    if (value!.length == 0) {
-      return 'Please enter your first name';
-    } else {
-      return null;
-    }
-  }
-
-  void saveFirstName(String? value) {
-    this.firstName = value;
+  void saveName(String? value) {
+    this.name = value;
   }
 }

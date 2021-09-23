@@ -1,4 +1,3 @@
-
 class Profile {
   String? docId;
   //AccountType? accountType;
@@ -87,7 +86,7 @@ class Profile {
   static Profile deserialize(Map<String, dynamic>? doc, String docId) {
     return Profile(
       docId: docId,
-      accountType: doc?[ACCOUNT_TYPE], //AccountType.CLIENT, 
+      accountType: doc?[ACCOUNT_TYPE], //AccountType.CLIENT,
       username: doc?[USERNAME],
       email: doc?[EMAIL],
       firstName: doc?[FIRSTNAME], //Do I need all these "?"?

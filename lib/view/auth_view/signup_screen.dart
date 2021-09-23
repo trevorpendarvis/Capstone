@@ -4,6 +4,7 @@ import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/profile.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
+import 'package:monkey_management/view/store_view/store_general_info_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   static const routeName = "/signUpScreen";
@@ -178,6 +179,9 @@ class _Controller {
             arguments: {'email': email, 'password': password});
       } else {
         // Collect store general info
+        Navigator.pushReplacementNamed(
+            state.context, StoreGeneralInfoScreen.routeName,
+            arguments: {'email': email, 'password': password});
       }
       //Navigator.pop(state.context);
     } catch (e) {
