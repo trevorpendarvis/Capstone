@@ -120,7 +120,7 @@ class Controller {
 
       p.docId = user!.uid;
 
-      await FirebaseController.addProfile(p);
+      await FirebaseController.addClientProfile(p);
       MyDialog.circularProgressStop(state.context);
       Navigator.pushReplacementNamed(state.context, ClientScreen.routeName,
           arguments: {'profile': p, 'user': user});
@@ -132,7 +132,7 @@ class Controller {
 
   String? validateAddress(String? value) {
     if (value == null || value.length < 5) {
-      return 'invalid addresss min char 5';
+      return 'invalid address min char 5';
     } else {
       return null;
     }

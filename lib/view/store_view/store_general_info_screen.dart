@@ -116,7 +116,7 @@ class Controller {
 
       p.docId = user!.uid;
 
-      await FirebaseController.addProfile(p);
+      // await FirebaseController.addStoreProfile(p);
       MyDialog.circularProgressStop(state.context);
       Navigator.pushReplacementNamed(state.context, StoreScreen.routeName,
           arguments: {'profile': p, 'user': user});
