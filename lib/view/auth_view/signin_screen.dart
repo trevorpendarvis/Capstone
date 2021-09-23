@@ -27,7 +27,20 @@ class SignInState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign In'),
+        title: Padding(
+          padding: const EdgeInsets.only(
+            left: 65.0,
+            right: 10.0,
+          ),
+          child: Text(
+            'Hello! Please Sign In!',
+            //textAlign: TextAlign.right,
+            style: TextStyle(
+                color: Colors.pink[500],
+                fontFamily: 'BowlbyOneSC',
+                fontSize: 20.0),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -35,7 +48,10 @@ class SignInState extends State<SignInScreen> {
           child: Column(
             children: [
               Stack(
-                children: [Image.asset('assets/images/MM.png')],
+                children: [Image.asset('assets/images/MonkeyMGMT.png')],
+              ),
+              SizedBox(
+                height: 40.0,
               ),
               TextFormField(
                 decoration: InputDecoration(hintText: "Email"),
@@ -51,19 +67,35 @@ class SignInState extends State<SignInScreen> {
                 validator: con?.validPassword,
                 onSaved: con?.onSavedPassword,
               ),
-              ElevatedButton(
-                  onPressed: con!.signIn,
-                  child: Text(
-                    'Sign In',
-                    style: TextStyle(fontSize: 20.0, color: Colors.white),
-                  ),),
               SizedBox(
                 height: 15.0,
               ),
               ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    Colors.pink[400],
+                  ),
+                ),
+                onPressed: con!.signIn,
+                child: Text(
+                  'Sign In',
+                  style: TextStyle(fontSize: 20.0, color: Colors.black),
+                ),
+              ),
+              SizedBox(
+                height: 5.0,
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    Colors.pink[400],
+                  ),
+                ),
                 onPressed: con!.signUp,
-                child: Text("Create a new account",
-                    style: Theme.of(context).textTheme.button),
+                child: Text(
+                  "Create a new account",
+                  style: TextStyle(fontSize: 20.0, color: Colors.black),
+                ),
               ),
             ],
           ),
@@ -86,22 +118,20 @@ class Controller {
     }
     state.formkey.currentState!.save();
 
-    User? user = await FirebaseController.signIn(email: email!, password: password!);
+    User? user =
+        await FirebaseController.signIn(email: email!, password: password!);
 
     if (user != null) {
       accountType = await FirebaseController.getAccountType();
 
       if (accountType == AccountType.STORE) {
         Navigator.pushNamed(state.context, StoreScreen.routeName);
-      }
-      else if (accountType == AccountType.CLIENT) {
+      } else if (accountType == AccountType.CLIENT) {
         Navigator.pushNamed(state.context, ClientScreen.routeName);
-      }
-      else {
+      } else {
         print('error');
       }
-    }
-    else {
+    } else {
       print('error');
     }
   }

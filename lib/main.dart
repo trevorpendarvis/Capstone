@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: Colors.indigoAccent,
-        primarySwatch: Colors.amber,
+        primarySwatch: Colors.pink,
         accentColor: Colors.pinkAccent,
       ),
       initialRoute: SignInScreen.routeName,
@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
         StoreScreen.routeName: (context) => StoreScreen(),
         ClientScreen.routeName: (context) => ClientScreen(),
         //ProfileScreen.routeName: (context) => ProfileScreen(),
-
       },
     );
   }
