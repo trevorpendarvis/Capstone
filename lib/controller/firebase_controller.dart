@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/model/client.dart';
+import 'package:monkey_management/model/store.dart';
 
 class FirebaseController {
   static Future<AccountType> getAccountType() async {
@@ -37,7 +38,39 @@ class FirebaseController {
     return userCredential.user;
   }
 
-  static Future<void> createNewAccount(
+  static Future<void> createNewClient(
+      {required String email, required String password}) async {
+    //UserCredential userCredential =
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    // Create the user's profile with default settings.
+
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+
+    final DocumentReference ref =
+        FirebaseFirestore.instance.collection(Client.COLLECTION).doc(user!.uid);
+
+    var userData = {
+      // 'docId': user.uid,
+      // 'username': '',
+      'email': user.email,
+      // 'firstName': '',
+      // 'lastName': '',
+      // 'phone': '',
+      // 'address': '',
+      // 'vehicleColor': '',
+      // 'vehicleMake': '',
+      // 'favLocation': '',
+    };
+    await ref.set(userData);
+
+  }
+
+  static Future<void> createNewStore(
       {required String email, required String password}) async {
     //UserCredential userCredential =
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -46,28 +79,27 @@ class FirebaseController {
     );
 
     //Create the user's profile with default settings.
-    /*
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
 
     final DocumentReference ref =
-        FirebaseFirestore.instance.collection('accounts').doc(user!.uid);
+        FirebaseFirestore.instance.collection(Store.COLLECTION).doc(user!.uid);
 
     var userData = {
-      'docId': user.uid,
-      'accountType': 'CLIENT',
-      'username': '',
+      // 'docId': user.uid,
+      // 'accountType': 'CLIENT',
+      // 'username': '',
       'email': user.email,
-      'firstName': '',
-      'lastName': '',
-      'phone': '',
-      'address': '',
-      'vehicleColor': '',
-      'vehicleMake': '',
-      'favLocation': '',
+      // 'firstName': '',
+      // 'lastName': '',
+      // 'phone': '',
+      // 'address': '',
+      // 'vehicleColor': '',
+      // 'vehicleMake': '',
+      // 'favLocation': '',
     };
     await ref.set(userData);
-    */
+
   }
 
   //Get a user's profile from Firebase
@@ -87,7 +119,7 @@ class FirebaseController {
     final User? user = auth.currentUser;
 
     DocumentReference ref =
-        await FirebaseFirestore.instance.collection('accounts').doc(user!.uid);
+        FirebaseFirestore.instance.collection('accounts').doc(user!.uid);
 
     await ref.set(profile!.serialize());
   }

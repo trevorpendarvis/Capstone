@@ -11,6 +11,10 @@ class Store {
   String email = '';
   String address = '';
 
+
+
   List<Option> options = [];
   List<Appointment> appointments = [];
+
+  static const COLLECTION = "stores";
 }

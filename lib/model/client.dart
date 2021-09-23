@@ -1,7 +1,5 @@
 class Client {
   String? docId;
-  //AccountType? accountType;
-  String? accountType; //?
   String? userName;
   String? email;
   String? firstName;
@@ -12,9 +10,8 @@ class Client {
   String? vehicleMake;
   String? favLocation;
 
-//   //For firestore document
-  //static const UID = "uid";
-  static const ACCOUNT_TYPE = "accountType";
+  //For firestore document
+  static const COLLECTION = "clients";
   static const USERNAME = "username";
   static const EMAIL = "email";
   static const FIRSTNAME = "firstName";
@@ -27,7 +24,6 @@ class Client {
 
   Client({
     this.docId,
-    this.accountType = '',
     this.userName = '',
     this.email = '',
     this.firstName = '',
@@ -41,7 +37,6 @@ class Client {
 
   Client.clone(Client p) {
     this.docId = p.docId;
-    this.accountType = p.accountType;
     this.userName = p.userName;
     this.email = p.email;
     this.firstName = p.firstName;
@@ -55,7 +50,6 @@ class Client {
 
   void assign(Client p) {
     this.docId = p.docId;
-    this.accountType = p.accountType;
     this.userName = p.userName;
     this.email = p.email;
     this.firstName = p.firstName;
@@ -86,7 +80,6 @@ class Client {
   static Client deserialize(Map<String, dynamic>? doc, String docId) {
     return Client(
       docId: docId,
-      accountType: doc?[ACCOUNT_TYPE], //AccountType.CLIENT,
       userName: doc?[USERNAME],
       email: doc?[EMAIL],
       firstName: doc?[FIRSTNAME], //Do I need all these "?"?

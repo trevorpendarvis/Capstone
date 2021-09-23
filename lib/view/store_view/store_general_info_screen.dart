@@ -105,7 +105,6 @@ class Controller {
     MyDialog.circularProgressStart(state.context);
     state.formKey.currentState!.save();
     Client p = new Client();
-    p.accountType = 'STORE';
     p.firstName = name;
     p.address = address;
     p.email = state.email;

@@ -145,7 +145,7 @@ class _Controller {
   String? password;
   String? passwordConfirm;
   String? passwordErrorMessage;
-  Client newProfile = Client();
+  // Client newProfile = Client();
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -168,16 +168,20 @@ class _Controller {
     }
     MyDialog.circularProgressStart(state.context);
     try {
-      await FirebaseController.createNewAccount(
-          email: email!, password: password!);
-      MyDialog.circularProgressStop(state.context);
+
 
       if (state.dropdownValue == 'Client') {
+        await FirebaseController.createNewClient(
+            email: email!, password: password!);
+        MyDialog.circularProgressStop(state.context);
         // Collect client general info
         Navigator.pushReplacementNamed(
             state.context, ClientGeneralInfoScreen.routeName,
             arguments: {'email': email, 'password': password});
       } else {
+        await FirebaseController.createNewStore(
+            email: email!, password: password!);
+        MyDialog.circularProgressStop(state.context);
         // Collect store general info
         Navigator.pushReplacementNamed(
             state.context, StoreGeneralInfoScreen.routeName,
