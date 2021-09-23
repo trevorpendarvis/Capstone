@@ -4,6 +4,7 @@ import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/view/auth_view/signup_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
+import 'package:monkey_management/view/common_view/mydialog.dart';
 import 'package:monkey_management/view/store_view/store_screen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -54,14 +55,20 @@ class SignInState extends State<SignInScreen> {
                 height: 40.0,
               ),
               TextFormField(
-                decoration: InputDecoration(hintText: "Email"),
+                decoration: InputDecoration(
+                  hintText: "Email",
+                  border: OutlineInputBorder(),
+                ),
                 autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
                 validator: con?.validEmail,
                 onSaved: con?.onSavedEmail,
               ),
               TextFormField(
-                decoration: InputDecoration(hintText: "Password"),
+                decoration: InputDecoration(
+                  hintText: "Password",
+                  border: OutlineInputBorder(),
+                ),
                 autocorrect: false,
                 obscureText: true,
                 validator: con?.validPassword,
@@ -116,14 +123,15 @@ class Controller {
     if (!state.formkey.currentState!.validate()) {
       return;
     }
-    state.formkey.currentState!.save();
 
+    state.formkey.currentState!.save();
+    MyDialog.circularProgressStart(state.context);
     User? user =
         await FirebaseController.signIn(email: email!, password: password!);
 
     if (user != null) {
       accountType = await FirebaseController.getAccountType();
-
+      MyDialog.circularProgressStop(state.context);
       if (accountType == AccountType.STORE) {
         Navigator.pushNamed(state.context, StoreScreen.routeName);
       } else if (accountType == AccountType.CLIENT) {

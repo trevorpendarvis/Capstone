@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/profile.dart';
+import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
+import 'package:monkey_management/view/store_view/store_general_info_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   static const routeName = "/signUpScreen";
@@ -15,6 +17,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpState extends State<SignUpScreen> {
   late _Controller con;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  String? dropdownValue;
 
   @override
   void initState() {
@@ -28,7 +31,10 @@ class _SignUpState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create a New Account"),
+        title: Center(
+          child: Text("Create a New Account"),
+        ),
+        backgroundColor: Colors.grey[850],
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 10.0, right: 15.0, left: 15.0),
@@ -37,33 +43,76 @@ class _SignUpState extends State<SignUpScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Text("Create an account", style: Theme.of(context).textTheme.headline5),
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Email",
+                Text("Welcome please sign up",
+                    style: Theme.of(context).textTheme.headline5),
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "Email",
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
+                    validator: con.validateEmail,
+                    onSaved: con.saveEmail,
                   ),
-                  keyboardType: TextInputType.emailAddress,
-                  autocorrect: false,
-                  validator: con.validateEmail,
-                  onSaved: con.saveEmail,
                 ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Password",
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "Password",
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: true,
+                    autocorrect: false,
+                    validator: con.validatePassword,
+                    onSaved: con.savePassword,
                   ),
-                  obscureText: true,
-                  autocorrect: false,
-                  validator: con.validatePassword,
-                  onSaved: con.savePassword,
                 ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Confirm Password",
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "Confirm Password",
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: true,
+                    autocorrect: false,
+                    validator: con.validatePassword,
+                    onSaved: con.savePasswordConfirm,
                   ),
-                  obscureText: true,
-                  autocorrect: false,
-                  validator: con.validatePassword,
-                  onSaved: con.savePasswordConfirm,
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.amber, width: 2.0),
+                  ),
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    iconSize: 25,
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.amber),
+                    underline: Container(
+                      height: 2,
+                    ),
+                    hint: Center(child: Text('I am a')),
+                    onChanged: (newValue) {
+                      render(() {
+                        dropdownValue = newValue!;
+                      });
+                    },
+                    items: <String>['Client', 'Store']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
                 ),
                 con.passwordErrorMessage == null
                     ? SizedBox(
@@ -101,6 +150,13 @@ class _Controller {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   void createAccount() async {
+    if (state.dropdownValue == null) {
+      MyDialog.info(
+          context: state.context,
+          title: 'select a type',
+          content: 'either client or store');
+      return;
+    }
     if (!state.formKey.currentState!.validate()) return;
 
     state.render(() => passwordErrorMessage = null);
@@ -110,18 +166,30 @@ class _Controller {
       state.render(() => passwordErrorMessage = "Passwords do not match.");
       return;
     }
-
+    MyDialog.circularProgressStart(state.context);
     try {
-      await FirebaseController.createNewAccount(email: email!, password: password!);
-      MyDialog.info(
-        context: state.context,
-        title: "Account created!",
-        content: "Go to Sign In screen to use the app."
-      );
+      await FirebaseController.createNewAccount(
+          email: email!, password: password!);
+      MyDialog.circularProgressStop(state.context);
+
+      if (state.dropdownValue == 'Client') {
+        // Collect client general info
+        Navigator.pushReplacementNamed(
+            state.context, ClientGeneralInfoScreen.routeName,
+            arguments: {'email': email, 'password': password});
+      } else {
+        // Collect store general info
+        Navigator.pushReplacementNamed(
+            state.context, StoreGeneralInfoScreen.routeName,
+            arguments: {'email': email, 'password': password});
+      }
       //Navigator.pop(state.context);
     } catch (e) {
+      MyDialog.circularProgressStop(state.context);
       MyDialog.info(
-          context: state.context, title: "Failed to create account.", content: "$e");
+          context: state.context,
+          title: "Failed to create account.",
+          content: "$e");
     }
   }
 
