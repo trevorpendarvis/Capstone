@@ -1,29 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monkey_management/model/data.dart';
-import 'package:monkey_management/model/profile.dart';
+import 'package:monkey_management/model/client.dart';
+import 'package:monkey_management/model/store.dart';
 
 class FirebaseController {
+
+  /*
+  * Set accountType as Store first
+  * see if the current user is in Client collection
+  * if he/she is, change accountType to Client
+  * Otherwise, he/she is still Store
+  * */
   static Future<AccountType> getAccountType() async {
-    var isClient = AccountType.STORE;
+    var accountType = AccountType.STORE;
 
     try {
       await FirebaseFirestore.instance
-          .collection('accounts')
+          .collection(Client.COLLECTION)
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get()
           .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
         if (documentSnapshot.exists) {
-          if (documentSnapshot['accountType'] == 'CLIENT')
-            isClient = AccountType
+            accountType = AccountType
                 .CLIENT; //Changed from account_type to accountType -Caitlyn
         }
       });
     } catch (e) {
       print(e);
     }
-
-    return isClient;
+    return accountType;
   }
 
   static Future<User?> signIn(
@@ -37,7 +43,11 @@ class FirebaseController {
     return userCredential.user;
   }
 
-  static Future<void> createNewAccount(
+  static Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
+  static Future<void> createNewClient(
       {required String email, required String password}) async {
     //UserCredential userCredential =
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -45,50 +55,100 @@ class FirebaseController {
       password: password,
     );
 
+    // Implement in addClientProfile()
+    // Create the user's profile with default settings.
+
+    // final FirebaseAuth auth = FirebaseAuth.instance;
+    // final User? user = auth.currentUser;
+    //
+    // final DocumentReference ref =
+    //     FirebaseFirestore.instance.collection(Client.COLLECTION).doc(user!.uid);
+    //
+    // var userData = {
+    //   // 'docId': user.uid,
+    //   // 'username': '',
+    //   // 'email': user.email,
+    //   // 'firstName': '',
+    //   // 'lastName': '',
+    //   // 'phone': '',
+    //   // 'address': '',
+    //   // 'vehicleColor': '',
+    //   // 'vehicleMake': '',
+    //   // 'favLocation': '',
+    // };
+    // await ref.set(userData);
+
+  }
+
+  static Future<void> createNewStore(
+      {required String email, required String password}) async {
+    //UserCredential userCredential =
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    // Implement in addStoreProfile
     //Create the user's profile with default settings.
-    /*
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
+    // final FirebaseAuth auth = FirebaseAuth.instance;
+    // final User? user = auth.currentUser;
+    //
+    // final DocumentReference ref =
+    //     FirebaseFirestore.instance.collection(Store.COLLECTION).doc(user!.uid);
+    //
+    // var userData = {
+    //   // 'docId': user.uid,
+    //   // 'accountType': 'CLIENT',
+    //   // 'username': '',
+    //   'email': user.email,
+    //   // 'firstName': '',
+    //   // 'lastName': '',
+    //   // 'phone': '',
+    //   // 'address': '',
+    //   // 'vehicleColor': '',
+    //   // 'vehicleMake': '',
+    //   // 'favLocation': '',
+    // };
+    // await ref.set(userData);
 
-    final DocumentReference ref =
-        FirebaseFirestore.instance.collection('accounts').doc(user!.uid);
-
-    var userData = {
-      'docId': user.uid,
-      'accountType': 'CLIENT',
-      'username': '',
-      'email': user.email,
-      'firstName': '',
-      'lastName': '',
-      'phone': '',
-      'address': '',
-      'vehicleColor': '',
-      'vehicleMake': '',
-      'favLocation': '',
-    };
-    await ref.set(userData);
-    */
   }
 
-  //Get a user's profile from Firebase
-  static Future<Profile> getProfile(String uid) async {
+  //Get a client's profile from Firebase
+  static Future<Client> getClientProfile(String uid) async {
     var result =
-        await FirebaseFirestore.instance.collection('accounts').doc(uid).get();
+        await FirebaseFirestore.instance.collection(Client.COLLECTION).doc(uid).get();
 
-    return Profile.deserialize(result.data(), uid);
+    return Client.deserialize(result.data(), uid);
   }
 
-  static Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
-  }
+  //Get a store's profile from Firebase
+  // static Future<Client> getStoreProfile(String uid) async {
+  //   var result =
+  //   await FirebaseFirestore.instance.collection(Store.COLLECTION).doc(uid).get();
+  //
+  //   return Store.deserialize(result.data(), uid);
+  // }
 
-  static Future<void> addProfile(Profile? profile) async {
+
+
+  static Future<void> addClientProfile(Client? profile) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
 
     DocumentReference ref =
-        await FirebaseFirestore.instance.collection('accounts').doc(user!.uid);
+        FirebaseFirestore.instance.collection(Client.COLLECTION).doc(user!.uid);
 
     await ref.set(profile!.serialize());
   }
+
+
+  // static Future<void> addStoreProfile(Store? profile) async {
+  //   final FirebaseAuth auth = FirebaseAuth.instance;
+  //   final User? user = auth.currentUser;
+  //
+  //   DocumentReference ref =
+  //   FirebaseFirestore.instance.collection(Client.COLLECTION).doc(user!.uid);
+  //
+  //   await ref.set(profile!.serialize());
+  // }
 }

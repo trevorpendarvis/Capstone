@@ -26,8 +26,8 @@ class _ClientScreenState extends State<ClientScreen> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         appBar: AppBar(
-          title: Center(child: Text('Home')),
-          backgroundColor: Colors.grey[850],
+          title: Center(child: Text('Client Home')),
+          backgroundColor: Colors.indigoAccent,
           automaticallyImplyLeading: false,
         ),
         body: Center(

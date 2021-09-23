@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: Brightness.dark,
+        // brightness: Brightness.dark,
         primaryColor: Colors.indigoAccent,
         primarySwatch: Colors.pink,
         accentColor: Colors.pinkAccent,

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/data.dart';
-import 'package:monkey_management/model/profile.dart';
+import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
 
@@ -108,8 +108,7 @@ class Controller {
 
     MyDialog.circularProgressStart(state.context);
     state.formKey.currentState!.save();
-    Profile p = new Profile();
-    p.accountType = 'CLIENT';
+    Client p = new Client();
     p.firstName = firstName;
     p.lastName = lastName;
     p.address = address;
@@ -121,7 +120,7 @@ class Controller {
 
       p.docId = user!.uid;
 
-      await FirebaseController.addProfile(p);
+      await FirebaseController.addClientProfile(p);
       MyDialog.circularProgressStop(state.context);
       Navigator.pushReplacementNamed(state.context, ClientScreen.routeName,
           arguments: {'profile': p, 'user': user});
@@ -133,7 +132,7 @@ class Controller {
 
   String? validateAddress(String? value) {
     if (value == null || value.length < 5) {
-      return 'invalid addresss min char 5';
+      return 'invalid address min char 5';
     } else {
       return null;
     }
