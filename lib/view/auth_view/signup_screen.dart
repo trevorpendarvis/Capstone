@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
-import 'package:monkey_management/model/profile.dart';
+import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
 import 'package:monkey_management/view/store_view/store_general_info_screen.dart';
@@ -145,7 +145,7 @@ class _Controller {
   String? password;
   String? passwordConfirm;
   String? passwordErrorMessage;
-  Profile newProfile = Profile();
+  Client newProfile = Client();
 
   FirebaseAuth auth = FirebaseAuth.instance;
 

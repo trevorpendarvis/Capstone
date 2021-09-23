@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
-import 'package:monkey_management/model/profile.dart';
+import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
 import 'package:monkey_management/view/store_view/store_screen.dart';
 
@@ -104,7 +104,7 @@ class Controller {
 
     MyDialog.circularProgressStart(state.context);
     state.formKey.currentState!.save();
-    Profile p = new Profile();
+    Client p = new Client();
     p.accountType = 'STORE';
     p.firstName = name;
     p.address = address;

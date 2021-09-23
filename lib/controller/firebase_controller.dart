@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monkey_management/model/data.dart';
-import 'package:monkey_management/model/profile.dart';
+import 'package:monkey_management/model/client.dart';
 
 class FirebaseController {
   static Future<AccountType> getAccountType() async {
@@ -71,18 +71,18 @@ class FirebaseController {
   }
 
   //Get a user's profile from Firebase
-  static Future<Profile> getProfile(String uid) async {
+  static Future<Client> getProfile(String uid) async {
     var result =
         await FirebaseFirestore.instance.collection('accounts').doc(uid).get();
 
-    return Profile.deserialize(result.data(), uid);
+    return Client.deserialize(result.data(), uid);
   }
 
   static Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
   }
 
-  static Future<void> addProfile(Profile? profile) async {
+  static Future<void> addProfile(Client? profile) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
 
