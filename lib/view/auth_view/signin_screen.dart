@@ -28,28 +28,31 @@ class SignInState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text('Sign In'),
+        title: Padding(
+          padding: const EdgeInsets.only(
+            left: 65.0,
+            right: 10.0,
+          ),
+          child: Text(
+            'Hello! Please Sign In!',
+            //textAlign: TextAlign.right,
+            style: TextStyle(
+                color: Colors.pink[500],
+                fontFamily: 'BowlbyOneSC',
+                fontSize: 20.0),
+          ),
         ),
-        backgroundColor: Colors.grey[850],
       ),
       body: SingleChildScrollView(
         child: Form(
           key: formkey,
           child: Column(
             children: [
-              Container(
-                constraints: BoxConstraints.expand(
-                  height: 200.0,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.grey[850],
-                ),
-                child: Image.asset(
-                  'assets/images/MM.png',
-                  fit: BoxFit.contain,
-                ),
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              Stack(
+                children: [Image.asset('assets/images/MonkeyMGMT.png')],
+              ),
+              SizedBox(
+                height: 40.0,
               ),
               TextFormField(
                 decoration: InputDecoration(
@@ -82,9 +85,31 @@ class SignInState extends State<SignInScreen> {
                 height: 15.0,
               ),
               ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    Colors.pink[400],
+                  ),
+                ),
+                onPressed: con!.signIn,
+                child: Text(
+                  'Sign In',
+                  style: TextStyle(fontSize: 20.0, color: Colors.black),
+                ),
+              ),
+              SizedBox(
+                height: 5.0,
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    Colors.pink[400],
+                  ),
+                ),
                 onPressed: con!.signUp,
-                child: Text("Create a new account",
-                    style: Theme.of(context).textTheme.button),
+                child: Text(
+                  "Create a new account",
+                  style: TextStyle(fontSize: 20.0, color: Colors.black),
+                ),
               ),
             ],
           ),
