@@ -74,13 +74,6 @@ class SignInState extends State<SignInScreen> {
                 validator: con?.validPassword,
                 onSaved: con?.onSavedPassword,
               ),
-              ElevatedButton(
-                onPressed: con!.signIn,
-                child: Text(
-                  'Sign In',
-                  style: TextStyle(fontSize: 20.0, color: Colors.white),
-                ),
-              ),
               SizedBox(
                 height: 15.0,
               ),
