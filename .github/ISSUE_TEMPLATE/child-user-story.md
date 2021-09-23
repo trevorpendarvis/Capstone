@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **From epic: #**\
-*When create an issue/story, in "\* Item 1", please delete "Item 1", keep "\* ", then write yours words*
+*When create an issue/story, in "\* Item 1", please delete "Item 1", keep "\* ", then write your words*
   
 **Description:**\
 *Write in a complete English sentence without omitting any part of the sentence*\
