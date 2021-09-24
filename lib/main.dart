@@ -27,6 +27,15 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.indigoAccent,
         primarySwatch: Colors.pink,
         accentColor: Colors.pinkAccent,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.blue, // background
+            onPrimary: Colors.white, // foreground
+            // elevation: 0.0,
+            // textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            shape: StadiumBorder(),
+          )
+        ),
       ),
       initialRoute: SignInScreen.routeName,
       routes: {
