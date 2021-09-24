@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monkey_management/view/auth_view/signin_screen.dart';
+import 'package:monkey_management/view/store_view/store_settings_screen.dart';
 
 class StoreScreen extends StatefulWidget {
   static const routeName = "/store_screen";
@@ -27,7 +28,7 @@ class _StoreScreenState extends State<StoreScreen> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         appBar: AppBar(
-          title: Center(child: Text('Store Home')),
+          title: Center(child: Text('Store Home', style: TextStyle(color: Colors.black),)),
           backgroundColor: Colors.amber,
           automaticallyImplyLeading: false,
         ),
@@ -56,6 +57,7 @@ class _StoreScreenState extends State<StoreScreen> {
               //Action for homescrren
             } else if (index == 1) {
               //action for settings
+              Navigator.pushNamed(context, StoreSettingsScreen.routeName);
             } else if (index == 2) {
               //action for logout
             } else {
@@ -71,4 +73,5 @@ class _StoreScreenState extends State<StoreScreen> {
 class Controller {
   _StoreScreenState state;
   Controller(this.state);
+
 }

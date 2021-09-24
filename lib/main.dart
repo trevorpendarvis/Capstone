@@ -5,8 +5,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:monkey_management/view/auth_view/signup_screen.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
+import 'package:monkey_management/view/store_view/store_edit_option_screen.dart';
 import 'package:monkey_management/view/store_view/store_general_info_screen.dart';
+import 'package:monkey_management/view/store_view/store_options_screen.dart';
 import 'package:monkey_management/view/store_view/store_screen.dart';
+import 'package:monkey_management/view/store_view/store_settings_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +37,10 @@ class MyApp extends StatelessWidget {
         ClientGeneralInfoScreen.routeName: (context) =>
             ClientGeneralInfoScreen(),
         StoreGeneralInfoScreen.routeName: (context) => StoreGeneralInfoScreen(),
+        StoreSettingsScreen.routeName: (context) => StoreSettingsScreen(),
+        StoreOptionsScreen.routeName: (context) => StoreOptionsScreen(),
+        StoreEditOptionScreen.routeName: (context) => StoreEditOptionScreen(),
+
         //ProfileScreen.routeName: (context) => ProfileScreen(),
       },
     );
