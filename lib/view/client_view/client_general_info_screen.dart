@@ -42,7 +42,9 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
         title: Center(child: Text('Monkey Management')),
         backgroundColor: Colors.grey[850],
       ),
-      body: SingleChildScrollView(
+      body:
+
+      SingleChildScrollView(
         child: Form(
           key: formKey,
           child: Column(

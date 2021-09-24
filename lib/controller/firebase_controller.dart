@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/model/client.dart';
+import 'package:monkey_management/model/option.dart';
 import 'package:monkey_management/model/store.dart';
 
 class FirebaseController {
-
   /*
   * Set accountType as Store first
   * see if the current user is in Client collection
@@ -151,4 +151,14 @@ class FirebaseController {
   //
   //   await ref.set(profile!.serialize());
   // }
+
+  static Future<void> addOption(Option option) async {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+
+
+    DocumentReference ref =
+    FirebaseFirestore.instance.collection(Option.COLLECTION).doc();
+
+    await ref.set(option.serialize(currentUser!.uid));
+  }
 }
