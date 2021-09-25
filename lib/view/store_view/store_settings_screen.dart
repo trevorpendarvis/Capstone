@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monkey_management/view/store_view/store_options_screen.dart';
+import 'package:monkey_management/view/store_view/store_locations_screen.dart';
 
 class StoreSettingsScreen extends StatefulWidget {
   static const routeName = "/store_settings_screen";
@@ -38,6 +39,11 @@ class _StoreSettingsScreenState extends State<StoreSettingsScreen> {
               onPressed: () => con!.handleOptionsButton(),
               child: Text('Options'),
             ),
+            Text('Place holder for store locations'),
+            ElevatedButton(
+              onPressed: () => con!.handleLocationsButton(),
+              child: Text('Locations'),
+            ),
           ],
         ),
       ),
@@ -52,5 +58,9 @@ class Controller {
 
   void handleOptionsButton() {
     Navigator.pushNamed(state.context, StoreOptionsScreen.routeName);
+  }
+
+  void handleLocationsButton() {
+    Navigator.pushNamed(state.context, StoreLocationsScreen.routeName);
   }
 }
