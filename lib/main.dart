@@ -7,6 +7,7 @@ import 'package:monkey_management/view/client_view/client_general_info_screen.da
 import 'package:monkey_management/view/client_view/client_screen.dart';
 import 'package:monkey_management/view/store_view/store_edit_option_screen.dart';
 import 'package:monkey_management/view/store_view/store_general_info_screen.dart';
+import 'package:monkey_management/view/store_view/store_locations_screen.dart';
 import 'package:monkey_management/view/store_view/store_options_screen.dart';
 import 'package:monkey_management/view/store_view/store_screen.dart';
 import 'package:monkey_management/view/store_view/store_settings_screen.dart';
@@ -28,14 +29,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.pink,
         accentColor: Colors.pinkAccent,
         elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            primary: Colors.blue, // background
-            onPrimary: Colors.white, // foreground
-            // elevation: 0.0,
-            // textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            shape: StadiumBorder(),
-          )
-        ),
+            style: ElevatedButton.styleFrom(
+          primary: Colors.blue, // background
+          onPrimary: Colors.white, // foreground
+          // elevation: 0.0,
+          // textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          shape: StadiumBorder(),
+        )),
       ),
       initialRoute: SignInScreen.routeName,
       routes: {
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         StoreSettingsScreen.routeName: (context) => StoreSettingsScreen(),
         StoreOptionsScreen.routeName: (context) => StoreOptionsScreen(),
         StoreEditOptionScreen.routeName: (context) => StoreEditOptionScreen(),
-
+        StoreLocationsScreen.routeName: (context) => StoreLocationsScreen(),
         //ProfileScreen.routeName: (context) => ProfileScreen(),
       },
     );
