@@ -28,8 +28,12 @@ class _StoreScreenState extends State<StoreScreen> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         appBar: AppBar(
-          title: Center(child: Text('Store Home', style: TextStyle(color: Colors.black),)),
-          backgroundColor: Colors.amber,
+          title: Center(
+              child: Text(
+            'Store Home',
+            style: TextStyle(color: Colors.black),
+          )),
+          backgroundColor: Colors.pinkAccent[400],
           automaticallyImplyLeading: false,
         ),
         body: Center(
@@ -73,5 +77,4 @@ class _StoreScreenState extends State<StoreScreen> {
 class Controller {
   _StoreScreenState state;
   Controller(this.state);
-
 }
