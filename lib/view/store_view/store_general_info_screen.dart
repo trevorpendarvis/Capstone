@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/client.dart';
+import 'package:monkey_management/model/store.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
 import 'package:monkey_management/view/store_view/store_screen.dart';
 
@@ -104,19 +105,19 @@ class Controller {
 
     MyDialog.circularProgressStart(state.context);
     state.formKey.currentState!.save();
-    Client p = new Client();
-    p.firstName = name;
-    p.address = address;
-    p.email = state.email;
-    p.phone = number;
+    Store p = new Store();
+    p.name = name!;
+    p.address = address!;
+    p.email = state.email!;
+    p.phone = number!;
 
     try {
       user = await FirebaseController.signIn(
           email: state.email, password: state.password);
 
-      p.docId = user!.uid;
+      p.id = user!.uid;
 
-      // await FirebaseController.addStoreProfile(p);
+      await FirebaseController.addStoreProfile(p);
       MyDialog.circularProgressStop(state.context);
       Navigator.pushReplacementNamed(state.context, StoreScreen.routeName,
           arguments: {'profile': p, 'user': user});

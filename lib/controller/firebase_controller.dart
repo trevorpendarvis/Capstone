@@ -140,19 +140,18 @@ class FirebaseController {
   }
 
 
-  // static Future<void> addStoreProfile(Store? profile) async {
-  //   final FirebaseAuth auth = FirebaseAuth.instance;
-  //   final User? user = auth.currentUser;
-  //
-  //   DocumentReference ref =
-  //   FirebaseFirestore.instance.collection(Client.COLLECTION).doc(user!.uid);
-  //
-  //   await ref.set(profile!.serialize());
-  // }
+  static Future<void> addStoreProfile(Store? profile) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+
+    DocumentReference ref =
+    FirebaseFirestore.instance.collection(Store.COLLECTION).doc(user!.uid);
+
+    await ref.set(profile!.serialize());
+  }
 
   static Future<void> addOption(Option option) async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
-
 
     DocumentReference ref =
     FirebaseFirestore.instance.collection(Option.COLLECTION).doc();
