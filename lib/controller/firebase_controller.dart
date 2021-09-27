@@ -147,6 +147,8 @@ class FirebaseController {
         .update(updateInfo);
   }
 
+  
+
 
   // static Future<void> addStoreProfile(Store? profile) async {
   //   final FirebaseAuth auth = FirebaseAuth.instance;

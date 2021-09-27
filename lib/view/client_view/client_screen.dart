@@ -111,5 +111,14 @@ class Controller {
 
   Future<void> settings() async {}
 
-  Future<void> signOut() async {}
+  Future<void> signOut() async {
+    try {
+      await FirebaseController.signOut();
+    } catch (e) {
+      //do nothing
+    }
+    Navigator.of(state.context).pop(); //close the drawer
+    Navigator.of(state.context).pop(); //pop UserHome screen
+
+  }
 }
