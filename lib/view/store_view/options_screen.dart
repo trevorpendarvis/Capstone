@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:monkey_management/view/store_view/store_edit_option_screen.dart';
+import 'package:monkey_management/view/store_view/add_update_option_screen.dart';
 
 class StoreOptionsScreen extends StatefulWidget {
-  static const routeName = "/store_options_screen";
+  static const routeName = "/options_screen";
 
   @override
   _StoreOptionsScreenState createState() => _StoreOptionsScreenState();
@@ -51,7 +51,7 @@ class Controller {
   Controller(this.state);
 
   void handleAddOptionButton() {
-    Navigator.pushNamed(state.context, StoreEditOptionScreen.routeName,
+    Navigator.pushNamed(state.context, AddUpdateOptionScreen.routeName,
         // arguments: {'isEdit': false}
     );
   }

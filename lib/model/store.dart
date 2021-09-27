@@ -43,11 +43,11 @@ class Store {
 
   static Store deserialize(Map<String, dynamic>? doc, String docId) {
     Store store = Store();
-    store.id =  docId;
-    store.name = doc?[NAME];
-    store.email = doc?[EMAIL];
-    store.phone = doc?[PHONE];
-    store.address = doc?[ADDRESS];
+    store.id = docId;
+    store.name = doc?[NAME] ?? 'Unknown';
+    store.email = doc?[EMAIL] ?? 'Unknown';
+    store.phone = doc?[PHONE] ?? 'Unknown';
+    store.address = doc?[ADDRESS] ?? 'Unknown';
     return store;
   }
 }

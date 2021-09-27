@@ -140,6 +140,7 @@ class FirebaseController {
     await ref.set(profile!.serialize());
   }
 
+
   // static Future<void> addStoreProfile(Store? profile) async {
   //   final FirebaseAuth auth = FirebaseAuth.instance;
   //   final User? user = auth.currentUser;
@@ -150,6 +151,18 @@ class FirebaseController {
   //   await ref.set(profile!.serialize());
   // }
 
+
+  static Future<void> addStoreProfile(Store? profile) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+
+    DocumentReference ref =
+    FirebaseFirestore.instance.collection(Store.COLLECTION).doc(user!.uid);
+
+    await ref.set(profile!.serialize());
+  }
+
+
   static Future<void> addOption(Option option) async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
@@ -159,6 +172,7 @@ class FirebaseController {
     await ref.set(option.serialize(currentUser!.uid));
   }
 
+
   static Future<void> addLocation(Location location) async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
@@ -167,4 +181,27 @@ class FirebaseController {
 
     await ref.set(location.serialize(currentUser!.uid));
   }
+
+  static Future<List<Store>> fetchStores() async {
+    List<Store> stores = [];
+    try {
+      await FirebaseFirestore.instance
+          .collection(Store.COLLECTION)
+          .get()
+          .then((var data) {
+        if (data.docs.isNotEmpty) {
+          data.docs.forEach((doc) {
+            Store staff = Store.deserialize(doc.data(), doc.id);
+            stores.add(staff);
+          });
+        }
+      });
+
+    } catch (e) {
+      print(e);
+    }
+    print(stores.length);
+    return stores;
+  }
+
 }
