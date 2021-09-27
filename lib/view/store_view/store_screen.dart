@@ -33,7 +33,8 @@ class _StoreScreenState extends State<StoreScreen> {
             'Store Home',
             style: TextStyle(color: Colors.black),
           )),
-          backgroundColor: Colors.amber,
+          backgroundColor: Colors.pinkAccent[400],
+          automaticallyImplyLeading: false,
         ),
         drawer: Drawer(
           child: ListView(
@@ -67,7 +68,6 @@ class _StoreScreenState extends State<StoreScreen> {
 class Controller {
   _StoreScreenState state;
   Controller(this.state);
-
   Future<void> profile() async {}
 
   Future<void> settings() async {}

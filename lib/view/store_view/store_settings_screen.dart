@@ -29,7 +29,7 @@ class _StoreSettingsScreenState extends State<StoreSettingsScreen> {
           style: TextStyle(color: Colors.black),
         ),
         foregroundColor: Colors.black,
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.pinkAccent[400],
       ),
       body: Container(
         child: Column(

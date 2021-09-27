@@ -33,7 +33,7 @@ class _StoreEditLocationScreenState extends State<StoreEditLocationScreen> {
           style: TextStyle(color: Colors.black),
         ),
         foregroundColor: Colors.black,
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.pinkAccent[400],
       ),
       body: Container(
           padding: EdgeInsets.all(8.0),

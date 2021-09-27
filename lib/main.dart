@@ -7,7 +7,6 @@ import 'package:monkey_management/view/client_view/client_general_info_screen.da
 import 'package:monkey_management/view/client_view/client_screen.dart';
 
 import 'package:monkey_management/view/store_view/store_edit_location_screen.dart';
-import 'package:monkey_management/view/store_view/store_edit_option_screen.dart';
 
 import 'package:monkey_management/view/store_view/add_update_option_screen.dart';
 

@@ -52,9 +52,6 @@ class SignInState extends State<SignInScreen> {
               Stack(
                 children: [Image.asset('assets/images/MonkeyMGMT.png')],
               ),
-              SizedBox(
-                height: 40.0,
-              ),
               TextFormField(
                 decoration: InputDecoration(
                   hintText: "Email",
@@ -142,8 +139,6 @@ class Controller {
       } else {
         print('error');
       }
-
-
     } else {
       print('error');
     }
