@@ -5,10 +5,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:monkey_management/view/auth_view/signup_screen.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
-import 'package:monkey_management/view/store_view/store_edit_option_screen.dart';
+import 'package:monkey_management/view/store_view/add_update_option_screen.dart';
 import 'package:monkey_management/view/store_view/store_general_info_screen.dart';
 import 'package:monkey_management/view/store_view/store_locations_screen.dart';
-import 'package:monkey_management/view/store_view/store_options_screen.dart';
+import 'package:monkey_management/view/store_view/options_screen.dart';
 import 'package:monkey_management/view/store_view/store_screen.dart';
 import 'package:monkey_management/view/store_view/store_settings_screen.dart';
 
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
         StoreGeneralInfoScreen.routeName: (context) => StoreGeneralInfoScreen(),
         StoreSettingsScreen.routeName: (context) => StoreSettingsScreen(),
         StoreOptionsScreen.routeName: (context) => StoreOptionsScreen(),
-        StoreEditOptionScreen.routeName: (context) => StoreEditOptionScreen(),
+        AddUpdateOptionScreen.routeName: (context) => AddUpdateOptionScreen(),
         StoreLocationsScreen.routeName: (context) => StoreLocationsScreen(),
         //ProfileScreen.routeName: (context) => ProfileScreen(),
       },

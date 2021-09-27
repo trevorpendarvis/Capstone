@@ -77,7 +77,6 @@ class FirebaseController {
     //   // 'favLocation': '',
     // };
     // await ref.set(userData);
-
   }
 
   static Future<void> createNewStore(
@@ -110,7 +109,6 @@ class FirebaseController {
     //   // 'favLocation': '',
     // };
     // await ref.set(userData);
-
   }
 
   //Get a client's profile from Firebase
@@ -161,4 +159,27 @@ class FirebaseController {
 
     await ref.set(option.serialize(currentUser!.uid));
   }
+
+  static Future<List<Store>> fetchStores() async {
+    List<Store> stores = [];
+    try {
+      await FirebaseFirestore.instance
+          .collection(Store.COLLECTION)
+          .get()
+          .then((var data) {
+        if (data.docs.isNotEmpty) {
+          data.docs.forEach((doc) {
+            Store staff = Store.deserialize(doc.data(), doc.id);
+            stores.add(staff);
+          });
+        }
+      });
+
+    } catch (e) {
+      print(e);
+    }
+    print(stores.length);
+    return stores;
+  }
+
 }
