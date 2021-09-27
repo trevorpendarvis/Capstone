@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monkey_management/view/store_view/store_edit_location_screen.dart';
 
 class StoreLocationsScreen extends StatefulWidget {
   static const routeName = "/store_locations_screen";
@@ -34,10 +35,10 @@ class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
         child: Row(
           children: [
             Text('Place holder for a list of store locations'),
-            /* ElevatedButton(
-              onPressed: () => con!.handleAddOptionButton(),
-              child: Text('Add New Option'),
-            ), */
+            ElevatedButton(
+              onPressed: () => con!.handleAddLocationButton(),
+              child: Text('Add New Location'),
+            ),
           ],
         ),
       ),
@@ -50,10 +51,10 @@ class Controller {
 
   Controller(this.state);
 
-  /*  void handleAddOptionButton() {
+  void handleAddLocationButton() {
     Navigator.pushNamed(
-      state.context, StoreEditOptionScreen.routeName,
+      state.context, StoreEditLocationScreen.routeName,
       // arguments: {'isEdit': false}
     );
-  } */
+  }
 }
