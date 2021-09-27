@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:monkey_management/view/auth_view/signup_screen.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
+import 'package:monkey_management/view/store_view/store_edit_location_screen.dart';
 import 'package:monkey_management/view/store_view/store_edit_option_screen.dart';
 import 'package:monkey_management/view/store_view/store_general_info_screen.dart';
 import 'package:monkey_management/view/store_view/store_locations_screen.dart';
@@ -50,6 +51,8 @@ class MyApp extends StatelessWidget {
         StoreOptionsScreen.routeName: (context) => StoreOptionsScreen(),
         StoreEditOptionScreen.routeName: (context) => StoreEditOptionScreen(),
         StoreLocationsScreen.routeName: (context) => StoreLocationsScreen(),
+        StoreEditLocationScreen.routeName: (context) =>
+            StoreEditLocationScreen(),
         //ProfileScreen.routeName: (context) => ProfileScreen(),
       },
     );

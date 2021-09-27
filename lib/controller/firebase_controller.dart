@@ -4,6 +4,7 @@ import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/model/option.dart';
 import 'package:monkey_management/model/store.dart';
+import 'package:monkey_management/model/location.dart';
 
 class FirebaseController {
   /*
@@ -22,8 +23,8 @@ class FirebaseController {
           .get()
           .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
         if (documentSnapshot.exists) {
-            accountType = AccountType
-                .CLIENT; //Changed from account_type to accountType -Caitlyn
+          accountType = AccountType
+              .CLIENT; //Changed from account_type to accountType -Caitlyn
         }
       });
     } catch (e) {
@@ -77,7 +78,6 @@ class FirebaseController {
     //   // 'favLocation': '',
     // };
     // await ref.set(userData);
-
   }
 
   static Future<void> createNewStore(
@@ -110,13 +110,14 @@ class FirebaseController {
     //   // 'favLocation': '',
     // };
     // await ref.set(userData);
-
   }
 
   //Get a client's profile from Firebase
   static Future<Client> getClientProfile(String uid) async {
-    var result =
-        await FirebaseFirestore.instance.collection(Client.COLLECTION).doc(uid).get();
+    var result = await FirebaseFirestore.instance
+        .collection(Client.COLLECTION)
+        .doc(uid)
+        .get();
 
     return Client.deserialize(result.data(), uid);
   }
@@ -129,8 +130,6 @@ class FirebaseController {
   //   return Store.deserialize(result.data(), uid);
   // }
 
-
-
   static Future<void> addClientProfile(Client? profile) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
@@ -140,7 +139,6 @@ class FirebaseController {
 
     await ref.set(profile!.serialize());
   }
-
 
   // static Future<void> addStoreProfile(Store? profile) async {
   //   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -155,10 +153,18 @@ class FirebaseController {
   static Future<void> addOption(Option option) async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
-
     DocumentReference ref =
-    FirebaseFirestore.instance.collection(Option.COLLECTION).doc();
+        FirebaseFirestore.instance.collection(Option.COLLECTION).doc();
 
     await ref.set(option.serialize(currentUser!.uid));
+  }
+
+  static Future<void> addLocation(Location location) async {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+
+    DocumentReference ref =
+        FirebaseFirestore.instance.collection(Location.COLLECTION).doc();
+
+    await ref.set(location.serialize(currentUser!.uid));
   }
 }
