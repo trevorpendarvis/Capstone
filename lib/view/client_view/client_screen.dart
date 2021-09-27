@@ -46,7 +46,27 @@ class _ClientScreenState extends State<ClientScreen> {
                 appBar: AppBar(
                   title: Center(child: Text('Client Home')),
                   backgroundColor: Colors.indigoAccent,
-                  automaticallyImplyLeading: false,
+                ),
+                drawer: Drawer(
+                  child: ListView(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.people_outline),
+                        title: Text("Profile"),
+                        onTap: con?.profile,
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.settings),
+                        title: Text("Settings"),
+                        onTap: con?.settings,
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.exit_to_app),
+                        title: Text("Sign Out"),
+                        onTap: con?.signOut,
+                      ),
+                    ],
+                  ),
                 ),
                 body: Container(
                   child: Column(
@@ -63,38 +83,6 @@ class _ClientScreenState extends State<ClientScreen> {
                       ),
                     ],
                   ),
-                ),
-                bottomNavigationBar: BottomNavigationBar(
-                  currentIndex: currentIndex,
-                  items: [
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                        backgroundColor: Colors.blueGrey),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.settings),
-                        label: 'Settings',
-                        backgroundColor: Colors.blueGrey),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.exit_to_app),
-                        label: 'Logout',
-                        backgroundColor: Colors.blueGrey),
-                  ],
-                  onTap: (index) {
-                    render((index) {
-                      currentIndex = index;
-                    });
-                    if (index == 0) {
-                      //Action for homescreen
-                    } else if (index == 1) {
-                      //action for settings
-                    } else if (index == 2) {
-                      //action for logout
-                      con!.signOut();
-                    } else {
-                      print('error');
-                    }
-                  },
                 ),
               ),
             );
@@ -119,12 +107,9 @@ class Controller {
     stores = await FirebaseController.fetchStores();
   }
 
-  void signOut() async {
-    //try {
-      await FirebaseController.signOut();
-    //} catch (e) {
-      //do nothing
-   // }
-    Navigator.of(state.context).pop(); //pop UserHome screen
-  }
+  Future<void> profile() async {}
+
+  Future<void> settings() async {}
+
+  Future<void> signOut() async {}
 }
