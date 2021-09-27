@@ -28,13 +28,14 @@ class _StoreScreenState extends State<StoreScreen> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         appBar: AppBar(
-          title: Center(
-              child: Text(
-            'Store Home',
-            style: TextStyle(color: Colors.black),
-          )),
+          title: Padding(
+            padding: const EdgeInsets.only(left: 80, right: 5),
+            child: Text(
+              'Store Home',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
           backgroundColor: Colors.pinkAccent[400],
-          automaticallyImplyLeading: false,
         ),
         drawer: Drawer(
           child: ListView(
