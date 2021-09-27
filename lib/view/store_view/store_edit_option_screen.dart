@@ -25,7 +25,6 @@ class _StoreEditOptionScreenState extends State<StoreEditOptionScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -35,82 +34,78 @@ class _StoreEditOptionScreenState extends State<StoreEditOptionScreen> {
         foregroundColor: Colors.black,
         backgroundColor: Colors.amber,
       ),
-      body:
-      Container(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-
-          SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Option Name",
-                        border: OutlineInputBorder(),
+      body: Container(
+          padding: EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Option Name",
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: con?.validateName,
+                          onSaved: con?.saveName,
+                        ),
                       ),
-                      validator: con?.validateName,
-                      onSaved: con?.saveName,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Description",
-                        border: OutlineInputBorder(),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Description",
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: con?.validateDescription,
+                          onSaved: con?.saveDescription,
+                        ),
                       ),
-                      validator: con?.validateDescription,
-                      onSaved: con?.saveDescription,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Price",
-                        border: OutlineInputBorder(),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Price",
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: con?.validatePrice,
+                          onSaved: con?.savePrice,
+                        ),
                       ),
-                      validator: con?.validatePrice,
-                      onSaved: con?.savePrice,
-                    ),
+                    ],
                   ),
-
-                ],
-              ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: Text("Delete", style: Theme.of(context).textTheme.button),
+                    ),
+                    ElevatedButton(
+                      onPressed: con?.onSave,
+                      child: Text("Done", style: Theme.of(context).textTheme.button),
+                    ),
+                  ],
+                )
+              ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                onPressed: () {},
-                child:
-                Text("Delete", style: Theme.of(context).textTheme.button),
-              ),
-              ElevatedButton(
-                onPressed: con?.onSave,
-                child:
-                Text("Done", style: Theme.of(context).textTheme.button),
-              ),
-            ],
-          )
-        ],)
-      ),
+          )),
     );
   }
 }
 
 class Controller {
   _StoreEditOptionScreenState state;
-  Controller(this.state);
-  Option _option = Option();
 
+  Controller(this.state);
+
+  Option _option = Option();
 
   String? validateName(String? value) {
     if (value == null || value.length < 1) {
@@ -137,8 +132,7 @@ class Controller {
   }
 
   String? validatePrice(String? value) {
-    if (value!.length == 0)
-      return 'Please enter the price';
+    if (value!.length == 0) return 'Please enter the price';
     if (double.parse(value) <= 0.0) {
       return 'Please enter the price';
     } else {
@@ -160,7 +154,7 @@ class Controller {
 
     try {
       await FirebaseController.addOption(_option);
-      
+
       MyDialog.circularProgressStop(state.context);
       Navigator.pop(state.context);
     } catch (e) {
@@ -168,5 +162,4 @@ class Controller {
       MyDialog.info(context: state.context, title: 'Error', content: '$e');
     }
   }
-
 }
