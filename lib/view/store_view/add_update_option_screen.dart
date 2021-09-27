@@ -90,8 +90,7 @@ class _AddUpdateOptionScreenState extends State<AddUpdateOptionScreen> {
                     ),
                     ElevatedButton(
                       onPressed: con?.onSave,
-                      child: Text("Done",
-                          style: Theme.of(context).textTheme.button),
+                      child: Text('Done', style: Theme.of(context).textTheme.button),
                     ),
                   ],
                 )

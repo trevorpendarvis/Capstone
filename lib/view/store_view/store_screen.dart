@@ -36,38 +36,29 @@ class _StoreScreenState extends State<StoreScreen> {
           backgroundColor: Colors.pinkAccent[400],
           automaticallyImplyLeading: false,
         ),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              ListTile(
+                leading: Icon(Icons.people_outline),
+                title: Text("Profile"),
+                onTap: con?.profile,
+              ),
+              ListTile(
+                leading: Icon(Icons.settings),
+                title: Text("Settings"),
+                onTap: con?.settings,
+              ),
+              ListTile(
+                leading: Icon(Icons.exit_to_app),
+                title: Text("Sign Out"),
+                onTap: con?.signOut,
+              ),
+            ],
+          ),
+        ),
         body: Center(
           child: Text('This is the store screen'),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: currentIndex,
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-                backgroundColor: Colors.blueGrey),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: 'Settings',
-                backgroundColor: Colors.blueGrey),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.exit_to_app),
-                label: 'Logout',
-                backgroundColor: Colors.blueGrey),
-          ],
-          onTap: (index) {
-            render(() => currentIndex = index);
-            if (index == 0) {
-              //Action for homescrren
-            } else if (index == 1) {
-              //action for settings
-              Navigator.pushNamed(context, StoreSettingsScreen.routeName);
-            } else if (index == 2) {
-              //action for logout
-            } else {
-              print('error');
-            }
-          },
         ),
       ),
     );
@@ -77,4 +68,9 @@ class _StoreScreenState extends State<StoreScreen> {
 class Controller {
   _StoreScreenState state;
   Controller(this.state);
+  Future<void> profile() async {}
+
+  Future<void> settings() async {}
+
+  Future<void> signOut() async {}
 }
