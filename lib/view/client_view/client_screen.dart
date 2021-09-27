@@ -37,7 +37,8 @@ class _ClientScreenState extends State<ClientScreen> {
     return FutureBuilder(
         future: con!.fetchData(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return CircularProgressIndicator();
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return CircularProgressIndicator();
           if (snapshot.connectionState == ConnectionState.done)
             return WillPopScope(
               onWillPop: () => Future.value(false),
@@ -53,11 +54,12 @@ class _ClientScreenState extends State<ClientScreen> {
                       Text('List of stores'),
                       Expanded(
                         child: ListView.builder(
-                            itemCount: con!.stores.length,
-                            itemBuilder: (context, index) => ListTile(
-                                  title: Text(con!.stores[index].name),
-                                  subtitle: Text(con!.stores[index].email),
-                                ),),
+                          itemCount: con!.stores.length,
+                          itemBuilder: (context, index) => ListTile(
+                            title: Text(con!.stores[index].name),
+                            subtitle: Text(con!.stores[index].email),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -65,22 +67,30 @@ class _ClientScreenState extends State<ClientScreen> {
                 bottomNavigationBar: BottomNavigationBar(
                   currentIndex: currentIndex,
                   items: [
-                    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home', backgroundColor: Colors.blueGrey),
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.settings), label: 'Settings', backgroundColor: Colors.blueGrey),
+                        icon: Icon(Icons.home),
+                        label: 'Home',
+                        backgroundColor: Colors.blueGrey),
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.exit_to_app), label: 'Logout', backgroundColor: Colors.blueGrey),
+                        icon: Icon(Icons.settings),
+                        label: 'Settings',
+                        backgroundColor: Colors.blueGrey),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.exit_to_app),
+                        label: 'Logout',
+                        backgroundColor: Colors.blueGrey),
                   ],
                   onTap: (index) {
                     render((index) {
                       currentIndex = index;
                     });
                     if (index == 0) {
-                      //Action for homescrren
+                      //Action for homescreen
                     } else if (index == 1) {
                       //action for settings
                     } else if (index == 2) {
                       //action for logout
+                      con!.signOut();
                     } else {
                       print('error');
                     }
@@ -107,6 +117,14 @@ class Controller {
   */
   Future<void> fetchData() async {
     stores = await FirebaseController.fetchStores();
+  }
 
+  void signOut() async {
+    //try {
+      await FirebaseController.signOut();
+    //} catch (e) {
+      //do nothing
+   // }
+    Navigator.of(state.context).pop(); //pop UserHome screen
   }
 }

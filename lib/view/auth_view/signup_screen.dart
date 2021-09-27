@@ -145,7 +145,6 @@ class _Controller {
   String? password;
   String? passwordConfirm;
   String? passwordErrorMessage;
-  // Client newProfile = Client();
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -153,8 +152,8 @@ class _Controller {
     if (state.dropdownValue == null) {
       MyDialog.info(
           context: state.context,
-          title: 'select a type',
-          content: 'either client or store');
+          title: 'Select a Type',
+          content: 'Select either client or store.');
       return;
     }
     if (!state.formKey.currentState!.validate()) return;

@@ -140,6 +140,13 @@ class FirebaseController {
     await ref.set(profile!.serialize());
   }
 
+  static Future<void> updateClientProfile(String docId, Map<String, dynamic> updateInfo) async {
+    await FirebaseFirestore.instance
+        .collection(Client.COLLECTION)
+        .doc(docId)
+        .update(updateInfo);
+  }
+
 
   // static Future<void> addStoreProfile(Store? profile) async {
   //   final FirebaseAuth auth = FirebaseAuth.instance;
