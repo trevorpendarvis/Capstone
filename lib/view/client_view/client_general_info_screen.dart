@@ -21,6 +21,7 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
   var formKey = GlobalKey<FormState>();
   String? email;
   String? password;
+  Client? clientProfile;
 
   @override
   void initState() {
@@ -33,8 +34,9 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
   @override
   Widget build(BuildContext context) {
     Map? args = ModalRoute.of(context)!.settings.arguments as Map?;
-    email = args!['email'];
-    password = args['password'];
+    email = args!['email'] ?? '';
+    password = args['password'] ?? '';
+    clientProfile = args['one_clientProfile'] ?? Client();
     print('Email: $email');
     print('Password: $password');
     return Scaffold(
@@ -42,9 +44,7 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
         title: Center(child: Text('Monkey Management')),
         backgroundColor: Colors.grey[850],
       ),
-      body:
-
-      SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Form(
           key: formKey,
           child: Column(
@@ -84,8 +84,7 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
               ),
               ElevatedButton(
                 onPressed: con?.onSave,
-                child:
-                    Text("Finish", style: Theme.of(context).textTheme.button),
+                child: Text("Finish", style: Theme.of(context).textTheme.button),
               ),
             ],
           ),
@@ -117,8 +116,8 @@ class Controller {
     p.email = state.email;
 
     try {
-      user = await FirebaseController.signIn(
-          email: state.email, password: state.password);
+      user =
+          await FirebaseController.signIn(email: state.email, password: state.password);
 
       p.docId = user!.uid;
 

@@ -1,6 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
+import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/model/store.dart';
+import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
+import 'package:monkey_management/view/common_view/mydialog.dart';
 
 class ClientScreen extends StatefulWidget {
   static const routeName = "/client_screen";
@@ -15,6 +20,10 @@ class _ClientScreenState extends State<ClientScreen> {
   int currentIndex = 0;
   Controller? con;
 
+  //CAITLYN
+  //User? user;
+  //Client? clientProfile;
+
   @override
   void initState() {
     super.initState();
@@ -25,6 +34,13 @@ class _ClientScreenState extends State<ClientScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    //CAITLYN
+    //Map? args = ModalRoute.of(context)!.settings.arguments as Map?; //Do I need cast?
+    // user ??= args!["user"];
+    //clientProfile ??= args!["one_clientProfile"];
+
+
     /*
     * FutureBuilder will build something in the future
     * while future: con!.fetchData() is running in the background,
@@ -52,14 +68,14 @@ class _ClientScreenState extends State<ClientScreen> {
                     children: [
                       ListTile(
                         leading: Icon(Icons.people_outline),
-                        title: Text("Profile"),
-                        onTap: con?.profile,
+                        title: Text("Account Settings"),
+                        onTap: () => con?.accountSettings(FirebaseAuth.instance.currentUser!.uid),
                       ),
-                      ListTile(
-                        leading: Icon(Icons.settings),
-                        title: Text("Settings"),
-                        onTap: con?.settings,
-                      ),
+                      // ListTile(
+                      //   leading: Icon(Icons.settings),
+                      //   title: Text("Settings"),
+                      //   onTap: con?.settings,
+                      // ),
                       ListTile(
                         leading: Icon(Icons.exit_to_app),
                         title: Text("Sign Out"),
@@ -99,17 +115,30 @@ class Controller {
 
   List<Store> stores = [];
 
+  late Client clientProfile;
+
   /*
   * we should put all the fetching operations,
   * which take a lot of time to complete in this method
   */
   Future<void> fetchData() async {
     stores = await FirebaseController.fetchStores();
+    clientProfile = await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
   }
 
-  Future<void> profile() async {}
+  Future<void> accountSettings(String? uid) async {
 
-  Future<void> settings() async {}
+    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName,
+        arguments: {
+          // "user": state.user,
+          "one_clientProfile": clientProfile,
+        }
+      );
+    Navigator.pop(state.context); //pop the drawer
+    state.render(() {});
+  }
+
+  //Future<void> settings() async {}
 
   Future<void> signOut() async {
     try {
@@ -119,6 +148,5 @@ class Controller {
     }
     Navigator.of(state.context).pop(); //close the drawer
     Navigator.of(state.context).pop(); //pop UserHome screen
-
   }
 }
