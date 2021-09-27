@@ -3,14 +3,14 @@ import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/option.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
 
-class StoreEditOptionScreen extends StatefulWidget {
-  static const routeName = "/store_edit_option_screen";
+class AddUpdateOptionScreen extends StatefulWidget {
+  static const routeName = "/add_update_option_screen";
 
   @override
-  _StoreEditOptionScreenState createState() => _StoreEditOptionScreenState();
+  _AddUpdateOptionScreenState createState() => _AddUpdateOptionScreenState();
 }
 
-class _StoreEditOptionScreenState extends State<StoreEditOptionScreen> {
+class _AddUpdateOptionScreenState extends State<AddUpdateOptionScreen> {
   Controller? con;
 
   var formKey = GlobalKey<FormState>();
@@ -101,7 +101,7 @@ class _StoreEditOptionScreenState extends State<StoreEditOptionScreen> {
 }
 
 class Controller {
-  _StoreEditOptionScreenState state;
+  _AddUpdateOptionScreenState state;
 
   Controller(this.state);
 

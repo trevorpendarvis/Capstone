@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monkey_management/view/store_view/store_options_screen.dart';
+import 'package:monkey_management/view/store_view/options_screen.dart';
 import 'package:monkey_management/view/store_view/store_locations_screen.dart';
 
 class StoreSettingsScreen extends StatefulWidget {
