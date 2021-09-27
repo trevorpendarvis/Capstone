@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:monkey_management/model/location.dart';
 import 'package:monkey_management/view/store_view/store_edit_location_screen.dart';
 
 class StoreLocationsScreen extends StatefulWidget {
@@ -10,6 +12,8 @@ class StoreLocationsScreen extends StatefulWidget {
 
 class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
   Controller? con;
+  User? store;
+  List<Location>? locations;
 
   @override
   void initState() {
@@ -21,6 +25,9 @@ class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Map args = ModalRoute.of(context)!.settings.arguments as Map;
+    locations = args["locations"];
+    print(locations![0].StoreAddress);
     return Scaffold(
       appBar: AppBar(
         /*  */
@@ -31,14 +38,25 @@ class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
         foregroundColor: Colors.black,
         backgroundColor: Colors.amber,
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+          color: Colors.red,
+        ),
+        backgroundColor: Colors.blue[400],
+        onPressed: () => con!.handleAddLocationButton(),
+      ),
       body: Container(
-        child: Row(
+        child: Column(
           children: [
-            Text('Place holder for a list of store locations'),
-            ElevatedButton(
-              onPressed: () => con!.handleAddLocationButton(),
-              child: Text('Add New Location'),
-            ),
+            Text('List of store locations'),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: locations!.length,
+                  itemBuilder: (context, index) => ListTile(
+                        title: Text(locations![index].StoreName),
+                      )),
+            )
           ],
         ),
       ),

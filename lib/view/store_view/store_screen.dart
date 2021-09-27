@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:monkey_management/controller/firebase_controller.dart';
+import 'package:monkey_management/model/location.dart';
 import 'package:monkey_management/view/auth_view/signin_screen.dart';
 import 'package:monkey_management/view/store_view/store_settings_screen.dart';
 
@@ -24,11 +26,16 @@ class _StoreScreenState extends State<StoreScreen> {
 
   @override
   Widget build(BuildContext context) {
+    con!.fetchData();
     return WillPopScope(
       onWillPop: () => Future.value(false),
       child: Scaffold(
         appBar: AppBar(
-          title: Center(child: Text('Store Home', style: TextStyle(color: Colors.black),)),
+          title: Center(
+              child: Text(
+            'Store Home',
+            style: TextStyle(color: Colors.black),
+          )),
           backgroundColor: Colors.amber,
           automaticallyImplyLeading: false,
         ),
@@ -57,7 +64,7 @@ class _StoreScreenState extends State<StoreScreen> {
               //Action for homescrren
             } else if (index == 1) {
               //action for settings
-              Navigator.pushNamed(context, StoreSettingsScreen.routeName);
+              Navigator.pushNamed(context, StoreSettingsScreen.routeName, arguments: {"locations": con!.locations});
             } else if (index == 2) {
               //action for logout
             } else {
@@ -74,4 +81,14 @@ class Controller {
   _StoreScreenState state;
   Controller(this.state);
 
+  List<Location> locations = [];
+
+  // Place for all the fectching operations.
+  Future<void> fetchData() async {
+    try {
+      locations = await FirebaseController.fetchLocations();
+    } catch (e) {
+      print(e);
+    }
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monkey_management/model/location.dart';
 import 'package:monkey_management/view/store_view/options_screen.dart';
 import 'package:monkey_management/view/store_view/store_locations_screen.dart';
 
@@ -11,7 +12,7 @@ class StoreSettingsScreen extends StatefulWidget {
 
 class _StoreSettingsScreenState extends State<StoreSettingsScreen> {
   Controller? con;
-
+  List<Location>? locations = [];
   @override
   void initState() {
     super.initState();
@@ -22,6 +23,8 @@ class _StoreSettingsScreenState extends State<StoreSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Map args = ModalRoute.of(context)!.settings.arguments as Map;
+    locations = args["locations"];
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -61,6 +64,7 @@ class Controller {
   }
 
   void handleLocationsButton() {
-    Navigator.pushNamed(state.context, StoreLocationsScreen.routeName);
+    Navigator.pushNamed(state.context, StoreLocationsScreen.routeName,
+        arguments: {"locations": state.locations});
   }
 }
