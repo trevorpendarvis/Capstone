@@ -140,7 +140,6 @@ class FirebaseController {
     await ref.set(profile!.serialize());
   }
 
-
   // static Future<void> addStoreProfile(Store? profile) async {
   //   final FirebaseAuth auth = FirebaseAuth.instance;
   //   final User? user = auth.currentUser;
@@ -151,17 +150,15 @@ class FirebaseController {
   //   await ref.set(profile!.serialize());
   // }
 
-
   static Future<void> addStoreProfile(Store? profile) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
 
     DocumentReference ref =
-    FirebaseFirestore.instance.collection(Store.COLLECTION).doc(user!.uid);
+        FirebaseFirestore.instance.collection(Store.COLLECTION).doc(user!.uid);
 
     await ref.set(profile!.serialize());
   }
-
 
   static Future<void> addOption(Option option) async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
@@ -171,7 +168,6 @@ class FirebaseController {
 
     await ref.set(option.serialize(currentUser!.uid));
   }
-
 
   static Future<void> addLocation(Location location) async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
@@ -196,7 +192,6 @@ class FirebaseController {
           });
         }
       });
-
     } catch (e) {
       print(e);
     }
@@ -204,4 +199,24 @@ class FirebaseController {
     return stores;
   }
 
+  static Future<List<Option>> getOptions(String? storeId) async {
+    List<Option> option = [];
+    try {
+      await FirebaseFirestore.instance
+          .collection(Option.COLLECTION)
+          .where(Option.STORE_ID, isEqualTo: storeId)
+          .get()
+          .then((var data) {
+        if (data.docs.isNotEmpty) {
+          data.docs.forEach((opt) {
+            Option optionObject = Option.deserialize(opt.data(), opt.id);
+            option.add(optionObject);
+          });
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+    return option;
+  }
 }

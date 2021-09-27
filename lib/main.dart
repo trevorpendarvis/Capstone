@@ -3,11 +3,12 @@ import 'package:monkey_management/view/auth_view/signin_screen.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:monkey_management/view/auth_view/signup_screen.dart';
+import 'package:monkey_management/view/client_view/add_update_appointment_screen.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
 
 import 'package:monkey_management/view/store_view/store_edit_location_screen.dart';
-import 'package:monkey_management/view/store_view/store_edit_option_screen.dart';
+//import 'package:monkey_management/view/store_view/store_edit_option_screen.dart';
 
 import 'package:monkey_management/view/store_view/add_update_option_screen.dart';
 
@@ -58,6 +59,8 @@ class MyApp extends StatelessWidget {
         StoreEditLocationScreen.routeName: (context) =>
             StoreEditLocationScreen(),
         //ProfileScreen.routeName: (context) => ProfileScreen(),
+        AddUpdateAppointmentScreen.routeName: (context) =>
+            AddUpdateAppointmentScreen(),
       },
     );
   }

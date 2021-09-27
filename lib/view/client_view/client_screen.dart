@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/store.dart';
+import 'package:monkey_management/view/client_view/add_update_appointment_screen.dart';
 
 class ClientScreen extends StatefulWidget {
   static const routeName = "/client_screen";
@@ -78,6 +79,7 @@ class _ClientScreenState extends State<ClientScreen> {
                           itemBuilder: (context, index) => ListTile(
                             title: Text(con!.stores[index].name),
                             subtitle: Text(con!.stores[index].email),
+                            onTap: () => con!.handleStoreListTile(index),
                           ),
                         ),
                       ),
@@ -96,8 +98,9 @@ class Controller {
   _ClientScreenState state;
 
   Controller(this.state);
-
+  late Store selectedStore;
   List<Store> stores = [];
+  bool isUpdated = false;
 
   /*
   * we should put all the fetching operations,
@@ -112,4 +115,10 @@ class Controller {
   Future<void> settings() async {}
 
   Future<void> signOut() async {}
+
+  void handleStoreListTile(int index) {
+    selectedStore = stores[index];
+    Navigator.pushNamed(state.context, AddUpdateAppointmentScreen.routeName,
+        arguments: {'isUpdate': isUpdated, 'store': selectedStore});
+  }
 }
