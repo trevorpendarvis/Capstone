@@ -71,7 +71,6 @@ class MyApp extends StatelessWidget {
                       }
                       return SplashScreen();
                     }
-
                 );
             }
             return SignInScreen();
