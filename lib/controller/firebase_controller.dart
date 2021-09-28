@@ -147,9 +147,6 @@ class FirebaseController {
         .update(updateInfo);
   }
 
-
-
-
   // static Future<void> addStoreProfile(Store? profile) async {
   //   final FirebaseAuth auth = FirebaseAuth.instance;
   //   final User? user = auth.currentUser;
@@ -160,17 +157,15 @@ class FirebaseController {
   //   await ref.set(profile!.serialize());
   // }
 
-
   static Future<void> addStoreProfile(Store? profile) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
 
     DocumentReference ref =
-    FirebaseFirestore.instance.collection(Store.COLLECTION).doc(user!.uid);
+        FirebaseFirestore.instance.collection(Store.COLLECTION).doc(user!.uid);
 
     await ref.set(profile!.serialize());
   }
-
 
   static Future<void> addOption(Option option) async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
@@ -180,7 +175,6 @@ class FirebaseController {
 
     await ref.set(option.serialize(currentUser!.uid));
   }
-
 
   static Future<void> addLocation(Location location) async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
@@ -205,7 +199,6 @@ class FirebaseController {
           });
         }
       });
-
     } catch (e) {
       print(e);
     }
@@ -213,4 +206,26 @@ class FirebaseController {
     return stores;
   }
 
+  static Future<List<Location>> fetchLocations() async {
+    List<Location> locations = [];
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+
+    try {
+      await FirebaseFirestore.instance
+          .collection(Location.COLLECTION)
+          .where(Location.STORE_ID, isEqualTo: currentUser!.uid)
+          .get()
+          .then((var data) {
+        if (data.docs.isNotEmpty) {
+          data.docs.forEach((doc) {
+            Location location = Location.deserialize(doc.data(), doc.id);
+            locations.add(location);
+          });
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+    return locations;
+  }
 }

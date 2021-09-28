@@ -28,7 +28,7 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
           style: TextStyle(color: Colors.black),
         ),
         foregroundColor: Colors.black,
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.pinkAccent[400],
       ),
       body: Container(
         child: Row(
@@ -51,8 +51,9 @@ class Controller {
   Controller(this.state);
 
   void handleAddOptionButton() {
-    Navigator.pushNamed(state.context, AddUpdateOptionScreen.routeName,
-        // arguments: {'isEdit': false}
+    Navigator.pushNamed(
+      state.context, AddUpdateOptionScreen.routeName,
+      // arguments: {'isEdit': false}
     );
   }
 }

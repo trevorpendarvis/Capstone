@@ -54,6 +54,7 @@ flutter:
   assets:
     - assets/images/MM.png
     - assets/images/MonkeyMGMT.png
+    - assets/images/MonkeyLogo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

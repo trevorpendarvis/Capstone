@@ -1,10 +1,12 @@
 class Location {
   String StoreName = '';
   String StoreAddress = '';
+  String storeId = '';
 
   static const COLLECTION = "location";
   static const STORE_NAME = "StoreName";
   static const STORE_ADDRESS = "StoreAddress";
+  static const STORE_ID = "store_id";
 
   Location();
 
@@ -12,6 +14,7 @@ class Location {
     return <String, dynamic>{
       STORE_NAME: this.StoreName,
       STORE_ADDRESS: this.StoreAddress,
+      STORE_ID: storeId,
     };
   }
 
@@ -19,6 +22,7 @@ class Location {
     Location location = Location();
     location.StoreName = doc?[STORE_NAME];
     location.StoreAddress = doc?[STORE_ADDRESS];
+    location.storeId = doc?[STORE_ID];
     return location;
   }
 }
