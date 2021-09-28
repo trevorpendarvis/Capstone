@@ -37,7 +37,7 @@ class _StoreScreenState extends State<StoreScreen> {
             'Store Home',
             style: TextStyle(color: Colors.black),
           )),
-          backgroundColor: Colors.amber,
+          // backgroundColor: Colors.amber,
           automaticallyImplyLeading: false,
 
 //           title: Padding(

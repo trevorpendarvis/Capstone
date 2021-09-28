@@ -6,6 +6,7 @@ import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/model/store.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
+import 'package:monkey_management/view/common_view/splash_screen.dart';
 
 class ClientScreen extends StatefulWidget {
   static const routeName = "/client_screen";
@@ -54,7 +55,7 @@ class _ClientScreenState extends State<ClientScreen> {
         future: con!.fetchData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return CircularProgressIndicator();
+            return SplashScreen();
           if (snapshot.connectionState == ConnectionState.done)
             return WillPopScope(
               onWillPop: () => Future.value(false),

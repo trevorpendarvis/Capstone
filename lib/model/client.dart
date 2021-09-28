@@ -80,15 +80,15 @@ class Client {
   static Client deserialize(Map<String, dynamic>? doc, String docId) {
     return Client(
       docId: docId,
-      userName: doc?[USERNAME],
-      email: doc?[EMAIL],
-      firstName: doc?[FIRSTNAME], //Do I need all these "?"?
-      lastName: doc?[LASTNAME],
-      phone: doc?[PHONE],
-      address: doc?[ADDRESS],
-      vehicleColor: doc?[VEHICLE_COLOR],
-      vehicleMake: doc?[VEHICLE_MAKE],
-      favLocation: doc?[FAV_LOCATION],
+      userName: doc?[USERNAME] ?? '',
+      email: doc?[EMAIL] ?? '',
+      firstName: doc?[FIRSTNAME] ?? '', //Do I need all these "?"?
+      lastName: doc?[LASTNAME] ?? '',
+      phone: doc?[PHONE] ?? '',
+      address: doc?[ADDRESS] ?? '',
+      vehicleColor: doc?[VEHICLE_COLOR] ?? '',
+      vehicleMake: doc?[VEHICLE_MAKE] ?? '',
+      favLocation: doc?[FAV_LOCATION] ?? '',
     );
   }
 }
