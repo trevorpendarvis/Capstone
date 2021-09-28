@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/view/auth_view/signin_screen.dart';
 import 'package:monkey_management/view/store_view/store_settings_screen.dart';
 
@@ -72,5 +73,7 @@ class Controller {
 
   Future<void> settings() async {}
 
-  Future<void> signOut() async {}
+  Future<void> signOut() async {
+    FirebaseController.signOut();
+  }
 }

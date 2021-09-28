@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/view/auth_view/signin_screen.dart';
 
@@ -5,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:monkey_management/view/auth_view/signup_screen.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
+import 'package:monkey_management/view/common_view/splash_screen.dart';
 
 import 'package:monkey_management/view/store_view/store_edit_location_screen.dart';
 
@@ -15,6 +17,9 @@ import 'package:monkey_management/view/store_view/store_locations_screen.dart';
 import 'package:monkey_management/view/store_view/options_screen.dart';
 import 'package:monkey_management/view/store_view/store_screen.dart';
 import 'package:monkey_management/view/store_view/store_settings_screen.dart';
+
+import 'controller/firebase_controller.dart';
+import 'model/data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +46,36 @@ class MyApp extends StatelessWidget {
           shape: StadiumBorder(),
         )),
       ),
-      initialRoute: SignInScreen.routeName,
+      home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (ctx, userSnapshot) {
+            if (userSnapshot.connectionState == ConnectionState.waiting) {
+              return SplashScreen();
+            }
+            if (userSnapshot.hasData) {
+
+                return FutureBuilder(
+                  future: FirebaseController.getAccountType(),
+                  builder: (context, AsyncSnapshot<AccountType> asyncSnapshotAccountType)
+                    {
+                      if (asyncSnapshotAccountType.connectionState == ConnectionState.waiting)
+                        return SplashScreen();
+                      else {
+                        if (asyncSnapshotAccountType.data == AccountType.STORE) {
+                          return StoreScreen();
+                        } else if (asyncSnapshotAccountType.data == AccountType.CLIENT) {
+                          return ClientScreen();
+                        } else {
+                          print('error');
+                        }
+                      }
+                      return SplashScreen();
+                    }
+
+                );
+            }
+            return SignInScreen();
+          }),
       routes: {
         SignInScreen.routeName: (context) => SignInScreen(),
         SignUpScreen.routeName: (context) => SignUpScreen(),

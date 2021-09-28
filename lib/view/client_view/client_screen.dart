@@ -111,5 +111,7 @@ class Controller {
 
   Future<void> settings() async {}
 
-  Future<void> signOut() async {}
+  Future<void> signOut() async {
+    FirebaseController.signOut();
+  }
 }
