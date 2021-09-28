@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
         StoreGeneralInfoScreen.routeName: (context) => StoreGeneralInfoScreen(),
         StoreSettingsScreen.routeName: (context) => StoreSettingsScreen(),
         StoreOptionsScreen.routeName: (context) => StoreOptionsScreen(),
+        // StoreEditOptionScreen.routeName: (context) => StoreEditOptionScreen(),
         AddUpdateOptionScreen.routeName: (context) => AddUpdateOptionScreen(),
         StoreLocationsScreen.routeName: (context) => StoreLocationsScreen(),
         StoreEditLocationScreen.routeName: (context) =>
