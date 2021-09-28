@@ -30,9 +30,17 @@ class _SignUpState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[700],
       appBar: AppBar(
-        title: Center(
-          child: Text("Create a New Account"),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 10, right: 20),
+          child: Text(
+            "Create a New Account",
+            style: TextStyle(
+                color: Colors.pinkAccent[400],
+                fontSize: 25,
+                fontWeight: FontWeight.bold),
+          ),
         ),
         backgroundColor: Colors.grey[850],
       ),
@@ -43,11 +51,40 @@ class _SignUpState extends State<SignUpScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Text("Welcome please sign up",
-                    style: Theme.of(context).textTheme.headline5),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(
+                  "Welcome, please sign up!",
+                  style: TextStyle(
+                    color: Colors.pinkAccent[400],
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    decorationThickness: 10,
+                  ),
+                ),
+                SizedBox(
+                  height: 25.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 0.0),
+                  child: Stack(
+                    children: [
+                      Image.asset(
+                        'assets/images/MonkeyLogo.png',
+                        height: 100.0,
+                        width: 100.0,
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
                   child: TextFormField(
+                    style: TextStyle(fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       hintText: "Email",
                       border: OutlineInputBorder(),
@@ -61,9 +98,15 @@ class _SignUpState extends State<SignUpScreen> {
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
                   child: TextFormField(
+                    style: TextStyle(fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       hintText: "Password",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.pink,
+                          width: 1.5,
+                        ),
+                      ),
                     ),
                     obscureText: true,
                     autocorrect: false,
@@ -74,6 +117,7 @@ class _SignUpState extends State<SignUpScreen> {
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
                   child: TextFormField(
+                    style: TextStyle(fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       hintText: "Confirm Password",
                       border: OutlineInputBorder(),
@@ -87,15 +131,21 @@ class _SignUpState extends State<SignUpScreen> {
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.amber, width: 2.0),
+                    border: Border.all(color: Colors.black, width: 2.0),
                   ),
                   child: DropdownButton<String>(
                     isExpanded: true,
                     value: dropdownValue,
-                    icon: const Icon(Icons.arrow_drop_down),
+                    icon: const Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.black,
+                    ),
                     iconSize: 25,
                     elevation: 16,
-                    style: const TextStyle(color: Colors.amber),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                     underline: Container(
                       height: 2,
                     ),
@@ -120,13 +170,23 @@ class _SignUpState extends State<SignUpScreen> {
                       )
                     : Text(
                         con.passwordErrorMessage!,
-                        style: TextStyle(color: Colors.red, fontSize: 14.0),
+                        style: TextStyle(color: Colors.black, fontSize: 14.0),
                       ),
+                SizedBox(
+                  height: 20.0,
+                ),
                 ElevatedButton(
                   onPressed: con.createAccount,
                   child: Text(
-                    "Create",
-                    style: Theme.of(context).textTheme.button,
+                    "Send It!",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.0,
+                      color: Colors.black,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.pinkAccent[400],
                   ),
                 ),
               ],
@@ -145,7 +205,6 @@ class _Controller {
   String? password;
   String? passwordConfirm;
   String? passwordErrorMessage;
-  // Client newProfile = Client();
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -153,8 +212,8 @@ class _Controller {
     if (state.dropdownValue == null) {
       MyDialog.info(
           context: state.context,
-          title: 'select a type',
-          content: 'either client or store');
+          title: 'Select a Type',
+          content: 'Select either client or store.');
       return;
     }
     if (!state.formKey.currentState!.validate()) return;
@@ -168,8 +227,6 @@ class _Controller {
     }
     MyDialog.circularProgressStart(state.context);
     try {
-
-
       if (state.dropdownValue == 'Client') {
         await FirebaseController.createNewClient(
             email: email!, password: password!);
