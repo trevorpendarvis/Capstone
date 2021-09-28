@@ -56,7 +56,6 @@ class MyApp extends StatelessWidget {
         StoreLocationsScreen.routeName: (context) => StoreLocationsScreen(),
         StoreEditLocationScreen.routeName: (context) =>
             StoreEditLocationScreen(),
-        //ProfileScreen.routeName: (context) => ProfileScreen(),
       },
     );
   }
