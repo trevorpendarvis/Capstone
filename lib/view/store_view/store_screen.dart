@@ -31,6 +31,7 @@ class _StoreScreenState extends State<StoreScreen> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         appBar: AppBar(
+
           title: Center(
               child: Text(
             'Store Home',
@@ -38,10 +39,42 @@ class _StoreScreenState extends State<StoreScreen> {
           )),
           backgroundColor: Colors.amber,
           automaticallyImplyLeading: false,
+
+//           title: Padding(
+//             padding: const EdgeInsets.only(left: 80, right: 5),
+//             child: Text(
+//               'Store Home',
+//               style: TextStyle(color: Colors.black),
+//             ),
+//           ),
+          backgroundColor: Colors.pinkAccent[400],
+        ),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              ListTile(
+                leading: Icon(Icons.people_outline),
+                title: Text("Profile"),
+                onTap: con?.profile,
+              ),
+              ListTile(
+                leading: Icon(Icons.settings),
+                title: Text("Settings"),
+                onTap: con?.settings,
+              ),
+              ListTile(
+                leading: Icon(Icons.exit_to_app),
+                title: Text("Sign Out"),
+                onTap: con?.signOut,
+              ),
+            ],
+          ),
+
         ),
         body: Center(
           child: Text('This is the store screen'),
         ),
+
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: currentIndex,
           items: [
@@ -72,6 +105,7 @@ class _StoreScreenState extends State<StoreScreen> {
             }
           },
         ),
+
       ),
     );
   }
@@ -80,6 +114,10 @@ class _StoreScreenState extends State<StoreScreen> {
 class Controller {
   _StoreScreenState state;
   Controller(this.state);
+  Future<void> profile() async {}
+
+  Future<void> settings() async {}
+
 
   List<Location> locations = [];
 
@@ -91,4 +129,6 @@ class Controller {
       print(e);
     }
   }
+
+  Future<void> signOut() async {}
 }

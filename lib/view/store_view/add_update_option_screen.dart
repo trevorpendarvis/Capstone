@@ -32,7 +32,7 @@ class _AddUpdateOptionScreenState extends State<AddUpdateOptionScreen> {
           style: TextStyle(color: Colors.black),
         ),
         foregroundColor: Colors.black,
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.pinkAccent[400],
       ),
       body: Container(
           padding: EdgeInsets.all(8.0),
@@ -85,11 +85,12 @@ class _AddUpdateOptionScreenState extends State<AddUpdateOptionScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: () {},
-                      child: Text("Delete", style: Theme.of(context).textTheme.button),
+                      child: Text("Delete",
+                          style: Theme.of(context).textTheme.button),
                     ),
                     ElevatedButton(
                       onPressed: con?.onSave,
-                      child: Text("Done", style: Theme.of(context).textTheme.button),
+                      child: Text('Done', style: Theme.of(context).textTheme.button),
                     ),
                   ],
                 )

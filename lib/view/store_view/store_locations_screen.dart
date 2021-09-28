@@ -36,7 +36,7 @@ class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
           style: TextStyle(color: Colors.black),
         ),
         foregroundColor: Colors.black,
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.pinkAccent[400],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(

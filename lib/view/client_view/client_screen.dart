@@ -37,7 +37,8 @@ class _ClientScreenState extends State<ClientScreen> {
     return FutureBuilder(
         future: con!.fetchData(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return CircularProgressIndicator();
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return CircularProgressIndicator();
           if (snapshot.connectionState == ConnectionState.done)
             return WillPopScope(
               onWillPop: () => Future.value(false),
@@ -45,7 +46,27 @@ class _ClientScreenState extends State<ClientScreen> {
                 appBar: AppBar(
                   title: Center(child: Text('Client Home')),
                   backgroundColor: Colors.indigoAccent,
-                  automaticallyImplyLeading: false,
+                ),
+                drawer: Drawer(
+                  child: ListView(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.people_outline),
+                        title: Text("Profile"),
+                        onTap: con?.profile,
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.settings),
+                        title: Text("Settings"),
+                        onTap: con?.settings,
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.exit_to_app),
+                        title: Text("Sign Out"),
+                        onTap: con?.signOut,
+                      ),
+                    ],
+                  ),
                 ),
                 body: Container(
                   child: Column(
@@ -53,38 +74,15 @@ class _ClientScreenState extends State<ClientScreen> {
                       Text('List of stores'),
                       Expanded(
                         child: ListView.builder(
-                            itemCount: con!.stores.length,
-                            itemBuilder: (context, index) => ListTile(
-                                  title: Text(con!.stores[index].name),
-                                  subtitle: Text(con!.stores[index].email),
-                                ),),
+                          itemCount: con!.stores.length,
+                          itemBuilder: (context, index) => ListTile(
+                            title: Text(con!.stores[index].name),
+                            subtitle: Text(con!.stores[index].email),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
-                bottomNavigationBar: BottomNavigationBar(
-                  currentIndex: currentIndex,
-                  items: [
-                    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home', backgroundColor: Colors.blueGrey),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.settings), label: 'Settings', backgroundColor: Colors.blueGrey),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.exit_to_app), label: 'Logout', backgroundColor: Colors.blueGrey),
-                  ],
-                  onTap: (index) {
-                    render((index) {
-                      currentIndex = index;
-                    });
-                    if (index == 0) {
-                      //Action for homescrren
-                    } else if (index == 1) {
-                      //action for settings
-                    } else if (index == 2) {
-                      //action for logout
-                    } else {
-                      print('error');
-                    }
-                  },
                 ),
               ),
             );
@@ -107,6 +105,11 @@ class Controller {
   */
   Future<void> fetchData() async {
     stores = await FirebaseController.fetchStores();
-
   }
+
+  Future<void> profile() async {}
+
+  Future<void> settings() async {}
+
+  Future<void> signOut() async {}
 }
