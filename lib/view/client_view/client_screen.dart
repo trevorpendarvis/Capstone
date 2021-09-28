@@ -116,6 +116,7 @@ class Controller {
   List<Store> stores = [];
 
   late Client clientProfile;
+  late bool isNewUser; //Do I need late? 
 
   /*
   * we should put all the fetching operations,
@@ -132,6 +133,7 @@ class Controller {
         arguments: {
           // "user": state.user,
           "one_clientProfile": clientProfile,
+          'isNewUser': false,
         }
       );
     Navigator.pop(state.context); //pop the drawer
