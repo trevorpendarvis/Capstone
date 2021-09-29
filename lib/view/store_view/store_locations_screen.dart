@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/location.dart';
+import 'package:monkey_management/view/common_view/splash_screen.dart';
 import 'package:monkey_management/view/store_view/store_edit_location_screen.dart';
 
 class StoreLocationsScreen extends StatefulWidget {
@@ -13,7 +16,6 @@ class StoreLocationsScreen extends StatefulWidget {
 class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
   Controller? con;
   User? store;
-  List<Location>? locations;
 
   @override
   void initState() {
@@ -25,9 +27,9 @@ class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map args = ModalRoute.of(context)!.settings.arguments as Map;
-    locations = args["locations"];
-    print(locations![0].StoreAddress);
+    // Map args = ModalRoute.of(context)!.settings.arguments as Map;
+    // locations = args["locations"];
+    // print(locations![0].StoreAddress);
     return Scaffold(
       appBar: AppBar(
         /*  */
@@ -46,22 +48,38 @@ class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
         backgroundColor: Colors.blue[400],
         onPressed: () => con!.handleAddLocationButton(),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Text('List of store locations'),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: locations!.length,
-                  itemBuilder: (context, index) => ListTile(
-                        leading: Icon(Icons.settings),
-                        title: Text(locations![index].StoreName),
-                        onTap: () => con?.locationSettings(locations![index]),
-                      )),
-            )
-          ],
-        ),
-      ),
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: FirebaseController.locationsStream(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> locationsSnapshot) {
+            if (locationsSnapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            if (locationsSnapshot.hasData) {
+              List<Location> locations = Location.deserializeToList(locationsSnapshot.data!);
+              return Container(
+                child: Column(
+                  children: [
+                    Text('List of store locations'),
+                    Expanded(
+                      child: ListView.builder(
+                          itemCount: locations.length,
+                          itemBuilder: (context, index) => ListTile(
+                                leading: Icon(Icons.settings),
+                                title: Text(locations[index].StoreName),
+                                onTap: () => con?.locationSettings(locations[index]),
+                              )),
+                    )
+                  ],
+                ),
+              );
+            }
+
+            print(locationsSnapshot.error);
+            return Text('error');
+          }),
     );
   }
 }
@@ -71,21 +89,21 @@ class Controller {
 
   Controller(this.state);
 
+  List<Location>? locations;
+
   void handleAddLocationButton() {
-    Navigator.pushNamed(state.context, StoreEditLocationScreen.routeName,
-        arguments: {
-          "locationName": "",
-          "locationAddress": "",
-          "isNewLocation": true,
-        });
+    Navigator.pushNamed(state.context, StoreEditLocationScreen.routeName, arguments: {
+      "locationName": "",
+      "locationAddress": "",
+      "isNewLocation": true,
+    });
   }
 
   Future<void> locationSettings(Location? location) async {
-    await Navigator.pushNamed(state.context, StoreEditLocationScreen.routeName,
-        arguments: {
-          "locationName": location!.StoreName,
-          "locationAddress": location.StoreAddress,
-          'isNewLocation': false,
-        });
+    await Navigator.pushNamed(state.context, StoreEditLocationScreen.routeName, arguments: {
+      "locationName": location!.StoreName,
+      "locationAddress": location.StoreAddress,
+      'isNewLocation': false,
+    });
   }
 }

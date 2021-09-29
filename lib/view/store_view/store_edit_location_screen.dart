@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/location.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
+import 'package:monkey_management/view/store_view/store_locations_screen.dart';
 
 class StoreEditLocationScreen extends StatefulWidget {
   static const routeName = "/store_edit_location_screen";
 
   @override
-  _StoreEditLocationScreenState createState() =>
-      _StoreEditLocationScreenState();
+  _StoreEditLocationScreenState createState() => _StoreEditLocationScreenState();
 }
 
 class _StoreEditLocationScreenState extends State<StoreEditLocationScreen> {
@@ -117,23 +117,20 @@ class _StoreEditLocationScreenState extends State<StoreEditLocationScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: con?.delete,
-                    child: Text("Delete",
-                        style: Theme.of(context).textTheme.button),
+                    child: Text("Delete", style: Theme.of(context).textTheme.button),
                   ),
                   isNewLocation!
                       ?
                       // Add new location
                       ElevatedButton(
                           onPressed: con?.onSave,
-                          child: Text("Done",
-                              style: Theme.of(context).textTheme.button),
+                          child: Text("Done", style: Theme.of(context).textTheme.button),
                         )
                       :
                       // Update existing location
                       ElevatedButton(
                           onPressed: con?.onUpdate,
-                          child: Text("Update",
-                              style: Theme.of(context).textTheme.button),
+                          child: Text("Update", style: Theme.of(context).textTheme.button),
                         ),
                 ],
               )
@@ -145,7 +142,9 @@ class _StoreEditLocationScreenState extends State<StoreEditLocationScreen> {
 
 class Controller {
   _StoreEditLocationScreenState state;
+
   Controller(this.state);
+
   Location _location = Location();
 
   String? validateStoreName(String? value) {
