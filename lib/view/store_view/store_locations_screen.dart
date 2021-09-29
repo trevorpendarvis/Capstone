@@ -54,7 +54,9 @@ class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
               child: ListView.builder(
                   itemCount: locations!.length,
                   itemBuilder: (context, index) => ListTile(
+                        leading: Icon(Icons.settings),
                         title: Text(locations![index].StoreName),
+                        onTap: () => con?.locationSettings(locations![index]),
                       )),
             )
           ],
@@ -70,9 +72,20 @@ class Controller {
   Controller(this.state);
 
   void handleAddLocationButton() {
-    Navigator.pushNamed(
-      state.context, StoreEditLocationScreen.routeName,
-      // arguments: {'isEdit': false}
-    );
+    Navigator.pushNamed(state.context, StoreEditLocationScreen.routeName,
+        arguments: {
+          "locationName": "",
+          "locationAddress": "",
+          "isNewLocation": true,
+        });
+  }
+
+  Future<void> locationSettings(Location? location) async {
+    await Navigator.pushNamed(state.context, StoreEditLocationScreen.routeName,
+        arguments: {
+          "locationName": location!.StoreName,
+          "locationAddress": location.StoreAddress,
+          'isNewLocation': false,
+        });
   }
 }

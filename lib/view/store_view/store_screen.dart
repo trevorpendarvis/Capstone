@@ -31,7 +31,6 @@ class _StoreScreenState extends State<StoreScreen> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         appBar: AppBar(
-
           title: Center(
               child: Text(
             'Store Home',
@@ -69,12 +68,10 @@ class _StoreScreenState extends State<StoreScreen> {
               ),
             ],
           ),
-
         ),
         body: Center(
           child: Text('This is the store screen'),
         ),
-
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: currentIndex,
           items: [
@@ -97,15 +94,16 @@ class _StoreScreenState extends State<StoreScreen> {
               //Action for homescrren
             } else if (index == 1) {
               //action for settings
-              Navigator.pushNamed(context, StoreSettingsScreen.routeName, arguments: {"locations": con!.locations});
+              Navigator.pushNamed(context, StoreSettingsScreen.routeName,
+                  arguments: {"locations": con!.locations});
             } else if (index == 2) {
               //action for logout
+              con!.signOut();
             } else {
               print('error');
             }
           },
         ),
-
       ),
     );
   }

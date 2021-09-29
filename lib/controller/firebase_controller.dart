@@ -140,7 +140,8 @@ class FirebaseController {
     await ref.set(profile!.serialize());
   }
 
-  static Future<void> updateClientProfile(String? docId, Map<String, dynamic> updateInfo) async {
+  static Future<void> updateClientProfile(
+      String? docId, Map<String, dynamic> updateInfo) async {
     await FirebaseFirestore.instance
         .collection(Client.COLLECTION)
         .doc(docId)
@@ -227,5 +228,17 @@ class FirebaseController {
       print(e);
     }
     return locations;
+  }
+
+  static Future<void> deleteLocation(String locationName) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(Location.COLLECTION)
+          .where(Location.STORE_NAME, isEqualTo: locationName)
+          .get()
+          .then((value) => value.docs.forEach((element) {
+                element.reference.delete();
+              }));
+    } catch (e) {}
   }
 }
