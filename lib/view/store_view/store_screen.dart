@@ -79,9 +79,13 @@ class _StoreScreenState extends State<StoreScreen> {
 class Controller {
   _StoreScreenState state;
   Controller(this.state);
+  List<Location> locations = [];
+
   Future<void> profile() async {}
 
-  Future<void> settings() async {}
+  Future<void> settings() async {
+    Navigator.pushNamed(state.context, StoreSettingsScreen.routeName, arguments: {'locations': locations});
+  }
 
   Future<void> signOut() async {
     FirebaseController.signOut();
@@ -94,7 +98,6 @@ class Controller {
 //     Navigator.of(state.context).pop(); //pop home screen
   }
 
-  List<Location> locations = [];
 
   // Place for all the fectching operations.
   Future<void> fetchData() async {

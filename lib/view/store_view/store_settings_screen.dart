@@ -24,7 +24,7 @@ class _StoreSettingsScreenState extends State<StoreSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     Map args = ModalRoute.of(context)!.settings.arguments as Map;
-    locations = args["locations"];
+    locations = args["locations"] ?? [];
     return Scaffold(
       appBar: AppBar(
         title: Text(
