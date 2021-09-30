@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:monkey_management/view/auth_view/signup_screen.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
+import 'package:monkey_management/view/client_view/store_info_screen.dart';
 import 'package:monkey_management/view/common_view/splash_screen.dart';
 
 import 'package:monkey_management/view/store_view/store_edit_location_screen.dart';
@@ -53,25 +54,25 @@ class MyApp extends StatelessWidget {
               return SplashScreen();
             }
             if (userSnapshot.hasData) {
-
-                return FutureBuilder(
+              return FutureBuilder(
                   future: FirebaseController.getAccountType(),
-                  builder: (context, AsyncSnapshot<AccountType> asyncSnapshotAccountType)
-                    {
-                      if (asyncSnapshotAccountType.connectionState == ConnectionState.waiting)
-                        return SplashScreen();
-                      else {
-                        if (asyncSnapshotAccountType.data == AccountType.STORE) {
-                          return StoreScreen();
-                        } else if (asyncSnapshotAccountType.data == AccountType.CLIENT) {
-                          return ClientScreen();
-                        } else {
-                          print('error');
-                        }
-                      }
+                  builder: (context,
+                      AsyncSnapshot<AccountType> asyncSnapshotAccountType) {
+                    if (asyncSnapshotAccountType.connectionState ==
+                        ConnectionState.waiting)
                       return SplashScreen();
+                    else {
+                      if (asyncSnapshotAccountType.data == AccountType.STORE) {
+                        return StoreScreen();
+                      } else if (asyncSnapshotAccountType.data ==
+                          AccountType.CLIENT) {
+                        return ClientScreen();
+                      } else {
+                        print('error');
+                      }
                     }
-                );
+                    return SplashScreen();
+                  });
             }
             return SignInScreen();
           }),
@@ -90,6 +91,7 @@ class MyApp extends StatelessWidget {
         StoreLocationsScreen.routeName: (context) => StoreLocationsScreen(),
         StoreEditLocationScreen.routeName: (context) =>
             StoreEditLocationScreen(),
+        StoreInfoScreen.routeName: (context) => StoreInfoScreen(),
       },
     );
   }

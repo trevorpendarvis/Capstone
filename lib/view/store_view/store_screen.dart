@@ -37,7 +37,6 @@ class _StoreScreenState extends State<StoreScreen> {
             style: TextStyle(color: Colors.black),
           )),
           // backgroundColor: Colors.amber,
-          automaticallyImplyLeading: false,
 
 //           title: Padding(
 //             padding: const EdgeInsets.only(left: 80, right: 5),
@@ -71,38 +70,6 @@ class _StoreScreenState extends State<StoreScreen> {
         ),
         body: Center(
           child: Text('This is the store screen'),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: currentIndex,
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-                backgroundColor: Colors.blueGrey),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: 'Settings',
-                backgroundColor: Colors.blueGrey),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.exit_to_app),
-                label: 'Logout',
-                backgroundColor: Colors.blueGrey),
-          ],
-          onTap: (index) {
-            render(() => currentIndex = index);
-            if (index == 0) {
-              //Action for homescrren
-            } else if (index == 1) {
-              //action for settings
-              Navigator.pushNamed(context, StoreSettingsScreen.routeName,
-                  arguments: {"locations": con!.locations});
-            } else if (index == 2) {
-              //action for logout
-              con!.signOut();
-            } else {
-              print('error');
-            }
-          },
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/model/store.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
+import 'package:monkey_management/view/client_view/store_info_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
 import 'package:monkey_management/view/common_view/splash_screen.dart';
 
@@ -35,12 +36,10 @@ class _ClientScreenState extends State<ClientScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     //CAITLYN
     //Map? args = ModalRoute.of(context)!.settings.arguments as Map?; //Do I need cast?
     // user ??= args!["user"];
     //clientProfile ??= args!["one_clientProfile"];
-
 
     /*
     * FutureBuilder will build something in the future
@@ -70,7 +69,8 @@ class _ClientScreenState extends State<ClientScreen> {
                       ListTile(
                         leading: Icon(Icons.people_outline),
                         title: Text("Account Settings"),
-                        onTap: () => con?.accountSettings(FirebaseAuth.instance.currentUser!.uid),
+                        onTap: () => con?.accountSettings(
+                            FirebaseAuth.instance.currentUser!.uid),
                       ),
                       // ListTile(
                       //   leading: Icon(Icons.settings),
@@ -95,6 +95,7 @@ class _ClientScreenState extends State<ClientScreen> {
                           itemBuilder: (context, index) => ListTile(
                             title: Text(con!.stores[index].name),
                             subtitle: Text(con!.stores[index].email),
+                            onTap: () => con!.handleStoreListTile(index),
                           ),
                         ),
                       ),
@@ -113,11 +114,11 @@ class Controller {
   _ClientScreenState state;
 
   Controller(this.state);
-
+  late Store selectedStore;
   List<Store> stores = [];
 
   late Client clientProfile;
-  late bool isNewUser; //Do I need late? 
+  late bool isNewUser; //Do I need late?
 
   /*
   * we should put all the fetching operations,
@@ -125,25 +126,30 @@ class Controller {
   */
   Future<void> fetchData() async {
     stores = await FirebaseController.fetchStores();
-    clientProfile = await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
+    clientProfile = await FirebaseController.getClientProfile(
+        FirebaseAuth.instance.currentUser!.uid);
   }
 
   Future<void> accountSettings(String? uid) async {
-
     await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName,
         arguments: {
           // "user": state.user,
           "one_clientProfile": clientProfile,
           'isNewUser': false,
-        }
-      );
+        });
     Navigator.pop(state.context); //pop the drawer
     state.render(() {});
+  }
+
+  void handleStoreListTile(int index) {
+    selectedStore = stores[index];
+    Navigator.pushNamed(state.context, StoreInfoScreen.routeName,
+        arguments: {'store': selectedStore});
   }
 
   Future<void> signOut() async {
     FirebaseController.signOut();
 
-  //Future<void> settings() async {}
+    //Future<void> settings() async {}
   }
 }
