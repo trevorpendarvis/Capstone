@@ -231,4 +231,10 @@ class FirebaseController {
               }));
     } catch (e) {}
   }
+
+  static Future<Option> getOption(String uid) async {
+    var result = await FirebaseFirestore.instance.collection(Option.COLLECTION).doc(uid).get();
+
+    return Option.deserialize(result.data(), uid);
+  }
 }
