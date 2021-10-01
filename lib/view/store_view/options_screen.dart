@@ -30,14 +30,17 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
         foregroundColor: Colors.black,
         backgroundColor: Colors.pinkAccent[400],
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+        ),
+        backgroundColor: Colors.blue,
+        onPressed: () => con!.handleAddOptionButton(),
+      ),
       body: Container(
         child: Row(
           children: [
             Text('Place holder for a list of options'),
-            ElevatedButton(
-              onPressed: () => con!.handleAddOptionButton(),
-              child: Text('Add New Option'),
-            ),
           ],
         ),
       ),
