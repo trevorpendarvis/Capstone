@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+# !!! Deprecated
+## Enter your story in [here](https://docs.google.com/spreadsheets/d/10i5jEY8AlIoFSdYiEwXDsNCFTHAVFJoz/edit?rtpof=true) instead.
 **From epic: #**\
 *When create an issue/story, in "\* Item 1", please delete "Item 1", keep "\* ", then write your words*
   
