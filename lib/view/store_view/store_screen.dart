@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/location.dart';
@@ -31,11 +32,10 @@ class _StoreScreenState extends State<StoreScreen> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         appBar: AppBar(
-          title: Center(
-              child: Text(
-            'Store Home',
-            style: TextStyle(color: Colors.black),
-          )),
+          title: Text(
+            '${FirebaseAuth.instance.currentUser!.email}',
+            style: TextStyle(color: Colors.white),
+          ),
           // backgroundColor: Colors.amber,
 
 //           title: Padding(
@@ -69,7 +69,7 @@ class _StoreScreenState extends State<StoreScreen> {
           ),
         ),
         body: Center(
-          child: Text('This is the store screen'),
+          child: Text('Place holder for the list of incoming appointments.'),
         ),
       ),
     );
