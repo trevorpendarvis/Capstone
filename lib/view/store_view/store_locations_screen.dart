@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/location.dart';
-import 'package:monkey_management/view/common_view/splash_screen.dart';
+import 'package:monkey_management/view/common_view/loading_screen.dart';
 import 'package:monkey_management/view/store_view/store_edit_location_screen.dart';
 
 class StoreLocationsScreen extends StatefulWidget {

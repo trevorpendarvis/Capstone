@@ -37,12 +37,8 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
         backgroundColor: Colors.blue,
         onPressed: () => con!.handleAddOptionButton(),
       ),
-      body: Container(
-        child: Row(
-          children: [
-            Text('Place holder for a list of options'),
-          ],
-        ),
+      body: Center(
+        child: Text('Place holder for a list of options'),
       ),
     );
   }

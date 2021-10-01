@@ -31,16 +31,11 @@ class SignInState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(
-            left: 65.0,
-            right: 10.0,
-          ),
-          child: Text(
-            'Hello! Please Sign In!',
-            //textAlign: TextAlign.right,
-            style: TextStyle(color: Colors.pink[500], fontFamily: 'BowlbyOneSC', fontSize: 20.0),
-          ),
+        backgroundColor: Colors.white,
+        title: Text(
+          'Hello! Please Sign In!',
+          //textAlign: TextAlign.right,
+          style: TextStyle(color: Colors.pink[500], fontFamily: 'BowlbyOneSC', fontSize: 20.0),
         ),
       ),
       body: SingleChildScrollView(

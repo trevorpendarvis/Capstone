@@ -7,7 +7,7 @@ import 'package:monkey_management/view/auth_view/signup_screen.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
 import 'package:monkey_management/view/client_view/store_info_screen.dart';
-import 'package:monkey_management/view/common_view/splash_screen.dart';
+import 'package:monkey_management/view/common_view/loading_screen.dart';
 
 import 'package:monkey_management/view/store_view/store_edit_location_screen.dart';
 
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (ctx, userSnapshot) {
             if (userSnapshot.connectionState == ConnectionState.waiting) {
-              return SplashScreen();
+              return LoadingScreen();
             }
             if (userSnapshot.hasData) {
               return FutureBuilder(
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
                       AsyncSnapshot<AccountType> asyncSnapshotAccountType) {
                     if (asyncSnapshotAccountType.connectionState ==
                         ConnectionState.waiting)
-                      return SplashScreen();
+                      return LoadingScreen();
                     else {
                       if (asyncSnapshotAccountType.data == AccountType.STORE) {
                         return StoreScreen();
@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
                         print('error');
                       }
                     }
-                    return SplashScreen();
+                    return LoadingScreen();
                   });
             }
             return SignInScreen();
