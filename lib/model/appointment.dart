@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:monkey_management/controller/firebase_controller.dart';
 
 import 'option.dart';
 
@@ -37,13 +38,13 @@ class Appointment {
     };
   }
 
-  static Appointment deserialize(Map<String, dynamic>? doc, String docId) {
+  static Future<Appointment> deserialize(Map<String, dynamic>? doc, String docId) async {
     Appointment appointment = Appointment();
 
     appointment.clientId = doc![CLIENT_ID] ?? '';
     appointment.storeId = doc[STORE_ID] ?? '';
     appointment.appointmentTime = doc[APPOINTMENT_TIME].toDate() ?? DateTime.now();
-    // appointment.option = doc![CLIENT_ID] ?? ''; // need a list of options to deserialize
+    appointment.option = await FirebaseController.getOption(doc[OPTION_ID]);
     appointment.createdAt = doc[CREATED_AT].toDate() ?? DateTime.now();
     appointment.createdBy = doc[CREATED_BY] ?? '';
     appointment.isCanceled = doc[IS_CANCELED] ?? false;
@@ -52,11 +53,13 @@ class Appointment {
     return appointment;
   }
 
-  static List<Appointment> deserializeToList(QuerySnapshot<Map<String, dynamic>> docs) {
+  static Future<List<Appointment>> deserializeToList(QuerySnapshot<Map<String, dynamic>> docs) async {
     List<Appointment> appointments = [];
 
-    docs.docs.forEach((element) {
-      appointments.add(deserialize(element.data(), element.id));
+    docs.docs.forEach((element) async {
+      Appointment appointment = await deserialize(element.data(), element.id);
+
+      appointments.add(appointment);
     });
     return appointments;
   }
