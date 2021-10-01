@@ -11,9 +11,17 @@ class LoadingScreen extends StatefulWidget {
 class _SplashState extends State<LoadingScreen> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body: Center(child: Text("Just a sec ...")),
+      body: Center(
+        child: Text(
+          "Just a sec ...",
+          style: TextStyle(
+            fontSize: 36.0,
+            color: Colors.black38,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 }

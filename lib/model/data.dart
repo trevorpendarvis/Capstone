@@ -4,3 +4,11 @@
 enum AccountType {
   CLIENT, STORE,
 }
+
+class Data {
+
+  // Client side
+
+
+  // Store side
+}
