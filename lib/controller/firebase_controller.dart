@@ -237,4 +237,24 @@ class FirebaseController {
 
     return Option.deserialize(result.data(), uid);
   }
+
+  static Future<List<Option>> getOptions(String storeId) async {
+    List<Option> options = [];
+
+    await FirebaseFirestore.instance
+        .collection(Option.COLLECTION)
+        .where(Option.STORE_ID, isEqualTo: storeId)
+        .get()
+        .then((data) => {
+              if (data.docs.isNotEmpty)
+                {
+                  data.docs.forEach((doc) {
+                    Option option = Option.deserialize(doc.data(), doc.id);
+                    options.add(option);
+                  })
+                }
+            });
+
+    return options;
+  }
 }
