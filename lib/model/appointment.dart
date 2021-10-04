@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:monkey_management/controller/firebase_controller.dart';
+
 import 'option.dart';
 
 class Appointment {
@@ -9,4 +12,55 @@ class Appointment {
   String createdBy = '';
   bool isCanceled =  false;
   bool isCompleted =  false;
+
+  static const COLLECTION = 'appointments';
+  static const CLIENT_ID = 'client_id';
+  static const STORE_ID = 'store_id';
+  static const APPOINTMENT_TIME = 'appointment_time';
+  static const OPTION_ID = 'option_id';
+  static const CREATED_AT = 'created_at';
+  static const CREATED_BY = 'created_by';
+  static const IS_CANCELED = 'is_canceled';
+  static const IS_COMPLETED = 'is_completed';
+
+  Appointment();
+
+  Map<String, dynamic> serialize() {
+    return <String, dynamic>{
+    CLIENT_ID: this.clientId,
+    STORE_ID: this.storeId,
+    APPOINTMENT_TIME: this.appointmentTime,
+    OPTION_ID: this.option.id,
+    CREATED_AT: this.createdAt,
+    CREATED_BY: this.createdBy,
+    IS_CANCELED: this.isCanceled,
+    IS_COMPLETED: this.isCompleted,
+    };
+  }
+
+  static Future<Appointment> deserialize(Map<String, dynamic>? doc, String docId) async {
+    Appointment appointment = Appointment();
+
+    appointment.clientId = doc![CLIENT_ID] ?? '';
+    appointment.storeId = doc[STORE_ID] ?? '';
+    appointment.appointmentTime = doc[APPOINTMENT_TIME].toDate() ?? DateTime.now();
+    appointment.option = await FirebaseController.getOption(doc[OPTION_ID]);
+    appointment.createdAt = doc[CREATED_AT].toDate() ?? DateTime.now();
+    appointment.createdBy = doc[CREATED_BY] ?? '';
+    appointment.isCanceled = doc[IS_CANCELED] ?? false;
+    appointment.isCompleted = doc[IS_COMPLETED] ?? false;
+
+    return appointment;
+  }
+
+  static Future<List<Appointment>> deserializeToList(QuerySnapshot<Map<String, dynamic>> docs) async {
+    List<Appointment> appointments = [];
+
+    docs.docs.forEach((element) async {
+      Appointment appointment = await deserialize(element.data(), element.id);
+
+      appointments.add(appointment);
+    });
+    return appointments;
+  }
 }

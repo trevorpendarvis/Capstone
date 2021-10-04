@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/location.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
+import 'package:monkey_management/view/store_view/store_locations_screen.dart';
 
 class StoreEditLocationScreen extends StatefulWidget {
   static const routeName = "/store_edit_location_screen";
 
   @override
-  _StoreEditLocationScreenState createState() =>
-      _StoreEditLocationScreenState();
+  _StoreEditLocationScreenState createState() => _StoreEditLocationScreenState();
 }
 
 class _StoreEditLocationScreenState extends State<StoreEditLocationScreen> {
   Controller? con;
 
   var formKey = GlobalKey<FormState>();
+  String? locationName;
+  String? locationAddress;
+  bool? isNewLocation;
 
   @override
   void initState() {
@@ -26,6 +29,10 @@ class _StoreEditLocationScreenState extends State<StoreEditLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Map? args = ModalRoute.of(context)!.settings.arguments as Map?;
+    locationName = args!['locationName'];
+    locationAddress = args['locationAddress'];
+    isNewLocation = args['isNewLocation'] ?? true;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -41,49 +48,90 @@ class _StoreEditLocationScreenState extends State<StoreEditLocationScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SingleChildScrollView(
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: "Location Store Name",
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: con?.validateStoreName,
-                          onSaved: con?.saveStoreName,
+                child: isNewLocation!
+                    ? // If this is a new location
+                    Form(
+                        key: formKey,
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: "Location Store Name",
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: con?.validateStoreName,
+                                onSaved: con?.saveStoreName,
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: "Address",
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: con?.validateStoreAddress,
+                                onSaved: con?.saveStoreAddress,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : // If it's an existing location
+                    Form(
+                        key: formKey,
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                              child: TextFormField(
+                                initialValue: locationName,
+                                decoration: InputDecoration(
+                                  // hintText: locationName,
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: con?.validateStoreName,
+                                onSaved: con?.saveStoreName,
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                              child: TextFormField(
+                                initialValue: locationAddress,
+                                decoration: InputDecoration(
+                                  // hintText: locationAddress,
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: con?.validateStoreAddress,
+                                onSaved: con?.saveStoreAddress,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: "Address",
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: con?.validateStoreAddress,
-                          onSaved: con?.saveStoreAddress,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
-                    child: Text("Delete",
-                        style: Theme.of(context).textTheme.button),
+                    onPressed: con?.delete,
+                    child: Text("Delete", style: Theme.of(context).textTheme.button),
                   ),
-                  ElevatedButton(
-                    onPressed: con?.onSave,
-                    child:
-                        Text("Done", style: Theme.of(context).textTheme.button),
-                  ),
+                  isNewLocation!
+                      ?
+                      // Add new location
+                      ElevatedButton(
+                          onPressed: con?.onSave,
+                          child: Text("Done", style: Theme.of(context).textTheme.button),
+                        )
+                      :
+                      // Update existing location
+                      ElevatedButton(
+                          onPressed: con?.onUpdate,
+                          child: Text("Update", style: Theme.of(context).textTheme.button),
+                        ),
                 ],
               )
             ],
@@ -94,7 +142,9 @@ class _StoreEditLocationScreenState extends State<StoreEditLocationScreen> {
 
 class Controller {
   _StoreEditLocationScreenState state;
+
   Controller(this.state);
+
   Location _location = Location();
 
   String? validateStoreName(String? value) {
@@ -132,6 +182,35 @@ class Controller {
     try {
       await FirebaseController.addLocation(_location);
 
+      MyDialog.circularProgressStop(state.context);
+      Navigator.pop(state.context);
+    } catch (e) {
+      MyDialog.circularProgressStop(state.context);
+      MyDialog.info(context: state.context, title: 'Error', content: '$e');
+    }
+  }
+
+  // Still working on this function
+  Future<void> onUpdate() async {
+    if (!state.formKey.currentState!.validate()) {
+      return;
+    }
+
+    // MyDialog.circularProgressStart(state.context);
+    state.formKey.currentState!.save();
+
+    print("Store name = " + _location.StoreName);
+  }
+
+  Future<void> delete() async {
+    if (!state.formKey.currentState!.validate()) {
+      return;
+    }
+
+    MyDialog.circularProgressStart(state.context);
+    state.formKey.currentState!.save();
+    try {
+      await FirebaseController.deleteLocation(_location.StoreName);
       MyDialog.circularProgressStop(state.context);
       Navigator.pop(state.context);
     } catch (e) {

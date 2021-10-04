@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Location {
   String StoreName = '';
   String StoreAddress = '';
@@ -24,5 +26,14 @@ class Location {
     location.StoreAddress = doc?[STORE_ADDRESS];
     location.storeId = doc?[STORE_ID];
     return location;
+  }
+
+  static List<Location> deserializeToList(QuerySnapshot<Map<String, dynamic>> docs) {
+    List<Location> locations = [];
+
+    docs.docs.forEach((element) {
+        locations.add(deserialize(element.data(), element.id));
+    });
+    return locations;
   }
 }

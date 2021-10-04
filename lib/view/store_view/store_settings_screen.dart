@@ -24,7 +24,7 @@ class _StoreSettingsScreenState extends State<StoreSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     Map args = ModalRoute.of(context)!.settings.arguments as Map;
-    locations = args["locations"];
+    locations = args["locations"] ?? [];
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -35,17 +35,18 @@ class _StoreSettingsScreenState extends State<StoreSettingsScreen> {
         backgroundColor: Colors.pinkAccent[400],
       ),
       body: Container(
-        child: Column(
+        width: MediaQuery.of(context).size.width,
+        child: ListView(
           children: [
-            Text('Place holder for a list of settings'),
-            ElevatedButton(
-              onPressed: () => con!.handleOptionsButton(),
-              child: Text('Options'),
+            ListTile(
+              title: Text('Options'),
+              trailing: Icon(Icons.arrow_forward_ios_rounded),
+              onTap: () => con!.handleOptionsButton(),
             ),
-            Text('Place holder for store locations'),
-            ElevatedButton(
-              onPressed: () => con!.handleLocationsButton(),
-              child: Text('Locations'),
+            ListTile(
+              title: Text('Locations'),
+              trailing: Icon(Icons.arrow_forward_ios_rounded),
+              onTap: () => con!.handleLocationsButton(),
             ),
           ],
         ),
