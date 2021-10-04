@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/model/option.dart';
@@ -160,6 +161,14 @@ class FirebaseController {
     DocumentReference ref = FirebaseFirestore.instance.collection(Option.COLLECTION).doc();
 
     await ref.set(option.serialize(currentUser!.uid));
+  }
+
+  static Future<void> addAppointment(Appointment appointment) async {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+
+    DocumentReference ref = FirebaseFirestore.instance.collection(Appointment.COLLECTION).doc();
+
+    await ref.set(appointment.serialize());
   }
 
   static Future<void> addLocation(Location location) async {

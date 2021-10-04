@@ -144,13 +144,11 @@ class Controller {
     }
 
     state.formkey.currentState!.save();
-    // MyDialog.circularProgressStart(state.context);
     User? user = await FirebaseController.signIn(email: email!, password: password!);
 
     if (user != null) {
       accountType = await FirebaseController.getAccountType();
 
-      // MyDialog.circularProgressStop(state.context);
 
       if (accountType == AccountType.STORE) {
         Navigator.pushNamed(state.context, StoreScreen.routeName);
