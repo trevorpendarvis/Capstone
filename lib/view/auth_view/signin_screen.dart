@@ -103,7 +103,7 @@ class SignInState extends State<SignInScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Does\'t have an account?',
+                  Text('Don\'t have an account?',
                       style: TextStyle(
                         fontSize: 16.0,
                       )),
