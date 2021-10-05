@@ -397,6 +397,8 @@ class Controller {
 
   void saveAddress(String? value) {
     this.address = value;
+
+    state.tempProfile!.address = value;
   }
 
   String? validateLastName(String? value) {
@@ -409,6 +411,8 @@ class Controller {
 
   void saveLastName(String? value) {
     this.lastName = value;
+
+    state.tempProfile!.lastName = value;
   }
 
   String? validateFirstName(String? value) {
@@ -454,7 +458,7 @@ class Controller {
 
       if (state.clientProfile!.lastName != state.tempProfile!.lastName)
         updateInfo[Client.LASTNAME] = state.tempProfile!.lastName;
-      
+
       if (state.clientProfile!.favLocation != state.tempProfile!.favLocation)
         updateInfo[Client.FAV_LOCATION] = state.tempProfile!.favLocation;
 
