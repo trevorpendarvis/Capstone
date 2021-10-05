@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
+import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/model/store.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
@@ -157,6 +158,9 @@ class Controller {
     stores = await FirebaseController.fetchStores();
     clientProfile =
         await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
+
+    // Appointment appointment = Appointment();
+    // await FirebaseController.addAppointment(appointment);
   }
 
   Future<void> accountSettings(String? uid) async {
