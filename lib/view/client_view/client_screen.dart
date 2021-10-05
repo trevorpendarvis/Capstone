@@ -2,11 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
+import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/model/store.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
+import 'package:monkey_management/view/common_view/loading_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
-import 'package:monkey_management/view/common_view/splash_screen.dart';
 
 class ClientScreen extends StatefulWidget {
   static const routeName = "/client_screen";
@@ -35,12 +36,10 @@ class _ClientScreenState extends State<ClientScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     //CAITLYN
     //Map? args = ModalRoute.of(context)!.settings.arguments as Map?; //Do I need cast?
     // user ??= args!["user"];
     //clientProfile ??= args!["one_clientProfile"];
-
 
     /*
     * FutureBuilder will build something in the future
@@ -54,8 +53,7 @@ class _ClientScreenState extends State<ClientScreen> {
     return FutureBuilder(
         future: con!.fetchData(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return SplashScreen();
+          if (snapshot.connectionState == ConnectionState.waiting) return LoadingScreen();
           if (snapshot.connectionState == ConnectionState.done)
             return WillPopScope(
               onWillPop: () => Future.value(false),
@@ -70,7 +68,8 @@ class _ClientScreenState extends State<ClientScreen> {
                       ListTile(
                         leading: Icon(Icons.people_outline),
                         title: Text("Account Settings"),
-                        onTap: () => con?.accountSettings(FirebaseAuth.instance.currentUser!.uid),
+                        onTap: () =>
+                            con?.accountSettings(FirebaseAuth.instance.currentUser!.uid),
                       ),
                       // ListTile(
                       //   leading: Icon(Icons.settings),
@@ -101,6 +100,38 @@ class _ClientScreenState extends State<ClientScreen> {
                     ],
                   ),
                 ),
+                bottomNavigationBar: BottomNavigationBar(
+                  currentIndex: currentIndex,
+                  items: [
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.home),
+                        label: 'Home',
+                        backgroundColor: Colors.blueGrey),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.settings),
+                        label: 'Settings',
+                        backgroundColor: Colors.blueGrey),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.exit_to_app),
+                        label: 'Logout',
+                        backgroundColor: Colors.blueGrey),
+                  ],
+                  onTap: (index) {
+                    render(() => currentIndex = index);
+                    if (index == 0) {
+                      //Action for homescrren
+                    } else if (index == 1) {
+                      //action for settings
+                      con?.accountSettingsUsingNavigator(
+                          FirebaseAuth.instance.currentUser!.uid);
+                    } else if (index == 2) {
+                      //action for logout
+                      con?.signOut();
+                    } else {
+                      print('error');
+                    }
+                  },
+                ),
               ),
             );
           else
@@ -117,7 +148,7 @@ class Controller {
   List<Store> stores = [];
 
   late Client clientProfile;
-  late bool isNewUser; //Do I need late? 
+  late bool isNewUser; //Do I need late?
 
   /*
   * we should put all the fetching operations,
@@ -125,25 +156,38 @@ class Controller {
   */
   Future<void> fetchData() async {
     stores = await FirebaseController.fetchStores();
-    clientProfile = await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
+    clientProfile =
+        await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
+
+    // Appointment appointment = Appointment();
+    // await FirebaseController.addAppointment(appointment);
   }
 
   Future<void> accountSettings(String? uid) async {
-
     await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName,
         arguments: {
           // "user": state.user,
           "one_clientProfile": clientProfile,
           'isNewUser': false,
-        }
-      );
+        });
     Navigator.pop(state.context); //pop the drawer
+    state.render(() {});
+  }
+
+  Future<void> accountSettingsUsingNavigator(String? uid) async {
+    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName,
+        arguments: {
+          // "user": state.user,
+          "one_clientProfile": clientProfile,
+          'isNewUser': false,
+        });
+    //Navigator.pop(state.context); //pop the drawer
     state.render(() {});
   }
 
   Future<void> signOut() async {
     FirebaseController.signOut();
 
-  //Future<void> settings() async {}
+    //Future<void> settings() async {}
   }
 }

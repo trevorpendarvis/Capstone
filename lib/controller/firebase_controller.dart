@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/model/option.dart';
@@ -115,12 +116,12 @@ class FirebaseController {
   }
 
   //Get a store's profile from Firebase
-  // static Future<Client> getStoreProfile(String uid) async {
-  //   var result =
-  //   await FirebaseFirestore.instance.collection(Store.COLLECTION).doc(uid).get();
-  //
-  //   return Store.deserialize(result.data(), uid);
-  // }
+  static Future<Store> getStoreProfile(String uid) async {
+    var result =
+    await FirebaseFirestore.instance.collection(Store.COLLECTION).doc(uid).get();
+
+    return Store.deserialize(result.data(), uid);
+  }
 
   static Future<void> addClientProfile(Client? profile) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -160,6 +161,14 @@ class FirebaseController {
     DocumentReference ref = FirebaseFirestore.instance.collection(Option.COLLECTION).doc();
 
     await ref.set(option.serialize(currentUser!.uid));
+  }
+
+  static Future<void> addAppointment(Appointment appointment) async {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+
+    DocumentReference ref = FirebaseFirestore.instance.collection(Appointment.COLLECTION).doc();
+
+    await ref.set(appointment.serialize());
   }
 
   static Future<void> addLocation(Location location) async {
@@ -230,5 +239,40 @@ class FirebaseController {
                 element.reference.delete();
               }));
     } catch (e) {}
+  }
+
+  static Future<Option> getOption(String uid) async {
+    var result = await FirebaseFirestore.instance.collection(Option.COLLECTION).doc(uid).get();
+
+    return Option.deserialize(result.data(), uid);
+  }
+
+  static Future<List<Option>> getOptions(String storeId) async {
+    List<Option> options = [];
+
+    await FirebaseFirestore.instance
+        .collection(Option.COLLECTION)
+        .where(Option.STORE_ID, isEqualTo: storeId)
+        .get()
+        .then((data) => {
+              if (data.docs.isNotEmpty)
+                {
+                  data.docs.forEach((doc) {
+                    Option option = Option.deserialize(doc.data(), doc.id);
+                    options.add(option);
+                  })
+                }
+            });
+
+    return options;
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamForStore() {
+    final User? currentStore = FirebaseAuth.instance.currentUser;
+
+    return FirebaseFirestore.instance
+        .collection(Appointment.COLLECTION)
+        .where(Appointment.STORE_ID, isEqualTo: currentStore!.uid)
+        .snapshots();
   }
 }
