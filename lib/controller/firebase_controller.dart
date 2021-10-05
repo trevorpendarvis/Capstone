@@ -116,12 +116,12 @@ class FirebaseController {
   }
 
   //Get a store's profile from Firebase
-  // static Future<Client> getStoreProfile(String uid) async {
-  //   var result =
-  //   await FirebaseFirestore.instance.collection(Store.COLLECTION).doc(uid).get();
-  //
-  //   return Store.deserialize(result.data(), uid);
-  // }
+  static Future<Store> getStoreProfile(String uid) async {
+    var result =
+    await FirebaseFirestore.instance.collection(Store.COLLECTION).doc(uid).get();
+
+    return Store.deserialize(result.data(), uid);
+  }
 
   static Future<void> addClientProfile(Client? profile) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -265,5 +265,14 @@ class FirebaseController {
             });
 
     return options;
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamForStore() {
+    final User? currentStore = FirebaseAuth.instance.currentUser;
+
+    return FirebaseFirestore.instance
+        .collection(Appointment.COLLECTION)
+        .where(Appointment.STORE_ID, isEqualTo: currentStore!.uid)
+        .snapshots();
   }
 }

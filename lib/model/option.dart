@@ -23,12 +23,13 @@ class Option {
   }
 
   static Option deserialize(Map<String, dynamic>? doc, String docId) {
+    print(doc);
     Option option = Option();
     option.id =  docId;
-    option.storeId = doc?[STORE_ID];
-    option.name = doc?[NAME];
-    option.description = doc?[DESCRIPTION];
-    option.price = doc?[PRICE];
+    option.storeId = doc?[STORE_ID] ?? '';
+    option.name = doc?[NAME] ?? 'Unknown';
+    option.description = doc?[DESCRIPTION] ?? '';
+    option.price = doc?[PRICE] ?? 0.0;
     return option;
   }
 }

@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
+import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/location.dart';
 import 'package:monkey_management/view/auth_view/signin_screen.dart';
 import 'package:monkey_management/view/store_view/store_settings_screen.dart';
+import 'package:intl/intl.dart';
 
 class StoreScreen extends StatefulWidget {
   static const routeName = "/store_screen";
+
   const StoreScreen({Key? key}) : super(key: key);
 
   @override
@@ -37,7 +41,6 @@ class _StoreScreenState extends State<StoreScreen> {
             style: TextStyle(color: Colors.black),
           )),
           // backgroundColor: Colors.amber,
-          automaticallyImplyLeading: false,
 
 //           title: Padding(
 //             padding: const EdgeInsets.only(left: 80, right: 5),
@@ -69,39 +72,128 @@ class _StoreScreenState extends State<StoreScreen> {
             ],
           ),
         ),
-        body: Center(
-          child: Text('This is the store screen'),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: currentIndex,
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home), label: 'Home', backgroundColor: Colors.blueGrey),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: 'Settings',
-                backgroundColor: Colors.blueGrey),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.exit_to_app),
-                label: 'Logout',
-                backgroundColor: Colors.blueGrey),
-          ],
-          onTap: (index) {
-            render(() => currentIndex = index);
-            if (index == 0) {
-              //Action for homescrren
-            } else if (index == 1) {
-              //action for settings
-              Navigator.pushNamed(context, StoreSettingsScreen.routeName,
-                  arguments: {"locations": con!.locations});
-            } else if (index == 2) {
-              //action for logout
-              con?.signOut();
-            } else {
-              print('error');
-            }
-          },
-        ),
+        body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            stream: FirebaseController.appointmentsStreamForStore(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamSnapshot) {
+              if (appointmentsStreamSnapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              if (appointmentsStreamSnapshot.hasData) {
+                // List<Appointment> appointments = Appointment.deserializeToList(appointmentsSnapshot.data!) as List<Appointment>;
+
+                return Container(
+                  child: Column(
+                    children: [
+                      Text('Blue: Pending | Green: Completed | Red: Canceled'),
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: appointmentsStreamSnapshot.data!.size,
+                            itemBuilder: (context, index) => FutureBuilder<Appointment>(
+                                future: Appointment.deserialize(appointmentsStreamSnapshot.data!.docs[index].data(),
+                                    appointmentsStreamSnapshot.data!.docs[index].id),
+                                builder: (context, appointmentSnapshot) {
+                                  if (appointmentSnapshot.connectionState == ConnectionState.waiting) {
+                                    return ListTile(
+                                      title: Text('Loading...'),
+                                    );
+                                  }
+                                  if (appointmentSnapshot.hasData) {
+                                    // print(appointmentSnapshot.data!.clientId);
+                                    Appointment appointment = appointmentSnapshot.data as Appointment;
+                                    return GestureDetector(
+                                      child: Container(
+                                        // shape: RoundedRectangleBorder(
+                                        //   borderRadius: BorderRadius.circular(15),
+                                        // ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black12,
+                                          borderRadius: BorderRadius.circular(33),
+                                        ),
+
+                                        margin: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
+                                        padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 15.0, bottom: 8.0),
+                                        height: 65.0,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  '${DateFormat('MMM dd').format(appointment.appointmentTime)}\n${DateFormat('h:mm aa').format(appointment.appointmentTime)}',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    // color: Colors.black54,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: 40.0,
+                                                  margin: EdgeInsets.only(right: 10.0, left: 10.0),
+                                                  decoration: BoxDecoration(
+                                                    color: appointment.isCompleted
+                                                        ? Colors.green
+                                                        : appointment.isCanceled
+                                                            ? Colors.deepOrange
+                                                            : Colors.blue,
+                                                    borderRadius: BorderRadius.circular(5),
+                                                  ),
+                                                  child: Text(' '),
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      '${appointment.client.firstName!} ${appointment.client.lastName!}',
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.blue,
+                                                        fontSize: 16.0,
+                                                      ),
+                                                    ),
+                                                    Text('${appointment.option.name} | ${appointment.option.price}', style: TextStyle(
+                                                      fontWeight: FontWeight.w500,
+                                                      // color: Colors.black54,
+                                                    ),),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                TextButton(onPressed: () {}, child: Text('${appointment.isCanceled ? 'Revert' : 'Cancel'}', style: TextStyle(
+                                                  // fontWeight: FontWeight.bold,
+                                                  color: Colors.red,
+                                                  // fontSize: 16.0,
+                                                ),)),
+                                                TextButton(onPressed: () {}, child: Text('${appointment.isCompleted ? 'Revert' : 'Done'}', style: TextStyle(
+                                                  // fontWeight: FontWeight.bold,
+                                                  color: Colors.blue,
+                                                  // fontSize: 16.0,
+                                                ),)),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      onTap: () {},
+                                    );
+                                  }
+                                  print(appointmentSnapshot.error);
+                                  return Text('error!!!');
+                                })),
+                      )
+                    ],
+                  ),
+                );
+              }
+
+              print(appointmentsStreamSnapshot.error);
+              return Text('error');
+            }),
       ),
     );
   }
@@ -109,7 +201,9 @@ class _StoreScreenState extends State<StoreScreen> {
 
 class Controller {
   _StoreScreenState state;
+
   Controller(this.state);
+
   Future<void> profile() async {}
 
   Future<void> settings() async {}
