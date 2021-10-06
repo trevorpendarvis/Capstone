@@ -59,8 +59,24 @@ class _ClientScreenState extends State<ClientScreen> {
               onWillPop: () => Future.value(false),
               child: Scaffold(
                 appBar: AppBar(
-                  title: Center(child: Text('Client Home')),
+                  title: Text('Home'),
                   backgroundColor: Colors.indigoAccent,
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.white),
+                          foregroundColor: MaterialStateProperty.all(Colors.indigo),
+                          textStyle: MaterialStateProperty.all(
+                            TextStyle(color: Colors.indigo),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: Text('My Appointment'),
+                      ),
+                    )
+                  ],
                 ),
                 drawer: Drawer(
                   child: ListView(
@@ -68,8 +84,7 @@ class _ClientScreenState extends State<ClientScreen> {
                       ListTile(
                         leading: Icon(Icons.people_outline),
                         title: Text("Account Settings"),
-                        onTap: () =>
-                            con?.accountSettings(FirebaseAuth.instance.currentUser!.uid),
+                        onTap: () => con?.accountSettings(FirebaseAuth.instance.currentUser!.uid),
                       ),
                       // ListTile(
                       //   leading: Icon(Icons.settings),
@@ -100,38 +115,38 @@ class _ClientScreenState extends State<ClientScreen> {
                     ],
                   ),
                 ),
-                bottomNavigationBar: BottomNavigationBar(
-                  currentIndex: currentIndex,
-                  items: [
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                        backgroundColor: Colors.blueGrey),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.settings),
-                        label: 'Settings',
-                        backgroundColor: Colors.blueGrey),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.exit_to_app),
-                        label: 'Logout',
-                        backgroundColor: Colors.blueGrey),
-                  ],
-                  onTap: (index) {
-                    render(() => currentIndex = index);
-                    if (index == 0) {
-                      //Action for homescrren
-                    } else if (index == 1) {
-                      //action for settings
-                      con?.accountSettingsUsingNavigator(
-                          FirebaseAuth.instance.currentUser!.uid);
-                    } else if (index == 2) {
-                      //action for logout
-                      con?.signOut();
-                    } else {
-                      print('error');
-                    }
-                  },
-                ),
+                // bottomNavigationBar: BottomNavigationBar(
+                //   currentIndex: currentIndex,
+                //   items: [
+                //     BottomNavigationBarItem(
+                //         icon: Icon(Icons.home),
+                //         label: 'Home',
+                //         backgroundColor: Colors.blueGrey),
+                //     BottomNavigationBarItem(
+                //         icon: Icon(Icons.settings),
+                //         label: 'Settings',
+                //         backgroundColor: Colors.blueGrey),
+                //     BottomNavigationBarItem(
+                //         icon: Icon(Icons.exit_to_app),
+                //         label: 'Logout',
+                //         backgroundColor: Colors.blueGrey),
+                //   ],
+                //   onTap: (index) {
+                //     render(() => currentIndex = index);
+                //     if (index == 0) {
+                //       //Action for homescrren
+                //     } else if (index == 1) {
+                //       //action for settings
+                //       con?.accountSettingsUsingNavigator(
+                //           FirebaseAuth.instance.currentUser!.uid);
+                //     } else if (index == 2) {
+                //       //action for logout
+                //       con?.signOut();
+                //     } else {
+                //       print('error');
+                //     }
+                //   },
+                // ),
               ),
             );
           else
@@ -156,31 +171,28 @@ class Controller {
   */
   Future<void> fetchData() async {
     stores = await FirebaseController.fetchStores();
-    clientProfile =
-        await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
+    clientProfile = await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
 
     // Appointment appointment = Appointment();
     // await FirebaseController.addAppointment(appointment);
   }
 
   Future<void> accountSettings(String? uid) async {
-    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName,
-        arguments: {
-          // "user": state.user,
-          "one_clientProfile": clientProfile,
-          'isNewUser': false,
-        });
+    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName, arguments: {
+      // "user": state.user,
+      "one_clientProfile": clientProfile,
+      'isNewUser': false,
+    });
     Navigator.pop(state.context); //pop the drawer
     state.render(() {});
   }
 
   Future<void> accountSettingsUsingNavigator(String? uid) async {
-    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName,
-        arguments: {
-          // "user": state.user,
-          "one_clientProfile": clientProfile,
-          'isNewUser': false,
-        });
+    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName, arguments: {
+      // "user": state.user,
+      "one_clientProfile": clientProfile,
+      'isNewUser': false,
+    });
     //Navigator.pop(state.context); //pop the drawer
     state.render(() {});
   }
