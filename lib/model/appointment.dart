@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
+import 'package:monkey_management/model/client.dart';
+import 'package:monkey_management/model/store.dart';
 
 import 'option.dart';
 
 class Appointment {
-  String clientId = '';
-  String storeId = '';
+  Client client = Client();
+  Store store = Store();
   DateTime appointmentTime = DateTime.now();
   Option option = Option();
   DateTime createdAt = DateTime.now();
@@ -27,8 +29,8 @@ class Appointment {
 
   Map<String, dynamic> serialize() {
     return <String, dynamic>{
-    CLIENT_ID: this.clientId,
-    STORE_ID: this.storeId,
+    CLIENT_ID: this.client.docId,
+    STORE_ID: this.store.id,
     APPOINTMENT_TIME: this.appointmentTime,
     OPTION_ID: this.option.id,
     CREATED_AT: this.createdAt,
@@ -41,8 +43,10 @@ class Appointment {
   static Future<Appointment> deserialize(Map<String, dynamic>? doc, String docId) async {
     Appointment appointment = Appointment();
 
-    appointment.clientId = doc![CLIENT_ID] ?? '';
-    appointment.storeId = doc[STORE_ID] ?? '';
+    print(doc![CLIENT_ID]);
+
+    appointment.client = await FirebaseController.getClientProfile(doc[CLIENT_ID]);
+    appointment.store = await FirebaseController.getStoreProfile(doc[STORE_ID]);
     appointment.appointmentTime = doc[APPOINTMENT_TIME].toDate() ?? DateTime.now();
     appointment.option = await FirebaseController.getOption(doc[OPTION_ID]);
     appointment.createdAt = doc[CREATED_AT].toDate() ?? DateTime.now();

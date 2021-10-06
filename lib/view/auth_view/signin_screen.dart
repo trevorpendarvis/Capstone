@@ -103,7 +103,7 @@ class SignInState extends State<SignInScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Does\'t have an account?',
+                  Text('Don\'t have an account?',
                       style: TextStyle(
                         fontSize: 16.0,
                       )),
@@ -144,13 +144,11 @@ class Controller {
     }
 
     state.formkey.currentState!.save();
-    // MyDialog.circularProgressStart(state.context);
     User? user = await FirebaseController.signIn(email: email!, password: password!);
 
     if (user != null) {
       accountType = await FirebaseController.getAccountType();
 
-      // MyDialog.circularProgressStop(state.context);
 
       if (accountType == AccountType.STORE) {
         Navigator.pushNamed(state.context, StoreScreen.routeName);

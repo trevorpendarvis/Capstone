@@ -23,7 +23,9 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
   String? email;
   String? password;
   Client? clientProfile;
+  Client? tempProfile;
   bool? isNewUser;
+  bool? editMode = false;
 
   @override
   void initState() {
@@ -41,12 +43,19 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
     clientProfile = args['one_clientProfile'] ?? Client();
     isNewUser = args['isNewUser'] ?? true;
 
+    tempProfile = Client.clone(clientProfile!);
+
     print('Email: $email');
     print('Password: $password');
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text('Account Settings')),
         backgroundColor: Colors.grey[850],
+        actions: [
+          editMode!
+              ? IconButton(icon: Icon(Icons.check), onPressed: con?.saveUpdates)
+              : IconButton(icon: Icon(Icons.edit), onPressed: con?.editProfile),
+        ],
       ),
       body: SingleChildScrollView(
         child: isNewUser!
@@ -96,243 +105,246 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
                 ),
               )
             : //IS ALREADY A CLIENT
-            
-            Column(
-              children: [
-                //EMAIL
-                  SizedBox(height: 7,),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
-                    alignment: Alignment.centerLeft,
-                    child: 
-                    Text(
-                      "Email",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontWeight:  FontWeight.bold,
-                        fontSize: 18,
+            Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    //EMAIL
+                    SizedBox(
+                      height: 7,
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Email",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                    padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                    child: TextFormField(
-                      //enabled: editMode,
-                      initialValue: clientProfile!.email,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: TextFormField(
+                        enabled: false,
+                        initialValue: clientProfile!.email,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
                       ),
-                      //validator: con?.validateFirstName,
-                      //onSaved: con?.saveFirstName,
                     ),
-                  ),
-                  SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
 
-                //FIRST NAME
-                  Container(
-                    margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
-                    alignment: Alignment.centerLeft,
-                    child: 
-                    Text(
-                      "First Name",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontWeight:  FontWeight.bold,
-                        fontSize: 18,
+                    //FIRST NAME
+                    Container(
+                      margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "First Name",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                    padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                    child: TextFormField(
-                      enabled: false, //Will need to change to bool editMode -Caitlyn
-                      initialValue: clientProfile!.firstName,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: TextFormField(
+                        enabled: editMode, //enable changes
+                        initialValue: tempProfile!.firstName, //clientProfile!.firstName,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: con?.validateFirstName,
+                        onSaved: con?.saveFirstName,
                       ),
-                      //validator: con?.validateFirstName,
-                      //onSaved: con?.saveFirstName,
                     ),
-                  ),
-                  SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
 
-                  //LAST NAME
-                  Container(
-                    margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
-                    alignment: Alignment.centerLeft,
-                    child: 
-                    Text(
-                      "Last Name",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        
-                        fontWeight:  FontWeight.bold,
-                        fontSize: 18,
+                    //LAST NAME
+                    Container(
+                      margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Last Name",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                    padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                    child: TextFormField(
-                      enabled: false, //Will need to change to bool editMode -Caitlyn
-                      initialValue: clientProfile!.lastName,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: TextFormField(
+                        enabled: editMode,
+                        initialValue: tempProfile!.lastName,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: con?.validateLastName,
+                        onSaved: con?.saveLastName,
                       ),
-                      //validator: con?.validateFirstName,
-                      //onSaved: con?.saveFirstName,
                     ),
-                  ),
-                  SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
 
-                  //FAV LOCATION
-                  Container(
-                    margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
-                    alignment: Alignment.centerLeft,
-                    child: 
-                    Text(
-                      "Preferred Location",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontWeight:  FontWeight.bold,
-                        fontSize: 18,
+                    //FAV LOCATION – USE DROPDOWN MENU
+                    Container(
+                      margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Preferred Location",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                    padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                    child: TextFormField(
-                      enabled: false, //Will need to change to bool editMode -Caitlyn
-                      initialValue: clientProfile!.favLocation,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: TextFormField(
+                        enabled: editMode,
+                        initialValue: tempProfile!.favLocation,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        //validator: con?.validateFirstName,
+                        onSaved: con?.saveFavLocation,
                       ),
-                      //validator: con?.validateFirstName,
-                      //onSaved: con?.saveFirstName,
                     ),
-                  ),
-                  SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
 
-                  //PHONE NUMBER
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: 
-                    Text(
-                      "Phone Number",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontWeight:  FontWeight.bold,
-                        fontSize: 18,
+                    //PHONE NUMBER
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Phone Number",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                    padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                    child: TextFormField(
-                      enabled: false, //Will need to change to bool editMode -Caitlyn
-                      initialValue: clientProfile!.phone!.isEmpty ? clientProfile!.phone : "555-555-5555", ///???
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: TextFormField(
+                        enabled: editMode,
+                        initialValue: tempProfile!.phone,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        //validator: con?.validatePhone //NEED TO IMPLEMENT
+                        onSaved: con?.savePhone,
                       ),
-                      //validator: con?.validateFirstName,
-                      //onSaved: con?.saveFirstName,
                     ),
-                  ),
-                  SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
 
-                  //ADDRESS
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
-                    child: 
-                    Text(
-                      "Address",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontWeight:  FontWeight.bold,
-                        fontSize: 18,
+                    //ADDRESS
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
+                      child: Text(
+                        "Address",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                    padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                    child: TextFormField(
-                      enabled: false, //Will need to change to bool editMode -Caitlyn
-                      initialValue: clientProfile!.address,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: TextFormField(
+                        enabled: editMode,
+                        initialValue: tempProfile!.address,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: con?.validateAddress,
+                        onSaved: con?.saveAddress,
                       ),
-                      //validator: con?.validateFirstName,
-                      //onSaved: con?.saveFirstName,
                     ),
-                  ),
-                  SizedBox(height: 10),
+                    SizedBox(height: 10),
 
-                  //VEHICLE COLOR
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
-                    child: 
-                    Text(
-                      "Vehicle Color",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontWeight:  FontWeight.bold,
-                        fontSize: 18,
+                    //VEHICLE COLOR – USE DROPDOWN
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
+                      child: Text(
+                        "Vehicle Color",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                    padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                    child: TextFormField(
-                      enabled: false, //Will need to change to bool editMode -Caitlyn
-                      initialValue: clientProfile!.vehicleColor,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: TextFormField(
+                        enabled: editMode,
+                        initialValue: tempProfile!.vehicleColor,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        //validator: con?.validateFirstName,
+                        onSaved: con?.saveVehicleColor,
                       ),
-                      //validator: con?.validateFirstName,
-                      //onSaved: con?.saveFirstName,
                     ),
-                  ),
-                  SizedBox(height: 10),
+                    SizedBox(height: 10),
 
-                  //VEHICLE MAKE
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
-                    child: 
-                    Text(
-                      "Vehicle Make",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontWeight:  FontWeight.bold,
-                        fontSize: 18,
+                    //VEHICLE MAKE
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
+                      child: Text(
+                        "Vehicle Make",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                    padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                    child: TextFormField(
-                      enabled: false, //Will need to change to bool editMode -Caitlyn
-                      initialValue: clientProfile!.vehicleMake,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: TextFormField(
+                        enabled: editMode,
+                        initialValue: tempProfile!.vehicleMake,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        //validator: con?.validateFirstName,
+                        onSaved: con?.saveVehicleMake,
                       ),
-                      //validator: con?.validateFirstName,
-                      //onSaved: con?.saveFirstName,
                     ),
-                  ),
-                  SizedBox(height: 90)
-              ],
-            ),
+                    SizedBox(height: 90)
+                  ],
+                ),
+              ),
       ),
     );
   }
@@ -377,7 +389,7 @@ class Controller {
 
   String? validateAddress(String? value) {
     if (value == null || value.length < 5) {
-      return 'invalid address min char 5';
+      return 'Address must be at least 5 characters.';
     } else {
       return null;
     }
@@ -385,11 +397,13 @@ class Controller {
 
   void saveAddress(String? value) {
     this.address = value;
+
+    state.tempProfile!.address = value;
   }
 
   String? validateLastName(String? value) {
     if (value!.length == 0) {
-      return 'Please enter your last name';
+      return 'Please enter your last name.';
     } else {
       return null;
     }
@@ -397,11 +411,13 @@ class Controller {
 
   void saveLastName(String? value) {
     this.lastName = value;
+
+    state.tempProfile!.lastName = value;
   }
 
   String? validateFirstName(String? value) {
     if (value!.length == 0) {
-      return 'Please enter your first name';
+      return 'Please enter your first name.';
     } else {
       return null;
     }
@@ -409,5 +425,69 @@ class Controller {
 
   void saveFirstName(String? value) {
     this.firstName = value;
+
+    state.tempProfile!.firstName = value;
+  }
+
+  void saveFavLocation(String? value) {
+    state.tempProfile!.favLocation = value;
+  }
+
+  void savePhone(String? value) {
+    state.tempProfile!.phone = value;
+  }
+
+  void saveVehicleColor(String? value) {
+    state.tempProfile!.vehicleColor = value;
+  }
+
+  void saveVehicleMake(String? value) {
+    state.tempProfile!.vehicleMake = value;
+  }
+
+  void saveUpdates() async {
+    if (!state.formKey.currentState!.validate()) return;
+    state.formKey.currentState!.save();
+
+    try {
+      MyDialog.circularProgressStart(state.context);
+      Map<String, dynamic> updateInfo = {};
+
+      if (state.clientProfile!.firstName != state.tempProfile!.firstName)
+        updateInfo[Client.FIRSTNAME] = state.tempProfile!.firstName;
+
+      if (state.clientProfile!.lastName != state.tempProfile!.lastName)
+        updateInfo[Client.LASTNAME] = state.tempProfile!.lastName;
+
+      if (state.clientProfile!.favLocation != state.tempProfile!.favLocation)
+        updateInfo[Client.FAV_LOCATION] = state.tempProfile!.favLocation;
+
+      if (state.clientProfile!.phone != state.tempProfile!.phone)
+        updateInfo[Client.PHONE] = state.tempProfile!.phone;
+
+      if (state.clientProfile!.address != state.tempProfile!.address)
+        updateInfo[Client.ADDRESS] = state.tempProfile!.address;
+
+      if (state.clientProfile!.vehicleColor != state.tempProfile!.vehicleColor)
+        updateInfo[Client.VEHICLE_COLOR] = state.tempProfile!.vehicleColor;
+
+      if (state.clientProfile!.vehicleMake != state.tempProfile!.vehicleMake)
+        updateInfo[Client.VEHICLE_MAKE] = state.tempProfile!.vehicleMake;
+
+      await FirebaseController.updateClientProfile(
+          FirebaseAuth.instance.currentUser!.uid, updateInfo);
+      state.clientProfile!.assign(state.tempProfile!);
+
+      MyDialog.circularProgressStop(state.context);
+      Navigator.pop(state.context);
+    } catch (e) {
+      MyDialog.circularProgressStop(state.context);
+      MyDialog.info(
+          context: state.context, title: "Error Updating Account", content: "$e");
+    }
+  }
+
+  void editProfile() {
+    state.render(() => state.editMode = true);
   }
 }
