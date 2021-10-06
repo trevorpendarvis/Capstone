@@ -275,4 +275,13 @@ class FirebaseController {
         .where(Appointment.STORE_ID, isEqualTo: currentStore!.uid)
         .snapshots();
   }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamForClient() {
+    final User? currentClient = FirebaseAuth.instance.currentUser;
+
+    return FirebaseFirestore.instance
+        .collection(Appointment.COLLECTION)
+        .where(Appointment.CLIENT_ID, isEqualTo: currentClient!.uid)
+        .snapshots();
+  }
 }

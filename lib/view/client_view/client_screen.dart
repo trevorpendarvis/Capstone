@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,9 @@ import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/model/store.dart';
+import 'package:monkey_management/view/client_view/client_appointments_screen.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
+import 'package:monkey_management/view/client_view/store_info_screen.dart';
 import 'package:monkey_management/view/common_view/loading_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
 
@@ -59,8 +62,69 @@ class _ClientScreenState extends State<ClientScreen> {
               onWillPop: () => Future.value(false),
               child: Scaffold(
                 appBar: AppBar(
-                  title: Center(child: Text('Client Home')),
+                  title: Text('Home'),
                   backgroundColor: Colors.indigoAccent,
+                  actions: [
+                    StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        stream: FirebaseController.appointmentsStreamForClient(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamSnapshot) {
+                          if (appointmentsStreamSnapshot.connectionState == ConnectionState.waiting) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Colors.white),
+                                  foregroundColor: MaterialStateProperty.all(Colors.indigo),
+                                  textStyle: MaterialStateProperty.all(
+                                    TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                onPressed: () => con!.handleMyAppointmentButton(),
+                                child: Text('... appointment'),
+                              ),
+                            );
+                          }
+
+                          if (appointmentsStreamSnapshot.hasData) {
+                            int numOfAppointments = appointmentsStreamSnapshot.data!.docs.length;
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Colors.white),
+                                  foregroundColor: MaterialStateProperty.all(Colors.indigo),
+                                  textStyle: MaterialStateProperty.all(
+                                    TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                onPressed: () => con!.handleMyAppointmentButton(),
+                                child: Row(
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Icon(
+                                          Icons.circle,
+                                          color: numOfAppointments > 0 ? Colors.deepOrange : null,
+                                          size: 25,
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(top: 4.0, left: 8.0),
+                                          child: Text('$numOfAppointments', style: TextStyle(color: Colors.white),),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(' appointment'),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+
+                          print(appointmentsStreamSnapshot.error);
+                          return Text('error');
+                        }),
+                  ],
                 ),
                 drawer: Drawer(
                   child: ListView(
@@ -68,8 +132,7 @@ class _ClientScreenState extends State<ClientScreen> {
                       ListTile(
                         leading: Icon(Icons.people_outline),
                         title: Text("Account Settings"),
-                        onTap: () =>
-                            con?.accountSettings(FirebaseAuth.instance.currentUser!.uid),
+                        onTap: () => con?.accountSettings(FirebaseAuth.instance.currentUser!.uid),
                       ),
                       // ListTile(
                       //   leading: Icon(Icons.settings),
@@ -90,47 +153,73 @@ class _ClientScreenState extends State<ClientScreen> {
                       Text('List of stores'),
                       Expanded(
                         child: ListView.builder(
-                          itemCount: con!.stores.length,
-                          itemBuilder: (context, index) => ListTile(
-                            title: Text(con!.stores[index].name),
-                            subtitle: Text(con!.stores[index].email),
-                          ),
-                        ),
+                            itemCount: con!.stores.length,
+                            itemBuilder: (context, index) => GestureDetector(
+                                  child: Container(
+                                    // shape: RoundedRectangleBorder(
+                                    //   borderRadius: BorderRadius.circular(15),
+                                    // ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black12,
+                                      borderRadius: BorderRadius.circular(33),
+                                    ),
+
+                                    margin: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
+                                    padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 15.0, bottom: 8.0),
+                                    height: 65.0,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  '${con!.stores[index].name}',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.blue,
+                                                    fontSize: 16.0,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '${con!.stores[index].email}',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    // color: Colors.black54,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            TextButton(
+                                              onPressed: () {
+                                                print('for call store function...');
+                                              },
+                                              child: Text(
+                                                'Call',
+                                                style: TextStyle(
+                                                  // fontWeight: FontWeight.bold,
+                                                  color: Colors.blue,
+                                                  // fontSize: 16.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  onTap: () => con?.handleStoreOnTap(con!.stores[index]),
+                                )),
                       ),
                     ],
                   ),
-                ),
-                bottomNavigationBar: BottomNavigationBar(
-                  currentIndex: currentIndex,
-                  items: [
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                        backgroundColor: Colors.blueGrey),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.settings),
-                        label: 'Settings',
-                        backgroundColor: Colors.blueGrey),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.exit_to_app),
-                        label: 'Logout',
-                        backgroundColor: Colors.blueGrey),
-                  ],
-                  onTap: (index) {
-                    render(() => currentIndex = index);
-                    if (index == 0) {
-                      //Action for homescrren
-                    } else if (index == 1) {
-                      //action for settings
-                      con?.accountSettingsUsingNavigator(
-                          FirebaseAuth.instance.currentUser!.uid);
-                    } else if (index == 2) {
-                      //action for logout
-                      con?.signOut();
-                    } else {
-                      print('error');
-                    }
-                  },
                 ),
               ),
             );
@@ -156,31 +245,34 @@ class Controller {
   */
   Future<void> fetchData() async {
     stores = await FirebaseController.fetchStores();
-    clientProfile =
-        await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
+    clientProfile = await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
 
     // Appointment appointment = Appointment();
     // await FirebaseController.addAppointment(appointment);
   }
 
   Future<void> accountSettings(String? uid) async {
-    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName,
-        arguments: {
-          // "user": state.user,
-          "one_clientProfile": clientProfile,
-          'isNewUser': false,
-        });
+    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName, arguments: {
+      // "user": state.user,
+      "one_clientProfile": clientProfile,
+      'isNewUser': false,
+    });
     Navigator.pop(state.context); //pop the drawer
     state.render(() {});
   }
 
+  Future<void> handleStoreOnTap(Store store) async {
+    await Navigator.pushNamed(state.context, StoreInfoScreen.routeName, arguments: {
+      "store": store,
+    });
+  }
+
   Future<void> accountSettingsUsingNavigator(String? uid) async {
-    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName,
-        arguments: {
-          // "user": state.user,
-          "one_clientProfile": clientProfile,
-          'isNewUser': false,
-        });
+    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName, arguments: {
+      // "user": state.user,
+      "one_clientProfile": clientProfile,
+      'isNewUser': false,
+    });
     //Navigator.pop(state.context); //pop the drawer
     state.render(() {});
   }
@@ -189,5 +281,9 @@ class Controller {
     FirebaseController.signOut();
 
     //Future<void> settings() async {}
+  }
+
+  void handleMyAppointmentButton() {
+    Navigator.pushNamed(state.context, ClientAppointmentsScreen.routeName);
   }
 }
