@@ -6,6 +6,7 @@ import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/model/store.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
+import 'package:monkey_management/view/client_view/store_info_screen.dart';
 import 'package:monkey_management/view/common_view/loading_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
 
@@ -105,12 +106,68 @@ class _ClientScreenState extends State<ClientScreen> {
                       Text('List of stores'),
                       Expanded(
                         child: ListView.builder(
-                          itemCount: con!.stores.length,
-                          itemBuilder: (context, index) => ListTile(
-                            title: Text(con!.stores[index].name),
-                            subtitle: Text(con!.stores[index].email),
-                          ),
-                        ),
+                            itemCount: con!.stores.length,
+                            itemBuilder: (context, index) => GestureDetector(
+                                  child: Container(
+                                    // shape: RoundedRectangleBorder(
+                                    //   borderRadius: BorderRadius.circular(15),
+                                    // ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black12,
+                                      borderRadius: BorderRadius.circular(33),
+                                    ),
+
+                                    margin: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
+                                    padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 15.0, bottom: 8.0),
+                                    height: 65.0,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  '${con!.stores[index].name}',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.blue,
+                                                    fontSize: 16.0,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '${con!.stores[index].email}',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    // color: Colors.black54,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            TextButton(
+                                              onPressed: () {},
+                                              child: Text(
+                                                'Call',
+                                                style: TextStyle(
+                                                  // fontWeight: FontWeight.bold,
+                                                  color: Colors.blue,
+                                                  // fontSize: 16.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  onTap: () => con?.handleStoreOnTap(con!.stores[index]),
+                                )),
                       ),
                     ],
                   ),
@@ -185,6 +242,12 @@ class Controller {
     });
     Navigator.pop(state.context); //pop the drawer
     state.render(() {});
+  }
+
+  Future<void> handleStoreOnTap(Store store) async {
+    await Navigator.pushNamed(state.context, StoreInfoScreen.routeName, arguments: {
+      "store": store,
+    });
   }
 
   Future<void> accountSettingsUsingNavigator(String? uid) async {

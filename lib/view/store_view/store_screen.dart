@@ -105,7 +105,9 @@ class _StoreScreenState extends State<StoreScreen> {
                                     // print(appointmentSnapshot.data!.clientId);
                                     Appointment appointment = appointmentSnapshot.data as Appointment;
                                     return GestureDetector(
-                                      child: Container(
+                                      child:
+
+                                      Container(
                                         // shape: RoundedRectangleBorder(
                                         //   borderRadius: BorderRadius.circular(15),
                                         // ),
