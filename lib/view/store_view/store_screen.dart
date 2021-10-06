@@ -83,7 +83,18 @@ class _StoreScreenState extends State<StoreScreen> {
               }
 
               if (appointmentsStreamSnapshot.hasData) {
-                // List<Appointment> appointments = Appointment.deserializeToList(appointmentsSnapshot.data!) as List<Appointment>;
+
+                if (appointmentsStreamSnapshot.data!.docs.length == 0)
+                  return Center(
+                    child: Text(
+                      'Empty',
+                      style: TextStyle(
+                        color: Colors.black12,
+                        fontSize: 75,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
 
                 return Container(
                   child: Column(
