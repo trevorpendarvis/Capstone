@@ -4,8 +4,11 @@ import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/location.dart';
 import 'package:monkey_management/view/auth_view/signin_screen.dart';
+import 'package:monkey_management/view/store_view/store_locations_screen.dart';
 import 'package:monkey_management/view/store_view/store_settings_screen.dart';
 import 'package:intl/intl.dart';
+
+import 'options_screen.dart';
 
 class StoreScreen extends StatefulWidget {
   static const routeName = "/store_screen";
@@ -63,6 +66,16 @@ class _StoreScreenState extends State<StoreScreen> {
                 leading: Icon(Icons.settings),
                 title: Text("Settings"),
                 onTap: con?.settings,
+              ),
+              ListTile(
+                leading: Icon(Icons.add_shopping_cart_rounded),
+                title: Text("Options"),
+                onTap: con?.handleOptionsButton,
+              ),
+              ListTile(
+                leading: Icon(Icons.location_on_rounded),
+                title: Text("Locations"),
+                onTap: con?.handleLocationsButton,
               ),
               ListTile(
                 leading: Icon(Icons.exit_to_app),
@@ -219,7 +232,9 @@ class Controller {
 
   Future<void> profile() async {}
 
-  Future<void> settings() async {}
+  Future<void> settings() async {
+    Navigator.pushNamed(state.context, StoreSettingsScreen.routeName);
+  }
 
   Future<void> signOut() async {
     FirebaseController.signOut();
@@ -241,5 +256,14 @@ class Controller {
     } catch (e) {
       print(e);
     }
+  }
+
+  void handleOptionsButton() {
+    Navigator.pushNamed(state.context, StoreOptionsScreen.routeName);
+  }
+
+  void handleLocationsButton() {
+    Navigator.pushNamed(state.context, StoreLocationsScreen.routeName,);
+    // arguments: {"locations": state.locations});
   }
 }

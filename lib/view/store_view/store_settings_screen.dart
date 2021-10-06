@@ -23,8 +23,8 @@ class _StoreSettingsScreenState extends State<StoreSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map args = ModalRoute.of(context)!.settings.arguments as Map;
-    locations = args["locations"] ?? [];
+    // Map args = ModalRoute.of(context)!.settings.arguments as Map;
+    // locations = args["locations"] ?? [];
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -65,7 +65,7 @@ class Controller {
   }
 
   void handleLocationsButton() {
-    Navigator.pushNamed(state.context, StoreLocationsScreen.routeName,
-        arguments: {"locations": state.locations});
+    Navigator.pushNamed(state.context, StoreLocationsScreen.routeName,);
+        // arguments: {"locations": state.locations});
   }
 }
