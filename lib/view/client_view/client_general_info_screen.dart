@@ -420,7 +420,14 @@ class Controller {
     for (int i = 0; i < stores.length; i++) {
       storeNames.add(stores[i].name);
     }
-    dropdownValue = clientProfile.favLocation;
+
+    if (clientProfile.favLocation == "" ||
+        storeNames.contains(clientProfile.favLocation) == false) {
+      dropdownValue = storeNames[0];
+    } else {
+      dropdownValue = clientProfile.favLocation;
+    }
+
     print(storeNames);
     // Appointment appointment = Appointment();
     // await FirebaseController.addAppointment(appointment);
