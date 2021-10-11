@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/data.dart';
@@ -65,9 +66,13 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
                   title: Center(child: Text('Account Settings')),
                   backgroundColor: Colors.grey[850],
                   actions: [
-                    editMode!
-                        ? IconButton(icon: Icon(Icons.check), onPressed: con?.saveUpdates)
-                        : IconButton(icon: Icon(Icons.edit), onPressed: con?.editProfile),
+                    isNewUser! //If is a new user, do not show edit icon.
+                      ? Icon(null)
+                      : editMode! 
+                            ? IconButton(
+                                icon: Icon(Icons.check), onPressed: con?.saveUpdates)
+                            : IconButton(
+                                icon: Icon(Icons.edit), onPressed: con?.editProfile),
                   ],
                 ),
                 body: SingleChildScrollView(
@@ -171,9 +176,8 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
                                 margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
                                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                                 child: TextFormField(
-                                  enabled: editMode, //enable changes
-                                  initialValue:
-                                      tempProfile!.firstName, //clientProfile!.firstName,
+                                  enabled: editMode,
+                                  initialValue: tempProfile!.firstName,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                   ),
@@ -291,12 +295,13 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
                                 margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
                                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                                 child: TextFormField(
+                                  keyboardType: TextInputType.phone,
                                   enabled: editMode,
                                   initialValue: tempProfile!.phone,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                   ),
-                                  //validator: con?.validatePhone //NEED TO IMPLEMENT
+                                  validator: con?.validatePhone,
                                   onSaved: con?.savePhone,
                                 ),
                               ),
@@ -354,7 +359,6 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                   ),
-                                  //validator: con?.validateFirstName,
                                   onSaved: con?.saveVehicleColor,
                                 ),
                               ),
@@ -382,7 +386,6 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                   ),
-                                  //validator: con?.validateFirstName,
                                   onSaved: con?.saveVehicleMake,
                                 ),
                               ),
@@ -534,6 +537,14 @@ class Controller {
   void saveFavLocation(String? value) {
     state.tempProfile!.favLocation = value;
     print(state.tempProfile!.favLocation);
+  }
+
+  String? validatePhone(String? value) {
+    if (value == null || value.length < 10 || value.length > 10) {
+      return 'Phone number must be 10 numbers.';
+    } else {
+      return null;
+    }
   }
 
   void savePhone(String? value) {
