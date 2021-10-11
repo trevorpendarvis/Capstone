@@ -49,12 +49,28 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
     print('Password: $password');
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Account Settings')),
-        backgroundColor: Colors.grey[850],
+        title: Center(
+            child: Text(
+          'Account Settings',
+          style: TextStyle(color: Colors.pink[400]),
+        )),
+        backgroundColor: Colors.blue[400],
         actions: [
           editMode!
-              ? IconButton(icon: Icon(Icons.check), onPressed: con?.saveUpdates)
-              : IconButton(icon: Icon(Icons.edit), onPressed: con?.editProfile),
+              ? IconButton(
+                  icon: Icon(
+                    Icons.check,
+                    color: Colors.pink,
+                  ),
+                  onPressed: con?.saveUpdates,
+                )
+              : IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.pink,
+                  ),
+                  onPressed: con?.editProfile,
+                ),
         ],
       ),
       body: SingleChildScrollView(
@@ -99,7 +115,8 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
                     ),
                     ElevatedButton(
                       onPressed: con?.onSave,
-                      child: Text("Finish", style: Theme.of(context).textTheme.button),
+                      child: Text("Finish",
+                          style: Theme.of(context).textTheme.button),
                     ),
                   ],
                 ),
@@ -158,7 +175,8 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
                       padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                       child: TextFormField(
                         enabled: editMode, //enable changes
-                        initialValue: tempProfile!.firstName, //clientProfile!.firstName,
+                        initialValue:
+                            tempProfile!.firstName, //clientProfile!.firstName,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -372,8 +390,8 @@ class Controller {
     p.email = state.email;
 
     try {
-      user =
-          await FirebaseController.signIn(email: state.email, password: state.password);
+      user = await FirebaseController.signIn(
+          email: state.email, password: state.password);
 
       p.docId = user!.uid;
 
@@ -483,7 +501,9 @@ class Controller {
     } catch (e) {
       MyDialog.circularProgressStop(state.context);
       MyDialog.info(
-          context: state.context, title: "Error Updating Account", content: "$e");
+          context: state.context,
+          title: "Error Updating Account",
+          content: "$e");
     }
   }
 

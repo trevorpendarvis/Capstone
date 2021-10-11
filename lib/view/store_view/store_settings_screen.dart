@@ -27,9 +27,12 @@ class _StoreSettingsScreenState extends State<StoreSettingsScreen> {
     // locations = args["locations"] ?? [];
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Store Settings',
-          style: TextStyle(color: Colors.black),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 75.0),
+          child: Text(
+            'Store Settings',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         foregroundColor: Colors.black,
         backgroundColor: Colors.pinkAccent[400],
@@ -65,7 +68,10 @@ class Controller {
   }
 
   void handleLocationsButton() {
-    Navigator.pushNamed(state.context, StoreLocationsScreen.routeName,);
-        // arguments: {"locations": state.locations});
+    Navigator.pushNamed(
+      state.context,
+      StoreLocationsScreen.routeName,
+    );
+    // arguments: {"locations": state.locations});
   }
 }
