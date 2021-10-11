@@ -38,11 +38,17 @@ class _StoreScreenState extends State<StoreScreen> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         appBar: AppBar(
-          title: Center(
-              child: Text(
-            'Store Home',
-            style: TextStyle(color: Colors.black),
-          )),
+          title: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 50.0,
+            ),
+            child: Center(
+                child: Text(
+              'Store Home',
+              style: TextStyle(color: Colors.black),
+            )),
+          ),
           // backgroundColor: Colors.amber,
 
 //           title: Padding(
@@ -57,6 +63,20 @@ class _StoreScreenState extends State<StoreScreen> {
         drawer: Drawer(
           child: ListView(
             children: [
+              DrawerHeader(
+                child: Container(
+                  width: 500.0,
+                  height: 10.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.pink[400],
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/MonkeyLogo.png"),
+                      fit: BoxFit.fitHeight,
+                    ),
+                  ),
+                ),
+              ),
               ListTile(
                 leading: Icon(Icons.people_outline),
                 title: Text("Profile"),
@@ -87,16 +107,17 @@ class _StoreScreenState extends State<StoreScreen> {
         ),
         body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
             stream: FirebaseController.appointmentsStreamForStore(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamSnapshot) {
-              if (appointmentsStreamSnapshot.connectionState == ConnectionState.waiting) {
+            builder: (BuildContext context,
+                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                    appointmentsStreamSnapshot) {
+              if (appointmentsStreamSnapshot.connectionState ==
+                  ConnectionState.waiting) {
                 return Center(
                   child: CircularProgressIndicator(),
                 );
               }
 
               if (appointmentsStreamSnapshot.hasData) {
-
                 if (appointmentsStreamSnapshot.data!.docs.length == 0)
                   return Center(
                     child: Text(
@@ -116,35 +137,46 @@ class _StoreScreenState extends State<StoreScreen> {
                       Expanded(
                         child: ListView.builder(
                             itemCount: appointmentsStreamSnapshot.data!.size,
-                            itemBuilder: (context, index) => FutureBuilder<Appointment>(
-                                future: Appointment.deserialize(appointmentsStreamSnapshot.data!.docs[index].data(),
-                                    appointmentsStreamSnapshot.data!.docs[index].id),
+                            itemBuilder: (context, index) => FutureBuilder<
+                                    Appointment>(
+                                future: Appointment.deserialize(
+                                    appointmentsStreamSnapshot.data!.docs[index]
+                                        .data(),
+                                    appointmentsStreamSnapshot
+                                        .data!.docs[index].id),
                                 builder: (context, appointmentSnapshot) {
-                                  if (appointmentSnapshot.connectionState == ConnectionState.waiting) {
+                                  if (appointmentSnapshot.connectionState ==
+                                      ConnectionState.waiting) {
                                     return ListTile(
                                       title: Text('Loading...'),
                                     );
                                   }
                                   if (appointmentSnapshot.hasData) {
                                     // print(appointmentSnapshot.data!.clientId);
-                                    Appointment appointment = appointmentSnapshot.data as Appointment;
+                                    Appointment appointment =
+                                        appointmentSnapshot.data as Appointment;
                                     return GestureDetector(
-                                      child:
-
-                                      Container(
+                                      child: Container(
                                         // shape: RoundedRectangleBorder(
                                         //   borderRadius: BorderRadius.circular(15),
                                         // ),
                                         decoration: BoxDecoration(
                                           color: Colors.black12,
-                                          borderRadius: BorderRadius.circular(33),
+                                          borderRadius:
+                                              BorderRadius.circular(33),
                                         ),
 
-                                        margin: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
-                                        padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 15.0, bottom: 8.0),
+                                        margin: const EdgeInsets.only(
+                                            top: 8.0, right: 8.0, left: 8.0),
+                                        padding: const EdgeInsets.only(
+                                            top: 8.0,
+                                            right: 8.0,
+                                            left: 15.0,
+                                            bottom: 8.0),
                                         height: 65.0,
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Row(
                                               children: [
@@ -157,49 +189,70 @@ class _StoreScreenState extends State<StoreScreen> {
                                                 ),
                                                 Container(
                                                   height: 40.0,
-                                                  margin: EdgeInsets.only(right: 10.0, left: 10.0),
+                                                  margin: EdgeInsets.only(
+                                                      right: 10.0, left: 10.0),
                                                   decoration: BoxDecoration(
-                                                    color: appointment.isCompleted
+                                                    color: appointment
+                                                            .isCompleted
                                                         ? Colors.green
                                                         : appointment.isCanceled
                                                             ? Colors.deepOrange
                                                             : Colors.blue,
-                                                    borderRadius: BorderRadius.circular(5),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
                                                   ),
                                                   child: Text(' '),
                                                 ),
                                                 Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     Text(
                                                       '${appointment.client.firstName!} ${appointment.client.lastName!}',
                                                       style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                         color: Colors.blue,
                                                         fontSize: 16.0,
                                                       ),
                                                     ),
-                                                    Text('${appointment.option.name} | ${appointment.option.price}', style: TextStyle(
-                                                      fontWeight: FontWeight.w500,
-                                                      // color: Colors.black54,
-                                                    ),),
+                                                    Text(
+                                                      '${appointment.option.name} | ${appointment.option.price}',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        // color: Colors.black54,
+                                                      ),
+                                                    ),
                                                   ],
                                                 ),
                                               ],
                                             ),
                                             Row(
                                               children: [
-                                                TextButton(onPressed: () {}, child: Text('${appointment.isCanceled ? 'Revert' : 'Cancel'}', style: TextStyle(
-                                                  // fontWeight: FontWeight.bold,
-                                                  color: Colors.red,
-                                                  // fontSize: 16.0,
-                                                ),)),
-                                                TextButton(onPressed: () {}, child: Text('${appointment.isCompleted ? 'Revert' : 'Done'}', style: TextStyle(
-                                                  // fontWeight: FontWeight.bold,
-                                                  color: Colors.blue,
-                                                  // fontSize: 16.0,
-                                                ),)),
+                                                TextButton(
+                                                    onPressed: () {},
+                                                    child: Text(
+                                                      '${appointment.isCanceled ? 'Revert' : 'Cancel'}',
+                                                      style: TextStyle(
+                                                        // fontWeight: FontWeight.bold,
+                                                        color: Colors.red,
+                                                        // fontSize: 16.0,
+                                                      ),
+                                                    )),
+                                                TextButton(
+                                                    onPressed: () {},
+                                                    child: Text(
+                                                      '${appointment.isCompleted ? 'Revert' : 'Done'}',
+                                                      style: TextStyle(
+                                                        // fontWeight: FontWeight.bold,
+                                                        color: Colors.blue,
+                                                        // fontSize: 16.0,
+                                                      ),
+                                                    )),
                                               ],
                                             )
                                           ],
@@ -263,7 +316,10 @@ class Controller {
   }
 
   void handleLocationsButton() {
-    Navigator.pushNamed(state.context, StoreLocationsScreen.routeName,);
+    Navigator.pushNamed(
+      state.context,
+      StoreLocationsScreen.routeName,
+    );
     // arguments: {"locations": state.locations});
   }
 }

@@ -30,7 +30,7 @@ class _SignUpState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[700],
+      backgroundColor: Colors.grey[350],
       appBar: AppBar(
         title: Padding(
           padding: const EdgeInsets.only(left: 10, right: 20),
@@ -87,6 +87,7 @@ class _SignUpState extends State<SignUpScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       hintText: "Email",
+                      hintStyle: TextStyle(fontSize: 20.0, color: Colors.pink),
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.emailAddress,
@@ -101,6 +102,7 @@ class _SignUpState extends State<SignUpScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       hintText: "Password",
+                      hintStyle: TextStyle(fontSize: 20.0, color: Colors.pink),
                       border: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.pink,
@@ -120,6 +122,7 @@ class _SignUpState extends State<SignUpScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       hintText: "Confirm Password",
+                      hintStyle: TextStyle(fontSize: 20.0, color: Colors.pink),
                       border: OutlineInputBorder(),
                     ),
                     obscureText: true,
@@ -173,7 +176,7 @@ class _SignUpState extends State<SignUpScreen> {
                         style: TextStyle(color: Colors.black, fontSize: 14.0),
                       ),
                 SizedBox(
-                  height: 20.0,
+                  height: 10.0,
                 ),
                 ElevatedButton(
                   onPressed: con.createAccount,
