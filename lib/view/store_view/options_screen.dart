@@ -23,12 +23,9 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(left: 75.0),
-          child: Text(
-            'Store Options',
-            style: TextStyle(color: Colors.black),
-          ),
+        title: Text(
+          'Store Options',
+          style: TextStyle(color: Colors.black),
         ),
         foregroundColor: Colors.black,
         backgroundColor: Colors.pinkAccent[400],
