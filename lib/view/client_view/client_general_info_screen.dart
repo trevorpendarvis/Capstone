@@ -47,7 +47,6 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
 
     print('Email: $email');
     print('Password: $password');
-
     return FutureBuilder(
         future: con!.fetchData(),
         builder: (context, snapshot) {
@@ -57,16 +56,28 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
               onWillPop: () => Future.value(true),
               child: Scaffold(
                 appBar: AppBar(
-                  title: Center(child: Text('Account Settings')),
-                  backgroundColor: Colors.grey[850],
+                  title: Center(
+                      child: Text(
+                        'Account Settings',
+                        style: TextStyle(color: Colors.pink[400]),
+                      )),
+                  backgroundColor: Colors.blue[400],
                   actions: [
-                    isNewUser! //If is a new user, do not show edit icon.
-                      ? Icon(null)
-                      : editMode! 
-                            ? IconButton(
-                                icon: Icon(Icons.check), onPressed: con?.saveUpdates)
-                            : IconButton(
-                                icon: Icon(Icons.edit), onPressed: con?.editProfile),
+                    editMode!
+                        ? IconButton(
+                      icon: Icon(
+                        Icons.check,
+                        color: Colors.pink,
+                      ),
+                      onPressed: con?.saveUpdates,
+                    )
+                        : IconButton(
+                      icon: Icon(
+                        Icons.edit,
+                        color: Colors.pink,
+                      ),
+                      onPressed: con?.editProfile,
+                    ),
                   ],
                 ),
                 body: SingleChildScrollView(
