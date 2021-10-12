@@ -2,19 +2,15 @@ import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/model/client.dart';
-import 'package:monkey_management/model/store.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
-import 'package:monkey_management/view/common_view/loading_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
 
 class ClientGeneralInfoScreen extends StatefulWidget {
   static const routeName = '/ClientGeneralInfoScreen';
-
   @override
   State<StatefulWidget> createState() {
     return ClientGeneralInfoState();
@@ -30,7 +26,6 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
   Client? tempProfile;
   bool? isNewUser;
   bool? editMode = false;
-  String? dropdownValue;
 
   @override
   void initState() {
@@ -49,11 +44,10 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
     isNewUser = args['isNewUser'] ?? true;
 
     tempProfile = Client.clone(clientProfile!);
-    //String? dropdownValue = tempProfile!.favLocation;
-    //print(dropdownValue);
-    //dropdownValue = 'One';
+
     print('Email: $email');
     print('Password: $password');
+
     return FutureBuilder(
         future: con!.fetchData(),
         builder: (context, snapshot) {
@@ -393,12 +387,83 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
                             ],
                           ),
                         ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: TextFormField(
+                        enabled: editMode,
+                        initialValue: tempProfile!.address,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: con?.validateAddress,
+                        onSaved: con?.saveAddress,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+
+                    //VEHICLE COLOR – USE DROPDOWN
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
+                      child: Text(
+                        "Vehicle Color",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: TextFormField(
+                        enabled: editMode,
+                        initialValue: tempProfile!.vehicleColor,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        //validator: con?.validateFirstName,
+                        onSaved: con?.saveVehicleColor,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+
+                    //VEHICLE MAKE
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
+                      child: Text(
+                        "Vehicle Make",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: TextFormField(
+                        enabled: editMode,
+                        initialValue: tempProfile!.vehicleMake,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        //validator: con?.validateFirstName,
+                        onSaved: con?.saveVehicleMake,
+                      ),
+                    ),
+                    SizedBox(height: 90)
+                  ],
                 ),
               ),
-            );
-          else
-            return Text("Error");
-        });
+      ),
+    );
   }
 }
 
@@ -409,51 +474,6 @@ class Controller {
   String? lastName;
   String? address;
   User? user;
-  List<Store> stores = [];
-  List<String> storeNames = [];
-  late Client clientProfile;
-  String? dropdownValue;
-
-  Future<void> fetchData() async {
-    stores = await FirebaseController.fetchStores();
-    storeNames = [];
-    clientProfile =
-        await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
-
-    for (int i = 0; i < stores.length; i++) {
-      storeNames.add(stores[i].name);
-    }
-
-    if (clientProfile.favLocation == "" ||
-        storeNames.contains(clientProfile.favLocation) == false) {
-      dropdownValue = storeNames[0];
-    } else {
-      dropdownValue = clientProfile.favLocation;
-    }
-
-    print(storeNames);
-    // Appointment appointment = Appointment();
-    // await FirebaseController.addAppointment(appointment);
-  }
-
-  Future<void> accountSettings(String? uid) async {
-    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName,
-        arguments: {
-          // "user": state.user,
-          "one_clientProfile": clientProfile,
-          'isNewUser': false,
-        });
-    Navigator.pop(state.context); //pop the drawer
-    state.render(() {});
-  }
-
-  void saveStores(List<Store> stores) {
-    storeNames = [];
-    for (int i = 0; i < stores.length; i++) {
-      storeNames.add(stores[i].name);
-    }
-    print(storeNames);
-  }
 
   Future<void> onSave() async {
     if (!state.formKey.currentState!.validate()) {
@@ -506,14 +526,6 @@ class Controller {
     }
   }
 
-  Future<bool> checkEditMode() async {
-    if (true) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   void saveLastName(String? value) {
     this.lastName = value;
 
@@ -536,15 +548,6 @@ class Controller {
 
   void saveFavLocation(String? value) {
     state.tempProfile!.favLocation = value;
-    print(state.tempProfile!.favLocation);
-  }
-
-  String? validatePhone(String? value) {
-    if (value == null || value.length < 10 || value.length > 10) {
-      return 'Phone number must be 10 numbers.';
-    } else {
-      return null;
-    }
   }
 
   void savePhone(String? value) {
@@ -598,25 +601,6 @@ class Controller {
       MyDialog.circularProgressStop(state.context);
       MyDialog.info(
           context: state.context, title: "Error Updating Account", content: "$e");
-    }
-  }
-
-  void saveFavLocationToFirebase(String newFav) async {
-    try {
-      MyDialog.circularProgressStart(state.context);
-      Map<String, dynamic> updateInfo = {};
-
-      updateInfo[Client.FAV_LOCATION] = newFav;
-
-      await FirebaseController.updateClientProfile(
-          FirebaseAuth.instance.currentUser!.uid, updateInfo);
-      state.clientProfile!.assign(state.tempProfile!);
-
-      MyDialog.circularProgressStop(state.context);
-    } catch (e) {
-      MyDialog.circularProgressStop(state.context);
-      MyDialog.info(
-          context: state.context, title: "Error Updating favLocation", content: "$e");
     }
   }
 
