@@ -30,7 +30,6 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
   Client? tempProfile;
   bool? isNewUser;
   bool? editMode = false;
-  String? dropdownValue;
 
   @override
   void initState() {
@@ -725,7 +724,7 @@ class Controller {
   List<Store> stores = [];
   List<String> storeNames = [];
   late Client clientProfile;
-  String? dropdownValue;
+  String? dropdownValue = "";
   String? vehicleColorDropdown = "";
   String? vehicleMakeDropdown = "";
   List<String> vehicleMakes = [
@@ -769,8 +768,9 @@ class Controller {
     for (int i = 0; i < stores.length; i++) {
       storeNames.add(stores[i].name);
     }
-
+    print(storeNames[0]);
     //checking favLocation
+
     if (dropdownValue == "") {
       if (clientProfile.favLocation == "" ||
           storeNames.contains(clientProfile.favLocation) == false) {
