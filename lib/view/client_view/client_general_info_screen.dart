@@ -742,7 +742,10 @@ class Controller {
     'Cadillac',
     'Buick',
     'GMC',
-    'Dodge'
+    'Dodge',
+    'Mazda',
+    'Infiniti',
+    'Lexus',
   ];
   List<String> vehicleColors = [
     'None Selected',
