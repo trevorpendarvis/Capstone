@@ -117,8 +117,7 @@ class FirebaseController {
 
   //Get a store's profile from Firebase
   static Future<Store> getStoreProfile(String uid) async {
-    var result =
-    await FirebaseFirestore.instance.collection(Store.COLLECTION).doc(uid).get();
+    var result = await FirebaseFirestore.instance.collection(Store.COLLECTION).doc(uid).get();
 
     return Store.deserialize(result.data(), uid);
   }
