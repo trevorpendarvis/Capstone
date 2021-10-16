@@ -105,6 +105,13 @@ class _StoreScreenState extends State<StoreScreen> {
                     onPressed: () => con!.onCompletedFilter(),
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsets.only(right: 8.0),
+                  child: ElevatedButton(
+                    child: Text('Time'),
+                    onPressed: () => con!.onTimeFilter(),
+                  ),
+                ),
               ],
             ),
             Expanded(
@@ -276,6 +283,12 @@ class Controller {
   void onCompletedFilter() {
     state.setState(() {
       filteredAppointmentsSnapshot = appointmentsSnapshot.docs.where((element) => element.data()[Appointment.IS_COMPLETED] == true);
+    });
+  }
+
+  void onTimeFilter() {
+    state.setState(() {
+      filteredAppointmentsSnapshot = appointmentsSnapshot.docs..sort((a, b) => b.data()[Appointment.APPOINTMENT_TIME].compareTo(a.data()[Appointment.APPOINTMENT_TIME]));
     });
   }
 
