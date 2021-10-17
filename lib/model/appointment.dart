@@ -12,8 +12,8 @@ class Appointment {
   Option option = Option();
   DateTime createdAt = DateTime.now();
   String createdBy = '';
-  bool isCanceled =  false;
-  bool isCompleted =  false;
+  bool isCanceled = false;
+  bool isCompleted = false;
 
   static const COLLECTION = 'appointments';
   static const CLIENT_ID = 'client_id';
@@ -29,25 +29,28 @@ class Appointment {
 
   Map<String, dynamic> serialize() {
     return <String, dynamic>{
-    CLIENT_ID: this.client.docId,
-    STORE_ID: this.store.id,
-    APPOINTMENT_TIME: this.appointmentTime,
-    OPTION_ID: this.option.id,
-    CREATED_AT: this.createdAt,
-    CREATED_BY: this.createdBy,
-    IS_CANCELED: this.isCanceled,
-    IS_COMPLETED: this.isCompleted,
+      CLIENT_ID: this.client.docId,
+      STORE_ID: this.store.id,
+      APPOINTMENT_TIME: this.appointmentTime,
+      OPTION_ID: this.option.id,
+      CREATED_AT: this.createdAt,
+      CREATED_BY: this.createdBy,
+      IS_CANCELED: this.isCanceled,
+      IS_COMPLETED: this.isCompleted,
     };
   }
 
-  static Future<Appointment> deserialize(Map<String, dynamic>? doc, String docId) async {
+  static Future<Appointment> deserialize(
+      Map<String, dynamic>? doc, String docId) async {
     Appointment appointment = Appointment();
 
     print(doc![CLIENT_ID]);
 
-    appointment.client = await FirebaseController.getClientProfile(doc[CLIENT_ID]);
+    appointment.client =
+        await FirebaseController.getClientProfile(doc[CLIENT_ID]);
     appointment.store = await FirebaseController.getStoreProfile(doc[STORE_ID]);
-    appointment.appointmentTime = doc[APPOINTMENT_TIME].toDate() ?? DateTime.now();
+    appointment.appointmentTime =
+        doc[APPOINTMENT_TIME].toDate() ?? DateTime.now();
     appointment.option = await FirebaseController.getOption(doc[OPTION_ID]);
     appointment.createdAt = doc[CREATED_AT].toDate() ?? DateTime.now();
     appointment.createdBy = doc[CREATED_BY] ?? '';
@@ -57,7 +60,8 @@ class Appointment {
     return appointment;
   }
 
-  static Future<List<Appointment>> deserializeToList(QuerySnapshot<Map<String, dynamic>> docs) async {
+  static Future<List<Appointment>> deserializeToList(
+      QuerySnapshot<Map<String, dynamic>> docs) async {
     List<Appointment> appointments = [];
 
     docs.docs.forEach((element) async {
