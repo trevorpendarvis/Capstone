@@ -295,8 +295,8 @@ class Controller {
     clientProfile = await FirebaseController.getClientProfile(
         FirebaseAuth.instance.currentUser!.uid);
 
-    // Appointment appointment = Appointment();
-    // await FirebaseController.addAppointment(appointment);
+    Appointment appointment = Appointment();
+    await FirebaseController.addAppointment(appointment);
   }
 
   Future<void> accountSettings(String? uid) async {
