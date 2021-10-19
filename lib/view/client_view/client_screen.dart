@@ -151,6 +151,20 @@ class _ClientScreenState extends State<ClientScreen> {
                 drawer: Drawer(
                   child: ListView(
                     children: [
+                      DrawerHeader(
+                        child: Container(
+                          width: 500.0,
+                          height: 10.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.blue[300],
+                            image: DecorationImage(
+                              image: AssetImage("assets/images/MonkeyLogo.png"),
+                              fit: BoxFit.fitHeight,
+                            ),
+                          ),
+                        ),
+                      ),
                       ListTile(
                         leading: Icon(Icons.people_outline),
                         title: Text("Account Settings"),
