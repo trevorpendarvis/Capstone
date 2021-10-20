@@ -4,33 +4,36 @@ import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/appointment.dart';
 import 'package:intl/intl.dart';
 
-class ClientAppointmentsScreen extends StatefulWidget {
-  static const routeName = "/client_appointments_screen";
+
+class ClientAppointmentHistoryScreen extends StatefulWidget {
+  static const routeName = "/client_appointment_history_screen";
 
   @override
-  _ClientAppointmentsScreenState createState() => _ClientAppointmentsScreenState();
+  _ClientAppointmentHistoryScreenState createState() =>
+      _ClientAppointmentHistoryScreenState();
 }
 
-class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
+class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Appointments'),
+        title: Text("Past Appointments"),
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: FirebaseController.appointmentsStreamForClient(),
+          stream: FirebaseController.appointmentHistoryStreamForClient(),
           builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamSnapshot) {
-            if (appointmentsStreamSnapshot.connectionState == ConnectionState.waiting) {
+          (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> appointmentHistoryStreamSnapshot) {
+            if (appointmentHistoryStreamSnapshot.connectionState ==
+                ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
 
-            if (appointmentsStreamSnapshot.hasData) {
+            if (appointmentHistoryStreamSnapshot.hasData) {
               // List<Appointment> appointments = Appointment.deserializeToList(appointmentsSnapshot.data!) as List<Appointment>;
-              if (appointmentsStreamSnapshot.data!.docs.length == 0)
+              if (appointmentHistoryStreamSnapshot.data!.docs.length == 0)
                 return Center(
                   child: Text(
                     'Empty',
@@ -45,22 +48,22 @@ class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
               return Container(
                 child: Column(
                   children: [
-                    Text('Blue: Pending | Green: Completed | Red: Canceled'),
+                    //Text('Blue: Pending | Green: Completed | Red: Canceled'),
                     Expanded(
                       child: ListView.builder(
-                          itemCount: appointmentsStreamSnapshot.data!.size,
+                          itemCount: appointmentHistoryStreamSnapshot.data!.size,
                           itemBuilder: (context, index) => FutureBuilder<Appointment>(
-                              future: Appointment.deserialize(appointmentsStreamSnapshot.data!.docs[index].data(),
-                                  appointmentsStreamSnapshot.data!.docs[index].id),
-                              builder: (context, appointmentSnapshot) {
-                                if (appointmentSnapshot.connectionState == ConnectionState.waiting) {
+                              future: Appointment.deserialize(appointmentHistoryStreamSnapshot.data!.docs[index].data(),
+                                  appointmentHistoryStreamSnapshot.data!.docs[index].id),
+                              builder: (context, appointmentHistorySnapshot) {
+                                if (appointmentHistorySnapshot.connectionState == ConnectionState.waiting) {
                                   return ListTile(
                                     title: Text('Loading...'),
                                   );
                                 }
-                                if (appointmentSnapshot.hasData) {
+                                if (appointmentHistorySnapshot.hasData) {
                                   // print(appointmentSnapshot.data!.clientId);
-                                  Appointment appointment = appointmentSnapshot.data as Appointment;
+                                  Appointment appointment = appointmentHistorySnapshot.data as Appointment;
                                   return GestureDetector(
                                     child: Container(
                                       // shape: RoundedRectangleBorder(
@@ -90,11 +93,12 @@ class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
                                                 height: 40.0,
                                                 margin: EdgeInsets.only(right: 10.0, left: 10.0),
                                                 decoration: BoxDecoration(
-                                                  color: appointment.isCompleted
-                                                      ? Colors.green
-                                                      : appointment.isCanceled
-                                                          ? Colors.deepOrange
-                                                          : Colors.blue,
+                                                  color: Colors.green,
+                                                  //appointment.isCompleted
+                                                  //     ? Colors.green
+                                                  //     : appointment.isCanceled
+                                                  //         ? Colors.deepOrange
+                                                  //         : Colors.blue,
                                                   borderRadius: BorderRadius.circular(5),
                                                 ),
                                                 child: Text(' '),
@@ -122,37 +126,37 @@ class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
                                               ),
                                             ],
                                           ),
-                                          Row(
-                                            children: [
-                                              TextButton(
-                                                  onPressed: () {},
-                                                  child: Text(
-                                                    '${appointment.isCanceled ? 'Revert' : 'Cancel'}',
-                                                    style: TextStyle(
-                                                      // fontWeight: FontWeight.bold,
-                                                      color: Colors.red,
-                                                      // fontSize: 16.0,
-                                                    ),
-                                                  )),
-                                              TextButton(
-                                                  onPressed: () {},
-                                                  child: Text(
-                                                    '${appointment.isCompleted ? 'Revert' : 'Done'}',
-                                                    style: TextStyle(
-                                                      // fontWeight: FontWeight.bold,
-                                                      color: Colors.blue,
-                                                      // fontSize: 16.0,
-                                                    ),
-                                                  )),
-                                            ],
-                                          )
+                                          // Row(
+                                          //   children: [
+                                          //     TextButton(
+                                          //         onPressed: () {},
+                                          //         child: Text(
+                                          //           '${appointment.isCanceled ? 'Revert' : 'Cancel'}',
+                                          //           style: TextStyle(
+                                          //             // fontWeight: FontWeight.bold,
+                                          //             color: Colors.red,
+                                          //             // fontSize: 16.0,
+                                          //           ),
+                                          //         )),
+                                          //     TextButton(
+                                          //         onPressed: () {},
+                                          //         child: Text(
+                                          //           '${appointment.isCompleted ? 'Revert' : 'Done'}',
+                                          //           style: TextStyle(
+                                          //             // fontWeight: FontWeight.bold,
+                                          //             color: Colors.blue,
+                                          //             // fontSize: 16.0,
+                                          //           ),
+                                          //         )),
+                                          //   ],
+                                          // )
                                         ],
                                       ),
                                     ),
                                     onTap: () {},
                                   );
                                 }
-                                print(appointmentSnapshot.error);
+                                print(appointmentHistorySnapshot.error);
                                 return Text('error!!!');
                               })),
                     )
@@ -161,7 +165,7 @@ class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
               );
             }
 
-            print(appointmentsStreamSnapshot.error);
+            print(appointmentHistoryStreamSnapshot.error);
             return Text('error');
           }),
     );
