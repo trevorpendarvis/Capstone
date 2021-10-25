@@ -56,7 +56,8 @@ class _ClientScreenState extends State<ClientScreen> {
     return FutureBuilder(
         future: con!.fetchData(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return LoadingScreen();
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return LoadingScreen();
           if (snapshot.connectionState == ConnectionState.done)
             return WillPopScope(
               onWillPop: () => Future.value(false),
@@ -66,51 +67,72 @@ class _ClientScreenState extends State<ClientScreen> {
                   backgroundColor: Colors.indigoAccent,
                   actions: [
                     StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                        stream: FirebaseController.appointmentsStreamForClient(),
+                        stream:
+                            FirebaseController.appointmentsStreamForClient(),
                         builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamSnapshot) {
-                          if (appointmentsStreamSnapshot.connectionState == ConnectionState.waiting) {
+                            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                                appointmentsStreamSnapshot) {
+                          if (appointmentsStreamSnapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.white),
-                                  foregroundColor: MaterialStateProperty.all(Colors.indigo),
+                                  backgroundColor:
+                                      MaterialStateProperty.all(Colors.white),
+                                  foregroundColor:
+                                      MaterialStateProperty.all(Colors.indigo),
                                   textStyle: MaterialStateProperty.all(
-                                    TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold),
+                                    TextStyle(
+                                        color: Colors.indigo,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                onPressed: () => con!.handleMyAppointmentButton(),
+                                onPressed: () =>
+                                    con!.handleMyAppointmentButton(),
                                 child: Text('... appointment'),
                               ),
                             );
                           }
 
                           if (appointmentsStreamSnapshot.hasData) {
-                            int numOfAppointments = appointmentsStreamSnapshot.data!.docs.length;
+                            int numOfAppointments =
+                                appointmentsStreamSnapshot.data!.docs.length;
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.white),
-                                  foregroundColor: MaterialStateProperty.all(Colors.indigo),
+                                  backgroundColor:
+                                      MaterialStateProperty.all(Colors.white),
+                                  foregroundColor:
+                                      MaterialStateProperty.all(Colors.indigo),
                                   textStyle: MaterialStateProperty.all(
-                                    TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold),
+                                    TextStyle(
+                                        color: Colors.indigo,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                onPressed: () => con!.handleMyAppointmentButton(),
+                                onPressed: () =>
+                                    con!.handleMyAppointmentButton(),
                                 child: Row(
                                   children: [
                                     Stack(
                                       children: [
                                         Icon(
                                           Icons.circle,
-                                          color: numOfAppointments > 0 ? Colors.deepOrange : null,
+                                          color: numOfAppointments > 0
+                                              ? Colors.deepOrange
+                                              : null,
                                           size: 25,
                                         ),
                                         Container(
-                                          margin: EdgeInsets.only(top: 4.0, left: 8.0),
-                                          child: Text('$numOfAppointments', style: TextStyle(color: Colors.white),),
+                                          margin: EdgeInsets.only(
+                                              top: 4.0, left: 8.0),
+                                          child: Text(
+                                            '$numOfAppointments',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -132,7 +154,8 @@ class _ClientScreenState extends State<ClientScreen> {
                       ListTile(
                         leading: Icon(Icons.people_outline),
                         title: Text("Account Settings"),
-                        onTap: () => con?.accountSettings(FirebaseAuth.instance.currentUser!.uid),
+                        onTap: () => con?.accountSettings(
+                            FirebaseAuth.instance.currentUser!.uid),
                       ),
                       // ListTile(
                       //   leading: Icon(Icons.settings),
@@ -164,17 +187,25 @@ class _ClientScreenState extends State<ClientScreen> {
                                       borderRadius: BorderRadius.circular(33),
                                     ),
 
-                                    margin: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
-                                    padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 15.0, bottom: 8.0),
+                                    margin: const EdgeInsets.only(
+                                        top: 8.0, right: 8.0, left: 8.0),
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0,
+                                        right: 8.0,
+                                        left: 15.0,
+                                        bottom: 8.0),
                                     height: 65.0,
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(
                                           children: [
                                             Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   '${con!.stores[index].name}',
@@ -199,7 +230,8 @@ class _ClientScreenState extends State<ClientScreen> {
                                           children: [
                                             TextButton(
                                               onPressed: () {
-                                                print('for call store function...');
+                                                print(
+                                                    'for call store function...');
                                               },
                                               child: Text(
                                                 'Call',
@@ -215,7 +247,8 @@ class _ClientScreenState extends State<ClientScreen> {
                                       ],
                                     ),
                                   ),
-                                  onTap: () => con?.handleStoreOnTap(con!.stores[index]),
+                                  onTap: () =>
+                                      con?.handleStoreOnTap(con!.stores[index]),
                                 )),
                       ),
                     ],
@@ -245,34 +278,38 @@ class Controller {
   */
   Future<void> fetchData() async {
     stores = await FirebaseController.fetchStores();
-    clientProfile = await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
+    clientProfile = await FirebaseController.getClientProfile(
+        FirebaseAuth.instance.currentUser!.uid);
 
     // Appointment appointment = Appointment();
     // await FirebaseController.addAppointment(appointment);
   }
 
   Future<void> accountSettings(String? uid) async {
-    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName, arguments: {
-      // "user": state.user,
-      "one_clientProfile": clientProfile,
-      'isNewUser': false,
-    });
+    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName,
+        arguments: {
+          // "user": state.user,
+          "one_clientProfile": clientProfile,
+          'isNewUser': false,
+        });
     Navigator.pop(state.context); //pop the drawer
     state.render(() {});
   }
 
   Future<void> handleStoreOnTap(Store store) async {
-    await Navigator.pushNamed(state.context, StoreInfoScreen.routeName, arguments: {
-      "store": store,
-    });
+    await Navigator.pushNamed(state.context, StoreInfoScreen.routeName,
+        arguments: {
+          "store": store,
+        });
   }
 
   Future<void> accountSettingsUsingNavigator(String? uid) async {
-    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName, arguments: {
-      // "user": state.user,
-      "one_clientProfile": clientProfile,
-      'isNewUser': false,
-    });
+    await Navigator.pushNamed(state.context, ClientGeneralInfoScreen.routeName,
+        arguments: {
+          // "user": state.user,
+          "one_clientProfile": clientProfile,
+          'isNewUser': false,
+        });
     //Navigator.pop(state.context); //pop the drawer
     state.render(() {});
   }
