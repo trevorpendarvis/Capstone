@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/model/client.dart';
+import 'package:monkey_management/model/message.dart';
 import 'package:monkey_management/model/option.dart';
 import 'package:monkey_management/model/store.dart';
 import 'package:monkey_management/model/location.dart';
@@ -24,7 +25,8 @@ class FirebaseController {
           .get()
           .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
         if (documentSnapshot.exists) {
-          accountType = AccountType.CLIENT; //Changed from account_type to accountType -Caitlyn
+          accountType =
+              AccountType.CLIENT; //Changed from account_type to accountType -Caitlyn
         }
       });
     } catch (e) {
@@ -34,7 +36,8 @@ class FirebaseController {
   }
 
   static Future<User?> signIn({required String? email, required String? password}) async {
-    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email!,
       password: password!,
     );
@@ -46,7 +49,8 @@ class FirebaseController {
     await FirebaseAuth.instance.signOut();
   }
 
-  static Future<void> createNewClient({required String email, required String password}) async {
+  static Future<void> createNewClient(
+      {required String email, required String password}) async {
     //UserCredential userCredential =
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email,
@@ -77,7 +81,8 @@ class FirebaseController {
     // await ref.set(userData);
   }
 
-  static Future<void> createNewStore({required String email, required String password}) async {
+  static Future<void> createNewStore(
+      {required String email, required String password}) async {
     //UserCredential userCredential =
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email,
@@ -110,7 +115,8 @@ class FirebaseController {
 
   //Get a client's profile from Firebase
   static Future<Client> getClientProfile(String uid) async {
-    var result = await FirebaseFirestore.instance.collection(Client.COLLECTION).doc(uid).get();
+    var result =
+        await FirebaseFirestore.instance.collection(Client.COLLECTION).doc(uid).get();
 
     return Client.deserialize(result.data(), uid);
   }
@@ -118,7 +124,7 @@ class FirebaseController {
   //Get a store's profile from Firebase
   static Future<Store> getStoreProfile(String uid) async {
     var result =
-    await FirebaseFirestore.instance.collection(Store.COLLECTION).doc(uid).get();
+        await FirebaseFirestore.instance.collection(Store.COLLECTION).doc(uid).get();
 
     return Store.deserialize(result.data(), uid);
   }
@@ -127,13 +133,18 @@ class FirebaseController {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
 
-    DocumentReference ref = FirebaseFirestore.instance.collection(Client.COLLECTION).doc(user!.uid);
+    DocumentReference ref =
+        FirebaseFirestore.instance.collection(Client.COLLECTION).doc(user!.uid);
 
     await ref.set(profile!.serialize());
   }
 
-  static Future<void> updateClientProfile(String? docId, Map<String, dynamic> updateInfo) async {
-    await FirebaseFirestore.instance.collection(Client.COLLECTION).doc(docId).update(updateInfo);
+  static Future<void> updateClientProfile(
+      String? docId, Map<String, dynamic> updateInfo) async {
+    await FirebaseFirestore.instance
+        .collection(Client.COLLECTION)
+        .doc(docId)
+        .update(updateInfo);
   }
 
   // static Future<void> addStoreProfile(Store? profile) async {
@@ -150,7 +161,8 @@ class FirebaseController {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
 
-    DocumentReference ref = FirebaseFirestore.instance.collection(Store.COLLECTION).doc(user!.uid);
+    DocumentReference ref =
+        FirebaseFirestore.instance.collection(Store.COLLECTION).doc(user!.uid);
 
     await ref.set(profile!.serialize());
   }
@@ -158,7 +170,8 @@ class FirebaseController {
   static Future<void> addOption(Option option) async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
-    DocumentReference ref = FirebaseFirestore.instance.collection(Option.COLLECTION).doc();
+    DocumentReference ref =
+        FirebaseFirestore.instance.collection(Option.COLLECTION).doc();
 
     await ref.set(option.serialize(currentUser!.uid));
   }
@@ -166,7 +179,8 @@ class FirebaseController {
   static Future<void> addAppointment(Appointment appointment) async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
-    DocumentReference ref = FirebaseFirestore.instance.collection(Appointment.COLLECTION).doc();
+    DocumentReference ref =
+        FirebaseFirestore.instance.collection(Appointment.COLLECTION).doc();
 
     await ref.set(appointment.serialize());
   }
@@ -174,7 +188,8 @@ class FirebaseController {
   static Future<void> addLocation(Location location) async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
-    DocumentReference ref = FirebaseFirestore.instance.collection(Location.COLLECTION).doc();
+    DocumentReference ref =
+        FirebaseFirestore.instance.collection(Location.COLLECTION).doc();
 
     await ref.set(location.serialize(currentUser!.uid));
   }
@@ -182,7 +197,10 @@ class FirebaseController {
   static Future<List<Store>> fetchStores() async {
     List<Store> stores = [];
     try {
-      await FirebaseFirestore.instance.collection(Store.COLLECTION).get().then((var data) {
+      await FirebaseFirestore.instance
+          .collection(Store.COLLECTION)
+          .get()
+          .then((var data) {
         if (data.docs.isNotEmpty) {
           data.docs.forEach((doc) {
             Store staff = Store.deserialize(doc.data(), doc.id);
@@ -242,7 +260,8 @@ class FirebaseController {
   }
 
   static Future<Option> getOption(String uid) async {
-    var result = await FirebaseFirestore.instance.collection(Option.COLLECTION).doc(uid).get();
+    var result =
+        await FirebaseFirestore.instance.collection(Option.COLLECTION).doc(uid).get();
 
     return Option.deserialize(result.data(), uid);
   }
@@ -273,6 +292,7 @@ class FirebaseController {
     return FirebaseFirestore.instance
         .collection(Appointment.COLLECTION)
         .where(Appointment.STORE_ID, isEqualTo: currentStore!.uid)
+        .orderBy(Appointment.APPOINTMENT_TIME)
         .snapshots();
   }
 
@@ -282,6 +302,28 @@ class FirebaseController {
     return FirebaseFirestore.instance
         .collection(Appointment.COLLECTION)
         .where(Appointment.CLIENT_ID, isEqualTo: currentClient!.uid)
+        .snapshots();
+  }
+
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> appointmentHistoryStreamForClient() {
+    final User? currentClient = FirebaseAuth.instance.currentUser;
+    return FirebaseFirestore.instance
+        .collection(Appointment.COLLECTION)
+        .where(Appointment.CLIENT_ID, isEqualTo: currentClient!.uid)
+        .where(Appointment.IS_COMPLETED, isEqualTo: true)
+        .snapshots();
+}
+        //Might need to order by time?
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>>
+  messageStream() {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+
+    return FirebaseFirestore.instance
+        .collection(Message.COLLECTION)
+        .where(Message.SENDER_ID, isEqualTo: currentUser!.uid)
+        .limit(100)
         .snapshots();
   }
 }

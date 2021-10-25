@@ -6,6 +6,7 @@ import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/model/store.dart';
+import 'package:monkey_management/view/client_view/client_appointment_history_screen.dart';
 import 'package:monkey_management/view/client_view/client_appointments_screen.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
 import 'package:monkey_management/view/client_view/store_info_screen.dart';
@@ -151,6 +152,20 @@ class _ClientScreenState extends State<ClientScreen> {
                 drawer: Drawer(
                   child: ListView(
                     children: [
+                      DrawerHeader(
+                        child: Container(
+                          width: 500.0,
+                          height: 10.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.blue[300],
+                            image: DecorationImage(
+                              image: AssetImage("assets/images/MonkeyLogo.png"),
+                              fit: BoxFit.fitHeight,
+                            ),
+                          ),
+                        ),
+                      ),
                       ListTile(
                         leading: Icon(Icons.people_outline),
                         title: Text("Account Settings"),
@@ -162,6 +177,11 @@ class _ClientScreenState extends State<ClientScreen> {
                       //   title: Text("Settings"),
                       //   onTap: con?.settings,
                       // ),
+                      ListTile(
+                        leading: Icon(Icons.calendar_today),
+                        title: Text("Past Appointments"),
+                        onTap: () => con!.appointmentHistory(),
+                      ),
                       ListTile(
                         leading: Icon(Icons.exit_to_app),
                         title: Text("Sign Out"),
@@ -316,11 +336,14 @@ class Controller {
 
   Future<void> signOut() async {
     FirebaseController.signOut();
-
-    //Future<void> settings() async {}
   }
 
   void handleMyAppointmentButton() {
     Navigator.pushNamed(state.context, ClientAppointmentsScreen.routeName);
+  }
+
+  void appointmentHistory() {
+    Navigator.pushNamed(
+        state.context, ClientAppointmentHistoryScreen.routeName);
   }
 }

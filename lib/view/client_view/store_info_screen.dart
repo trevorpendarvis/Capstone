@@ -10,6 +10,7 @@ import 'package:monkey_management/view/common_view/mydialog.dart';
 
 class StoreInfoScreen extends StatefulWidget {
   static const routeName = '/storeInfoScreen';
+
   @override
   State<StatefulWidget> createState() {
     return StoreInfoState();
@@ -60,12 +61,8 @@ class StoreInfoState extends State<StoreInfoScreen> {
                     leading: Icon(Icons.location_on_outlined),
                     title: Text(selctedStore.address),
                   ),
-                  ElevatedButton(
-                      onPressed: () => con!.handelOptions(),
-                      child: Text('View Options')),
-                  ElevatedButton(
-                      onPressed: () => con!.openMaps(selctedStore.address),
-                      child: Text('Directions')),
+                  ElevatedButton(onPressed: () => con!.handelOptions(), child: Text('View Options')),
+                  ElevatedButton(onPressed: () => con!.openMaps(selctedStore.address), child: Text('Directions')),
                 ],
               ),
             ),
@@ -90,16 +87,10 @@ class Controller {
     try {
       options = await FirebaseController.getOptions(state.selctedStore.id);
     } catch (e) {
-      MyDialog.info(
-          context: state.context,
-          title: 'handel options failed',
-          content: e.toString());
+      MyDialog.info(context: state.context, title: 'handel options failed', content: e.toString());
     }
 
-    await Navigator.pushNamed(
-        state.context, AddUpdateAppointmentScreen.routeName, arguments: {
-      'storeOptions': options,
-      'selctedStore': state.selctedStore
-    });
+    await Navigator.pushNamed(state.context, AddUpdateAppointmentScreen.routeName,
+        arguments: {'storeOptions': options, 'selctedStore': state.selctedStore});
   }
 }

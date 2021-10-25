@@ -23,6 +23,7 @@ class _AddAppointmentScreenState extends State<AddUpdateAppointmentScreen> {
   late List<Option> storeOptions;
   late Store selctedStore;
   late DateTime pickedDate;
+
   @override
   void initState() {
     super.initState();
@@ -45,7 +46,7 @@ class _AddAppointmentScreenState extends State<AddUpdateAppointmentScreen> {
         itemBuilder: (context, index) => GestureDetector(
           child: Container(
             decoration:
-                BoxDecoration(border: Border.all(color: Colors.black38)),
+            BoxDecoration(border: Border.all(color: Colors.black38)),
             child: ListTile(
               title: Center(child: Text(storeOptions[index].name)),
               subtitle: Center(
@@ -110,7 +111,7 @@ class _Controller {
                       child: ListTile(
                         title: Text('Select a Time'),
                         subtitle:
-                            Text('${timeOfDay!.hour}:${timeOfDay!.minute}'),
+                        Text('${timeOfDay!.hour}:${timeOfDay!.minute}'),
                         trailing: Icon(Icons.access_time),
                         onTap: () async {
                           final TimeOfDay? tempTime = await showTimePicker(
@@ -168,7 +169,7 @@ class _Controller {
           context: state.context,
           title: 'Successful',
           content:
-              'Appointment made for ${state.pickedDate.month}/${state.pickedDate.day}/${state.pickedDate.year}  At: ${timeOfDay!.hour}:${timeOfDay!.minute}');
+          'Appointment made for ${state.pickedDate.month}/${state.pickedDate.day}/${state.pickedDate.year}  At: ${timeOfDay!.hour}:${timeOfDay!.minute}');
     } catch (e) {
       MyDialog.circularProgressStop(state.context);
       MyDialog.info(
