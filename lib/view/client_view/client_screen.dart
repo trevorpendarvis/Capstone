@@ -57,7 +57,8 @@ class _ClientScreenState extends State<ClientScreen> {
     return FutureBuilder(
         future: con!.fetchData(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return LoadingScreen();
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return LoadingScreen();
           if (snapshot.connectionState == ConnectionState.done)
             return WillPopScope(
               onWillPop: () => Future.value(false),
@@ -67,7 +68,8 @@ class _ClientScreenState extends State<ClientScreen> {
                   backgroundColor: Colors.indigoAccent,
                   actions: [
                     StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                        stream: FirebaseController.appointmentsStreamForClient(),
+                        stream:
+                            FirebaseController.appointmentsStreamForClient(),
                         builder: (BuildContext context,
                             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
                                 appointmentsStreamSnapshot) {
@@ -87,7 +89,8 @@ class _ClientScreenState extends State<ClientScreen> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                onPressed: () => con!.handleMyAppointmentButton(),
+                                onPressed: () =>
+                                    con!.handleMyAppointmentButton(),
                                 child: Text('... appointment'),
                               ),
                             );
@@ -110,7 +113,8 @@ class _ClientScreenState extends State<ClientScreen> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                onPressed: () => con!.handleMyAppointmentButton(),
+                                onPressed: () =>
+                                    con!.handleMyAppointmentButton(),
                                 child: Row(
                                   children: [
                                     Stack(
@@ -123,10 +127,12 @@ class _ClientScreenState extends State<ClientScreen> {
                                           size: 25,
                                         ),
                                         Container(
-                                          margin: EdgeInsets.only(top: 4.0, left: 8.0),
+                                          margin: EdgeInsets.only(
+                                              top: 4.0, left: 8.0),
                                           child: Text(
                                             '$numOfAppointments',
-                                            style: TextStyle(color: Colors.white),
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           ),
                                         ),
                                       ],
@@ -163,8 +169,8 @@ class _ClientScreenState extends State<ClientScreen> {
                       ListTile(
                         leading: Icon(Icons.people_outline),
                         title: Text("Account Settings"),
-                        onTap: () =>
-                            con?.accountSettings(FirebaseAuth.instance.currentUser!.uid),
+                        onTap: () => con?.accountSettings(
+                            FirebaseAuth.instance.currentUser!.uid),
                       ),
                       // ListTile(
                       //   leading: Icon(Icons.settings),
@@ -174,7 +180,7 @@ class _ClientScreenState extends State<ClientScreen> {
                       ListTile(
                         leading: Icon(Icons.calendar_today),
                         title: Text("Past Appointments"),
-                        onTap: () => con!.appointmentHistory,
+                        onTap: () => con!.appointmentHistory(),
                       ),
                       ListTile(
                         leading: Icon(Icons.exit_to_app),
@@ -204,17 +210,22 @@ class _ClientScreenState extends State<ClientScreen> {
                                     margin: const EdgeInsets.only(
                                         top: 8.0, right: 8.0, left: 8.0),
                                     padding: const EdgeInsets.only(
-                                        top: 8.0, right: 8.0, left: 15.0, bottom: 8.0),
+                                        top: 8.0,
+                                        right: 8.0,
+                                        left: 15.0,
+                                        bottom: 8.0),
                                     height: 65.0,
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(
                                           children: [
                                             Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   '${con!.stores[index].name}',
@@ -239,7 +250,8 @@ class _ClientScreenState extends State<ClientScreen> {
                                           children: [
                                             TextButton(
                                               onPressed: () {
-                                                print('for call store function...');
+                                                print(
+                                                    'for call store function...');
                                               },
                                               child: Text(
                                                 'Call',
@@ -255,7 +267,8 @@ class _ClientScreenState extends State<ClientScreen> {
                                       ],
                                     ),
                                   ),
-                                  onTap: () => con?.handleStoreOnTap(con!.stores[index]),
+                                  onTap: () =>
+                                      con?.handleStoreOnTap(con!.stores[index]),
                                 )),
                       ),
                     ],
@@ -285,11 +298,11 @@ class Controller {
   */
   Future<void> fetchData() async {
     stores = await FirebaseController.fetchStores();
-    clientProfile =
-        await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
+    clientProfile = await FirebaseController.getClientProfile(
+        FirebaseAuth.instance.currentUser!.uid);
 
-    Appointment appointment = Appointment();
-    await FirebaseController.addAppointment(appointment);
+    // Appointment appointment = Appointment();
+    // await FirebaseController.addAppointment(appointment);
   }
 
   Future<void> accountSettings(String? uid) async {
@@ -304,9 +317,10 @@ class Controller {
   }
 
   Future<void> handleStoreOnTap(Store store) async {
-    await Navigator.pushNamed(state.context, StoreInfoScreen.routeName, arguments: {
-      "store": store,
-    });
+    await Navigator.pushNamed(state.context, StoreInfoScreen.routeName,
+        arguments: {
+          "store": store,
+        });
   }
 
   Future<void> accountSettingsUsingNavigator(String? uid) async {
@@ -329,6 +343,7 @@ class Controller {
   }
 
   void appointmentHistory() {
-    Navigator.pushNamed(state.context, ClientAppointmentHistoryScreen.routeName);
+    Navigator.pushNamed(
+        state.context, ClientAppointmentHistoryScreen.routeName);
   }
 }
