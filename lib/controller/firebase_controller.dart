@@ -302,9 +302,9 @@ class FirebaseController {
     return FirebaseFirestore.instance
         .collection(Appointment.COLLECTION)
         .where(Appointment.CLIENT_ID, isEqualTo: currentClient!.uid)
+        .where(Appointment.IS_COMPLETED, isEqualTo: false)
         .snapshots();
   }
-
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> appointmentHistoryStreamForClient() {
     final User? currentClient = FirebaseAuth.instance.currentUser;
@@ -313,11 +313,10 @@ class FirebaseController {
         .where(Appointment.CLIENT_ID, isEqualTo: currentClient!.uid)
         .where(Appointment.IS_COMPLETED, isEqualTo: true)
         .snapshots();
-}
-        //Might need to order by time?
+  }
+  //Might need to order by time?
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>>
-  messageStream() {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> messageStream() {
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
     return FirebaseFirestore.instance
