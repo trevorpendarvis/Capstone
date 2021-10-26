@@ -20,8 +20,9 @@ class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseController.appointmentsStreamForClient(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamSnapshot) {
+          builder: (BuildContext context,
+              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                  appointmentsStreamSnapshot) {
             if (appointmentsStreamSnapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
@@ -45,22 +46,25 @@ class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
               return Container(
                 child: Column(
                   children: [
-                    Text('Blue: Pending | Green: Completed | Red: Canceled'),
+                    Text('Blue: Pending | Red: Canceled'),
                     Expanded(
                       child: ListView.builder(
                           itemCount: appointmentsStreamSnapshot.data!.size,
                           itemBuilder: (context, index) => FutureBuilder<Appointment>(
-                              future: Appointment.deserialize(appointmentsStreamSnapshot.data!.docs[index].data(),
+                              future: Appointment.deserialize(
+                                  appointmentsStreamSnapshot.data!.docs[index].data(),
                                   appointmentsStreamSnapshot.data!.docs[index].id),
                               builder: (context, appointmentSnapshot) {
-                                if (appointmentSnapshot.connectionState == ConnectionState.waiting) {
+                                if (appointmentSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
                                   return ListTile(
                                     title: Text('Loading...'),
                                   );
                                 }
                                 if (appointmentSnapshot.hasData) {
                                   // print(appointmentSnapshot.data!.clientId);
-                                  Appointment appointment = appointmentSnapshot.data as Appointment;
+                                  Appointment appointment =
+                                      appointmentSnapshot.data as Appointment;
                                   return GestureDetector(
                                     child: Container(
                                       // shape: RoundedRectangleBorder(
@@ -71,8 +75,10 @@ class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
                                         borderRadius: BorderRadius.circular(33),
                                       ),
 
-                                      margin: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
-                                      padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 15.0, bottom: 8.0),
+                                      margin: const EdgeInsets.only(
+                                          top: 8.0, right: 8.0, left: 8.0),
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0, right: 8.0, left: 15.0, bottom: 8.0),
                                       height: 65.0,
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,7 +94,8 @@ class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
                                               ),
                                               Container(
                                                 height: 40.0,
-                                                margin: EdgeInsets.only(right: 10.0, left: 10.0),
+                                                margin: EdgeInsets.only(
+                                                    right: 10.0, left: 10.0),
                                                 decoration: BoxDecoration(
                                                   color: appointment.isCompleted
                                                       ? Colors.green
@@ -100,8 +107,10 @@ class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
                                                 child: Text(' '),
                                               ),
                                               Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   Text(
                                                     '${appointment.store.name}',

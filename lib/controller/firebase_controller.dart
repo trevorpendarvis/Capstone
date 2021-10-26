@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/model/client.dart';
+import 'package:monkey_management/model/message.dart';
 import 'package:monkey_management/model/option.dart';
 import 'package:monkey_management/model/store.dart';
 import 'package:monkey_management/model/location.dart';
@@ -301,6 +302,7 @@ class FirebaseController {
     return FirebaseFirestore.instance
         .collection(Appointment.COLLECTION)
         .where(Appointment.CLIENT_ID, isEqualTo: currentClient!.uid)
+        .where(Appointment.IS_COMPLETED, isEqualTo: false)
         .snapshots();
   }
 
@@ -311,7 +313,16 @@ class FirebaseController {
         .where(Appointment.CLIENT_ID, isEqualTo: currentClient!.uid)
         .where(Appointment.IS_COMPLETED, isEqualTo: true)
         .snapshots();
+  }
+  //Might need to order by time?
 
-        //Might need to order by time?
+  static Stream<QuerySnapshot<Map<String, dynamic>>> messageStream() {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+
+    return FirebaseFirestore.instance
+        .collection(Message.COLLECTION)
+        .where(Message.SENDER_ID, isEqualTo: currentUser!.uid)
+        .limit(100)
+        .snapshots();
   }
 }

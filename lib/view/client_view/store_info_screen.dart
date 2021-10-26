@@ -1,10 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:monkey_management/controller/firebase_controller.dart';
+import 'package:monkey_management/model/option.dart';
 import 'package:monkey_management/model/store.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:monkey_management/view/client_view/add_update_appointment_screen.dart';
+import 'package:monkey_management/view/common_view/mydialog.dart';
 
 class StoreInfoScreen extends StatefulWidget {
   static const routeName = '/storeInfoScreen';
+
   @override
   State<StatefulWidget> createState() {
     return StoreInfoState();
@@ -55,11 +61,8 @@ class StoreInfoState extends State<StoreInfoScreen> {
                     leading: Icon(Icons.location_on_outlined),
                     title: Text(selctedStore.address),
                   ),
-                  ElevatedButton(
-                      onPressed: null, child: Text('Make Appointment')),
-                  ElevatedButton(
-                      onPressed: () => con!.openMaps(selctedStore.address),
-                      child: Text('Directions')),
+                  ElevatedButton(onPressed: () => con!.handelOptions(), child: Text('View Options')),
+                  ElevatedButton(onPressed: () => con!.openMaps(selctedStore.address), child: Text('Directions')),
                 ],
               ),
             ),
@@ -76,6 +79,18 @@ class Controller {
   Controller(this.state);
 
   Future<bool?> openMaps(value) async {
-    bool test = await MapsLauncher.launchQuery(value);
+    await MapsLauncher.launchQuery(value);
+  }
+
+  Future<void> handelOptions() async {
+    List<Option>? options;
+    try {
+      options = await FirebaseController.getOptions(state.selctedStore.id);
+    } catch (e) {
+      MyDialog.info(context: state.context, title: 'handel options failed', content: e.toString());
+    }
+
+    await Navigator.pushNamed(state.context, AddUpdateAppointmentScreen.routeName,
+        arguments: {'storeOptions': options, 'selctedStore': state.selctedStore});
   }
 }
