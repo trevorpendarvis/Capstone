@@ -18,7 +18,7 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Past Appointments"),
+        title: Text("Appointment History"),
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseController.appointmentHistoryStreamForClient(),
@@ -32,7 +32,6 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
             }
 
             if (appointmentHistoryStreamSnapshot.hasData) {
-              // List<Appointment> appointments = Appointment.deserializeToList(appointmentsSnapshot.data!) as List<Appointment>;
               if (appointmentHistoryStreamSnapshot.data!.docs.length == 0)
                 return Center(
                   child: Text(
@@ -48,7 +47,7 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
               return Container(
                 child: Column(
                   children: [
-                    //Text('Blue: Pending | Green: Completed | Red: Canceled'),
+                    Text('Completed Appointments'),
                     Expanded(
                       child: ListView.builder(
                           itemCount: appointmentHistoryStreamSnapshot.data!.size,
@@ -62,18 +61,13 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
                                   );
                                 }
                                 if (appointmentHistorySnapshot.hasData) {
-                                  // print(appointmentSnapshot.data!.clientId);
                                   Appointment appointment = appointmentHistorySnapshot.data as Appointment;
                                   return GestureDetector(
                                     child: Container(
-                                      // shape: RoundedRectangleBorder(
-                                      //   borderRadius: BorderRadius.circular(15),
-                                      // ),
                                       decoration: BoxDecoration(
                                         color: Colors.black12,
                                         borderRadius: BorderRadius.circular(33),
                                       ),
-
                                       margin: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
                                       padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 15.0, bottom: 8.0),
                                       height: 65.0,
@@ -86,7 +80,6 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
                                                 '${DateFormat('MMM dd').format(appointment.appointmentTime)}\n${DateFormat('h:mm aa').format(appointment.appointmentTime)}',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
-                                                  // color: Colors.black54,
                                                 ),
                                               ),
                                               Container(
@@ -94,11 +87,6 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
                                                 margin: EdgeInsets.only(right: 10.0, left: 10.0),
                                                 decoration: BoxDecoration(
                                                   color: Colors.green,
-                                                  //appointment.isCompleted
-                                                  //     ? Colors.green
-                                                  //     : appointment.isCanceled
-                                                  //         ? Colors.deepOrange
-                                                  //         : Colors.blue,
                                                   borderRadius: BorderRadius.circular(5),
                                                 ),
                                                 child: Text(' '),
@@ -119,37 +107,25 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
                                                     '${appointment.option.name} | ${appointment.option.price}',
                                                     style: TextStyle(
                                                       fontWeight: FontWeight.w500,
-                                                      // color: Colors.black54,
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ],
                                           ),
-                                          // Row(
-                                          //   children: [
-                                          //     TextButton(
-                                          //         onPressed: () {},
-                                          //         child: Text(
-                                          //           '${appointment.isCanceled ? 'Revert' : 'Cancel'}',
-                                          //           style: TextStyle(
-                                          //             // fontWeight: FontWeight.bold,
-                                          //             color: Colors.red,
-                                          //             // fontSize: 16.0,
-                                          //           ),
-                                          //         )),
-                                          //     TextButton(
-                                          //         onPressed: () {},
-                                          //         child: Text(
-                                          //           '${appointment.isCompleted ? 'Revert' : 'Done'}',
-                                          //           style: TextStyle(
-                                          //             // fontWeight: FontWeight.bold,
-                                          //             color: Colors.blue,
-                                          //             // fontSize: 16.0,
-                                          //           ),
-                                          //         )),
-                                          //   ],
-                                          // )
+                                          Row(
+                                            children: [
+                                              IconButton(
+                                                  onPressed: () {}, //_toggleFavorite
+                                                  icon: Icon(Icons.star_border),
+                                                  color: Colors.deepOrange,
+                                                  //Some helpful code for favorting feature:
+                                                  // icon: (_isFavorited
+                                                  //   ? const Icon(Icons.star)
+                                                  //   : const Icon(Icons.star_border)),
+                                              ),
+                                            ],
+                                          )
                                         ],
                                       ),
                                     ),

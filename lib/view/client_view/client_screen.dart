@@ -173,8 +173,8 @@ class _ClientScreenState extends State<ClientScreen> {
                       // ),
                       ListTile(
                         leading: Icon(Icons.calendar_today),
-                        title: Text("Past Appointments"),
-                        onTap: () => con!.appointmentHistory,
+                        title: Text("Appointment History"),
+                        onTap: () => con!.appointmentHistory(),
                       ),
                       ListTile(
                         leading: Icon(Icons.exit_to_app),
