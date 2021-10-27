@@ -316,13 +316,24 @@ class FirebaseController {
   }
   //Might need to order by time?
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> messageStream() {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> messageStream(String myId, String otherId) {
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
     return FirebaseFirestore.instance
         .collection(Message.COLLECTION)
-        .where(Message.SENDER_ID, isEqualTo: currentUser!.uid)
+        .where(Message.SENDER_ID, isEqualTo: myId)
+        .where(Message.RECEIVER_ID, isEqualTo: otherId)
+        .orderBy(Message.TIMESTAMP)
         .limit(100)
         .snapshots();
+  }
+
+  static Future<void> addMessage(Message message) async {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+
+    DocumentReference ref =
+    FirebaseFirestore.instance.collection(Message.COLLECTION).doc();
+
+    await ref.set(message.serialize());
   }
 }

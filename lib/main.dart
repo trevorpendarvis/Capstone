@@ -11,6 +11,7 @@ import 'package:monkey_management/view/client_view/client_general_info_screen.da
 import 'package:monkey_management/view/client_view/client_screen.dart';
 import 'package:monkey_management/view/client_view/store_info_screen.dart';
 import 'package:monkey_management/view/common_view/loading_screen.dart';
+import 'package:monkey_management/view/common_view/message_screen.dart';
 
 import 'package:monkey_management/view/store_view/store_edit_location_screen.dart';
 
@@ -99,6 +100,7 @@ class MyApp extends StatelessWidget {
         ClientAppointmentHistoryScreen.routeName: (context) => ClientAppointmentHistoryScreen(),
         AddUpdateAppointmentScreen.routeName: (context) =>
             AddUpdateAppointmentScreen(),
+        MessageScreen.routeName: (context) => MessageScreen(),
       },
     );
   }
