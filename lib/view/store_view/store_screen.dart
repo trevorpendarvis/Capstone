@@ -4,6 +4,7 @@ import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/location.dart';
 import 'package:monkey_management/view/auth_view/signin_screen.dart';
+import 'package:monkey_management/view/common_view/message_screen.dart';
 import 'package:monkey_management/view/store_view/store_locations_screen.dart';
 import 'package:monkey_management/view/store_view/store_settings_screen.dart';
 import 'package:intl/intl.dart';
@@ -268,6 +269,23 @@ class _StoreScreenState extends State<StoreScreen> {
                                                               // fontSize: 16.0,
                                                             ),
                                                           )),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pushNamed(context, MessageScreen.routeName, arguments: {
+                                                            'my_name': appointment.store.name,
+                                                            'other_name': appointment.client.firstName,
+                                                            'other_id': appointment.client.docId,
+                                                          });
+                                                        },
+                                                        child: Text(
+                                                          'Message',
+                                                          style: TextStyle(
+                                                            // fontWeight: FontWeight.bold,
+                                                            color: Colors.blue,
+                                                            // fontSize: 16.0,
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ],
                                                   )
                                                 ],
