@@ -35,7 +35,10 @@ class SignInState extends State<SignInScreen> {
         title: Text(
           'Hello! Please Sign In!',
           //textAlign: TextAlign.right,
-          style: TextStyle(color: Colors.pink[500], fontFamily: 'BowlbyOneSC', fontSize: 20.0),
+          style: TextStyle(
+              color: Colors.pink[500],
+              fontFamily: 'BowlbyOneSC',
+              fontSize: 20.0),
         ),
       ),
       body: SingleChildScrollView(
@@ -66,7 +69,8 @@ class SignInState extends State<SignInScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 8.0, bottom: 8.0, right: 8.0),
+                padding:
+                    const EdgeInsets.only(left: 8.0, bottom: 8.0, right: 8.0),
                 child: TextFormField(
                   decoration: InputDecoration(
                     labelText: 'Password',
@@ -95,7 +99,10 @@ class SignInState extends State<SignInScreen> {
                 onPressed: con!.signIn,
                 child: Text(
                   'Sign In',
-                  style: TextStyle(fontSize: 16.0, color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(
@@ -117,7 +124,10 @@ class SignInState extends State<SignInScreen> {
                     onPressed: con!.signUp,
                     child: Text(
                       "Join",
-                      style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.pink[400]),
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.pink[400]),
                     ),
                   ),
                 ],
@@ -145,11 +155,19 @@ class Controller {
     }
 
     state.formkey.currentState!.save();
-    User? user = await FirebaseController.signIn(email: email!, password: password!);
+    User? user;
+    try {
+      user =
+          await FirebaseController.signIn(email: email!, password: password!);
+    } catch (e) {
+      MyDialog.info(
+          context: state.context,
+          title: 'Sign in Error',
+          content: e.toString());
+    }
 
     if (user != null) {
       accountType = await FirebaseController.getAccountType();
-
 
       if (accountType == AccountType.STORE) {
         Navigator.pushNamed(state.context, StoreScreen.routeName);

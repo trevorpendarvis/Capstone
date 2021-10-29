@@ -14,6 +14,8 @@ class Appointment {
   String createdBy = '';
   bool isCanceled = false;
   bool isCompleted = false;
+  bool inRoute = false;
+  String docId = '';
 
   static const COLLECTION = 'appointments';
   static const CLIENT_ID = 'client_id';
@@ -24,6 +26,8 @@ class Appointment {
   static const CREATED_BY = 'created_by';
   static const IS_CANCELED = 'is_canceled';
   static const IS_COMPLETED = 'is_completed';
+  static const IN_ROUTE = 'in_route';
+  static const DOC_ID = 'doc_id';
 
   Appointment();
 
@@ -37,6 +41,8 @@ class Appointment {
       CREATED_BY: this.createdBy,
       IS_CANCELED: this.isCanceled,
       IS_COMPLETED: this.isCompleted,
+      IN_ROUTE: this.inRoute,
+      DOC_ID: this.docId,
     };
   }
 
@@ -54,8 +60,10 @@ class Appointment {
     appointment.option = await FirebaseController.getOption(doc[OPTION_ID]);
     appointment.createdAt = doc[CREATED_AT].toDate() ?? DateTime.now();
     appointment.createdBy = doc[CREATED_BY] ?? '';
+    appointment.docId = doc[DOC_ID] ?? '';
     appointment.isCanceled = doc[IS_CANCELED] ?? false;
     appointment.isCompleted = doc[IS_COMPLETED] ?? false;
+    appointment.inRoute = doc[IN_ROUTE] ?? false;
 
     return appointment;
   }

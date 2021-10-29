@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/model/client.dart';
@@ -25,8 +26,8 @@ class FirebaseController {
           .get()
           .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
         if (documentSnapshot.exists) {
-          accountType =
-              AccountType.CLIENT; //Changed from account_type to accountType -Caitlyn
+          accountType = AccountType
+              .CLIENT; //Changed from account_type to accountType -Caitlyn
         }
       });
     } catch (e) {
@@ -35,7 +36,8 @@ class FirebaseController {
     return accountType;
   }
 
-  static Future<User?> signIn({required String? email, required String? password}) async {
+  static Future<User?> signIn(
+      {required String? email, required String? password}) async {
     UserCredential userCredential =
         await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email!,
@@ -115,16 +117,20 @@ class FirebaseController {
 
   //Get a client's profile from Firebase
   static Future<Client> getClientProfile(String uid) async {
-    var result =
-        await FirebaseFirestore.instance.collection(Client.COLLECTION).doc(uid).get();
+    var result = await FirebaseFirestore.instance
+        .collection(Client.COLLECTION)
+        .doc(uid)
+        .get();
 
     return Client.deserialize(result.data(), uid);
   }
 
   //Get a store's profile from Firebase
   static Future<Store> getStoreProfile(String uid) async {
-    var result =
-        await FirebaseFirestore.instance.collection(Store.COLLECTION).doc(uid).get();
+    var result = await FirebaseFirestore.instance
+        .collection(Store.COLLECTION)
+        .doc(uid)
+        .get();
 
     return Store.deserialize(result.data(), uid);
   }
@@ -143,6 +149,14 @@ class FirebaseController {
       String? docId, Map<String, dynamic> updateInfo) async {
     await FirebaseFirestore.instance
         .collection(Client.COLLECTION)
+        .doc(docId)
+        .update(updateInfo);
+  }
+
+  static Future<void> updateAppointment(
+      String? docId, Map<String, dynamic> updateInfo) async {
+    await FirebaseFirestore.instance
+        .collection(Appointment.COLLECTION)
         .doc(docId)
         .update(updateInfo);
   }
@@ -181,6 +195,7 @@ class FirebaseController {
 
     DocumentReference ref =
         FirebaseFirestore.instance.collection(Appointment.COLLECTION).doc();
+    appointment.docId = ref.id;
 
     await ref.set(appointment.serialize());
   }
@@ -260,8 +275,10 @@ class FirebaseController {
   }
 
   static Future<Option> getOption(String uid) async {
-    var result =
-        await FirebaseFirestore.instance.collection(Option.COLLECTION).doc(uid).get();
+    var result = await FirebaseFirestore.instance
+        .collection(Option.COLLECTION)
+        .doc(uid)
+        .get();
 
     return Option.deserialize(result.data(), uid);
   }
@@ -286,7 +303,8 @@ class FirebaseController {
     return options;
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamForStore() {
+  static Stream<QuerySnapshot<Map<String, dynamic>>>
+      appointmentsStreamForStore() {
     final User? currentStore = FirebaseAuth.instance.currentUser;
 
     return FirebaseFirestore.instance
@@ -296,7 +314,8 @@ class FirebaseController {
         .snapshots();
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamForClient() {
+  static Stream<QuerySnapshot<Map<String, dynamic>>>
+      appointmentsStreamForClient() {
     final User? currentClient = FirebaseAuth.instance.currentUser;
 
     return FirebaseFirestore.instance
@@ -306,7 +325,8 @@ class FirebaseController {
         .snapshots();
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> appointmentHistoryStreamForClient() {
+  static Stream<QuerySnapshot<Map<String, dynamic>>>
+      appointmentHistoryStreamForClient() {
     final User? currentClient = FirebaseAuth.instance.currentUser;
     return FirebaseFirestore.instance
         .collection(Appointment.COLLECTION)
@@ -316,7 +336,8 @@ class FirebaseController {
   }
   //Might need to order by time?
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> messageStream(String myId, String otherId) {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> messageStream(
+      String myId, String otherId) {
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
     return FirebaseFirestore.instance
@@ -332,7 +353,7 @@ class FirebaseController {
     final User? currentUser = FirebaseAuth.instance.currentUser;
 
     DocumentReference ref =
-    FirebaseFirestore.instance.collection(Message.COLLECTION).doc();
+        FirebaseFirestore.instance.collection(Message.COLLECTION).doc();
 
     await ref.set(message.serialize());
   }

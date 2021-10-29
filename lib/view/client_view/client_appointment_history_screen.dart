@@ -4,7 +4,6 @@ import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/appointment.dart';
 import 'package:intl/intl.dart';
 
-
 class ClientAppointmentHistoryScreen extends StatefulWidget {
   static const routeName = "/client_appointment_history_screen";
 
@@ -13,7 +12,8 @@ class ClientAppointmentHistoryScreen extends StatefulWidget {
       _ClientAppointmentHistoryScreenState();
 }
 
-class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistoryScreen> {
+class _ClientAppointmentHistoryScreenState
+    extends State<ClientAppointmentHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,8 +22,9 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseController.appointmentHistoryStreamForClient(),
-          builder:
-          (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> appointmentHistoryStreamSnapshot) {
+          builder: (BuildContext context,
+              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                  appointmentHistoryStreamSnapshot) {
             if (appointmentHistoryStreamSnapshot.connectionState ==
                 ConnectionState.waiting) {
               return Center(
@@ -51,19 +52,29 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
                     //Text('Blue: Pending | Green: Completed | Red: Canceled'),
                     Expanded(
                       child: ListView.builder(
-                          itemCount: appointmentHistoryStreamSnapshot.data!.size,
-                          itemBuilder: (context, index) => FutureBuilder<Appointment>(
-                              future: Appointment.deserialize(appointmentHistoryStreamSnapshot.data!.docs[index].data(),
-                                  appointmentHistoryStreamSnapshot.data!.docs[index].id),
+                          itemCount:
+                              appointmentHistoryStreamSnapshot.data!.size,
+                          itemBuilder: (context, index) => FutureBuilder<
+                                  Appointment>(
+                              future: Appointment.deserialize(
+                                  appointmentHistoryStreamSnapshot
+                                      .data!.docs[index]
+                                      .data(),
+                                  appointmentHistoryStreamSnapshot
+                                      .data!.docs[index].id),
                               builder: (context, appointmentHistorySnapshot) {
-                                if (appointmentHistorySnapshot.connectionState == ConnectionState.waiting) {
+                                if (appointmentHistorySnapshot
+                                        .connectionState ==
+                                    ConnectionState.waiting) {
                                   return ListTile(
                                     title: Text('Loading...'),
                                   );
                                 }
                                 if (appointmentHistorySnapshot.hasData) {
                                   // print(appointmentSnapshot.data!.clientId);
-                                  Appointment appointment = appointmentHistorySnapshot.data as Appointment;
+                                  Appointment appointment =
+                                      appointmentHistorySnapshot.data
+                                          as Appointment;
                                   return GestureDetector(
                                     child: Container(
                                       // shape: RoundedRectangleBorder(
@@ -74,11 +85,17 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
                                         borderRadius: BorderRadius.circular(33),
                                       ),
 
-                                      margin: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
-                                      padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 15.0, bottom: 8.0),
+                                      margin: const EdgeInsets.only(
+                                          top: 8.0, right: 8.0, left: 8.0),
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0,
+                                          right: 8.0,
+                                          left: 15.0,
+                                          bottom: 8.0),
                                       height: 65.0,
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             children: [
@@ -91,7 +108,8 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
                                               ),
                                               Container(
                                                 height: 40.0,
-                                                margin: EdgeInsets.only(right: 10.0, left: 10.0),
+                                                margin: EdgeInsets.only(
+                                                    right: 10.0, left: 10.0),
                                                 decoration: BoxDecoration(
                                                   color: Colors.green,
                                                   //appointment.isCompleted
@@ -99,18 +117,22 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
                                                   //     : appointment.isCanceled
                                                   //         ? Colors.deepOrange
                                                   //         : Colors.blue,
-                                                  borderRadius: BorderRadius.circular(5),
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
                                                 ),
                                                 child: Text(' '),
                                               ),
                                               Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   Text(
                                                     '${appointment.store.name}',
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       color: Colors.blue,
                                                       fontSize: 16.0,
                                                     ),
@@ -118,7 +140,8 @@ class _ClientAppointmentHistoryScreenState extends State<ClientAppointmentHistor
                                                   Text(
                                                     '${appointment.option.name} | ${appointment.option.price}',
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.w500,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                       // color: Colors.black54,
                                                     ),
                                                   ),
