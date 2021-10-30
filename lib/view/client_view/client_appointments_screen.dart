@@ -29,7 +29,15 @@ class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Appointments'),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 50, right: 20),
+          child: Text(
+            'My Appointments',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ),
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseController.appointmentsStreamForClient(),

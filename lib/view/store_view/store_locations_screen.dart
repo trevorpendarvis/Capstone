@@ -33,9 +33,12 @@ class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
     return Scaffold(
       appBar: AppBar(
         /*  */
-        title: Text(
-          'Store Locations',
-          style: TextStyle(color: Colors.black),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 60, right: 20),
+          child: Text(
+            'Store Locations',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         foregroundColor: Colors.black,
         backgroundColor: Colors.pinkAccent[400],
@@ -50,7 +53,9 @@ class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseController.locationsStream(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> locationsSnapshot) {
+          builder: (BuildContext context,
+              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                  locationsSnapshot) {
             if (locationsSnapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
@@ -58,7 +63,8 @@ class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
             }
 
             if (locationsSnapshot.hasData) {
-              List<Location> locations = Location.deserializeToList(locationsSnapshot.data!);
+              List<Location> locations =
+                  Location.deserializeToList(locationsSnapshot.data!);
               return Container(
                 child: Column(
                   children: [
@@ -69,7 +75,8 @@ class _StoreLocationsScreenState extends State<StoreLocationsScreen> {
                           itemBuilder: (context, index) => ListTile(
                                 leading: Icon(Icons.settings),
                                 title: Text(locations[index].StoreName),
-                                onTap: () => con?.locationSettings(locations[index]),
+                                onTap: () =>
+                                    con?.locationSettings(locations[index]),
                               )),
                     )
                   ],
@@ -92,18 +99,20 @@ class Controller {
   List<Location>? locations;
 
   void handleAddLocationButton() {
-    Navigator.pushNamed(state.context, StoreEditLocationScreen.routeName, arguments: {
-      "locationName": "",
-      "locationAddress": "",
-      "isNewLocation": true,
-    });
+    Navigator.pushNamed(state.context, StoreEditLocationScreen.routeName,
+        arguments: {
+          "locationName": "",
+          "locationAddress": "",
+          "isNewLocation": true,
+        });
   }
 
   Future<void> locationSettings(Location? location) async {
-    await Navigator.pushNamed(state.context, StoreEditLocationScreen.routeName, arguments: {
-      "locationName": location!.StoreName,
-      "locationAddress": location.StoreAddress,
-      'isNewLocation': false,
-    });
+    await Navigator.pushNamed(state.context, StoreEditLocationScreen.routeName,
+        arguments: {
+          "locationName": location!.StoreName,
+          "locationAddress": location.StoreAddress,
+          'isNewLocation': false,
+        });
   }
 }

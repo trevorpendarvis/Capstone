@@ -34,8 +34,17 @@ class StoreInfoState extends State<StoreInfoScreen> {
     Map args = ModalRoute.of(context)!.settings.arguments as Map;
     selctedStore = args['store'];
     return Scaffold(
+      backgroundColor: Colors.grey[350],
       appBar: AppBar(
-        title: Text('StoreInfo'),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 90, right: 20),
+          child: Text(
+            'StoreInfo',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ),
       ),
       body: ListView(
         children: [
@@ -61,8 +70,12 @@ class StoreInfoState extends State<StoreInfoScreen> {
                     leading: Icon(Icons.location_on_outlined),
                     title: Text(selctedStore.address),
                   ),
-                  ElevatedButton(onPressed: () => con!.handelOptions(), child: Text('View Options')),
-                  ElevatedButton(onPressed: () => con!.openMaps(selctedStore.address), child: Text('Directions')),
+                  ElevatedButton(
+                      onPressed: () => con!.handelOptions(),
+                      child: Text('View Options')),
+                  ElevatedButton(
+                      onPressed: () => con!.openMaps(selctedStore.address),
+                      child: Text('Directions')),
                 ],
               ),
             ),
@@ -87,10 +100,16 @@ class Controller {
     try {
       options = await FirebaseController.getOptions(state.selctedStore.id);
     } catch (e) {
-      MyDialog.info(context: state.context, title: 'handel options failed', content: e.toString());
+      MyDialog.info(
+          context: state.context,
+          title: 'handel options failed',
+          content: e.toString());
     }
 
-    await Navigator.pushNamed(state.context, AddUpdateAppointmentScreen.routeName,
-        arguments: {'storeOptions': options, 'selctedStore': state.selctedStore});
+    await Navigator.pushNamed(
+        state.context, AddUpdateAppointmentScreen.routeName, arguments: {
+      'storeOptions': options,
+      'selctedStore': state.selctedStore
+    });
   }
 }

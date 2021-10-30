@@ -17,8 +17,19 @@ class _ClientAppointmentHistoryScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
-        title: Text("Past Appointments"),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 50, right: 20),
+          child: Text(
+            "Past Appointments",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.grey[250],
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseController.appointmentHistoryStreamForClient(),
