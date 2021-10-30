@@ -249,27 +249,18 @@ class _StoreScreenState extends State<StoreScreen> {
                                                   ),
                                                   Row(
                                                     children: [
-                                                      TextButton(
-                                                          onPressed: () {},
-                                                          child: Text(
-                                                            '${appointment.isCanceled ? 'Revert' : 'Cancel'}',
-                                                            style: TextStyle(
-                                                              // fontWeight: FontWeight.bold,
-                                                              color: Colors.red,
-                                                              // fontSize: 16.0,
-                                                            ),
-                                                          )),
-                                                      TextButton(
-                                                          onPressed: () {},
-                                                          child: Text(
-                                                            '${appointment.isCompleted ? 'Revert' : 'Done'}',
-                                                            style: TextStyle(
-                                                              // fontWeight: FontWeight.bold,
-                                                              color: Colors.blue,
-                                                              // fontSize: 16.0,
-                                                            ),
-                                                          )),
-                                                      TextButton(
+                                                      IconButton(
+                                                        icon: Icon(Icons.cancel_outlined),
+                                                        onPressed: () {},
+                                                        color: Colors.red,
+                                                      ),
+                                                      IconButton(
+                                                        icon: Icon(Icons.check_circle_outline_rounded),
+                                                        onPressed: () {},
+                                                        color: Colors.green,
+                                                      ),
+                                                      IconButton(
+                                                        icon: Icon(Icons.message_outlined),
                                                         onPressed: () {
                                                           Navigator.pushNamed(context, MessageScreen.routeName, arguments: {
                                                             'my_name': appointment.store.name,
@@ -277,14 +268,7 @@ class _StoreScreenState extends State<StoreScreen> {
                                                             'other_id': appointment.client.docId,
                                                           });
                                                         },
-                                                        child: Text(
-                                                          'Message',
-                                                          style: TextStyle(
-                                                            // fontWeight: FontWeight.bold,
-                                                            color: Colors.blue,
-                                                            // fontSize: 16.0,
-                                                          ),
-                                                        ),
+                                                        color: Colors.black54,
                                                       ),
                                                     ],
                                                   )
