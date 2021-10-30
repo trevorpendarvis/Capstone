@@ -8,7 +8,8 @@ class StoreEditLocationScreen extends StatefulWidget {
   static const routeName = "/store_edit_location_screen";
 
   @override
-  _StoreEditLocationScreenState createState() => _StoreEditLocationScreenState();
+  _StoreEditLocationScreenState createState() =>
+      _StoreEditLocationScreenState();
 }
 
 class _StoreEditLocationScreenState extends State<StoreEditLocationScreen> {
@@ -35,9 +36,12 @@ class _StoreEditLocationScreenState extends State<StoreEditLocationScreen> {
     isNewLocation = args['isNewLocation'] ?? true;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Add Location',
-          style: TextStyle(color: Colors.black),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 70, right: 20),
+          child: Text(
+            'Edit Location',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         foregroundColor: Colors.black,
         backgroundColor: Colors.pinkAccent[400],
@@ -117,20 +121,23 @@ class _StoreEditLocationScreenState extends State<StoreEditLocationScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: con?.delete,
-                    child: Text("Delete", style: Theme.of(context).textTheme.button),
+                    child: Text("Delete",
+                        style: Theme.of(context).textTheme.button),
                   ),
                   isNewLocation!
                       ?
                       // Add new location
                       ElevatedButton(
                           onPressed: con?.onSave,
-                          child: Text("Done", style: Theme.of(context).textTheme.button),
+                          child: Text("Done",
+                              style: Theme.of(context).textTheme.button),
                         )
                       :
                       // Update existing location
                       ElevatedButton(
                           onPressed: con?.onUpdate,
-                          child: Text("Update", style: Theme.of(context).textTheme.button),
+                          child: Text("Update",
+                              style: Theme.of(context).textTheme.button),
                         ),
                 ],
               )
