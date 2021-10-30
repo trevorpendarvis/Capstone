@@ -271,7 +271,7 @@ class _StoreScreenState extends State<StoreScreen> {
                                                         color: Colors.black54,
                                                       ),
                                                     ],
-                                                  )
+                                                  ),
                                                 ],
                                               ),
                                             ),
