@@ -300,33 +300,34 @@ class _StoreScreenState extends State<StoreScreen> {
                                                           ),
                                                         ],
                                                       ),
+                                                      Row(
+                                                        children: [
+                                                          IconButton(
+                                                            icon: Icon(Icons.cancel_outlined),
+                                                            onPressed: () {},
+                                                            color: Colors.red,
+                                                          ),
+                                                          IconButton(
+                                                            icon: Icon(Icons.check_circle_outline_rounded),
+                                                            onPressed: () {},
+                                                            color: Colors.green,
+                                                          ),
+                                                          IconButton(
+                                                            icon: Icon(Icons.message_outlined),
+                                                            onPressed: () {
+                                                              Navigator.pushNamed(context, MessageScreen.routeName, arguments: {
+                                                                'my_name': appointment.store.name,
+                                                                'other_name': appointment.client.firstName,
+                                                                'other_id': appointment.client.docId,
+                                                              });
+                                                            },
+                                                            color: Colors.black54,
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ],
                                                   ),
-                                                  Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.cancel_outlined),
-                                                        onPressed: () {},
-                                                        color: Colors.red,
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.check_circle_outline_rounded),
-                                                        onPressed: () {},
-                                                        color: Colors.green,
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.message_outlined),
-                                                        onPressed: () {
-                                                          Navigator.pushNamed(context, MessageScreen.routeName, arguments: {
-                                                            'my_name': appointment.store.name,
-                                                            'other_name': appointment.client.firstName,
-                                                            'other_id': appointment.client.docId,
-                                                          });
-                                                        },
-                                                        color: Colors.black54,
-                                                      ),
-                                                    ],
-                                                  ),
+
                                                 ),
                                                 onTap: () {},
                                               );
