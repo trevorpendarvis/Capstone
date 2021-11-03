@@ -8,6 +8,7 @@ import 'package:monkey_management/view/client_view/add_update_appointment_screen
 import 'package:monkey_management/view/client_view/client_appointments_screen.dart';
 import 'package:monkey_management/view/client_view/client_appointment_history_screen.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
+import 'package:monkey_management/view/client_view/client_payment_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
 import 'package:monkey_management/view/client_view/store_info_screen.dart';
 import 'package:monkey_management/view/common_view/loading_screen.dart';
@@ -101,6 +102,7 @@ class MyApp extends StatelessWidget {
         AddUpdateAppointmentScreen.routeName: (context) =>
             AddUpdateAppointmentScreen(),
         MessageScreen.routeName: (context) => MessageScreen(),
+        ClientPaymentScreen.routeName: (context) => ClientPaymentScreen(),
       },
     );
   }
