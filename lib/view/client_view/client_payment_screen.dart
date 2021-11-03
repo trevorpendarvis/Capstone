@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/cardBack.dart';
@@ -22,6 +23,8 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
   Controller? con;
   var formKey = GlobalKey<FormState>();
   GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
+  FlipCardController flipCardController = FlipCardController();
+
 
   Client? clientProfile;
   Client? tempProfile;
@@ -35,6 +38,18 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
   }
 
   void render(fn) => setState(fn);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // print(tempProfile!.firstName);
+  }
+
+  @override
+  void didUpdateWidget(covariant ClientPaymentScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print(tempProfile!.firstName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,15 +155,17 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0),
+                        Container(
+                          // padding: const EdgeInsets.all( 20.0),
+                          // margin: const EdgeInsets.all( 20.0),
                           child: FlipCard(
                             key: cardKey, //Will I need form key instead???
                             flipOnTouch: false,
+                            controller: flipCardController,
                             front: CreditCardFront(
-                              cardName: tempProfile!.cardName ?? 'Card Holder Name',
-                              cardNum: tempProfile!.cardNum ?? '1111 2222 3333 4444',
-                              cardExp: tempProfile!.cardExp ?? '01/23',
+                              cardName: tempProfile!.cardName == '' ? 'Card Holder Name' : tempProfile!.cardName,
+                              cardNum: tempProfile!.cardNum == '' ? '____ ____ ____ ____' : tempProfile!.cardNum,
+                              cardExp: tempProfile!.cardExp == '' ? 'MM/YY' : tempProfile!.cardExp,
                             ),
                             back: CreditCardBack(cardCVV: tempProfile!.cardCVV ?? '123'),
                           ),
@@ -161,6 +178,11 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                               tempProfile!.cardName = value;
                             });
                           },
+                          onTap: () {
+                            setState(() {
+                              if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                            });
+                          },
                           decoration: InputDecoration(labelText: "Enter name"),
                           onSaved: con?.saveCardName,
                         ),
@@ -170,6 +192,11 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                           onChanged: (value) {
                             setState(() {
                               tempProfile!.cardNum = value;
+                            });
+                          },
+                          onTap: () {
+                            setState(() {
+                              if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
                             });
                           },
                           decoration:
@@ -185,6 +212,11 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                               tempProfile!.cardExp = value;
                             });
                           },
+                          onTap: () {
+                            setState(() {
+                              if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                            });
+                          },
                           decoration: InputDecoration(labelText: "Enter expiration date"),
                           validator: con?.validateCardExp,
                           onSaved: con?.saveCardExp,
@@ -197,6 +229,7 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                               tempProfile!.cardCVV = value;
                             });
                           },
+
                           onSaved: (value) {
                             setState(() {
                               cardKey.currentState!.toggleCard();
@@ -210,7 +243,7 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                           // },
                           onTap: () {
                             setState(() {
-                              cardKey.currentState!.toggleCard();
+                              if (cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
                             });
                           },
                           decoration: InputDecoration(labelText: "Enter security code"),
