@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:monkey_management/controller/credit_card_provider.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/cardBack.dart';
 import 'package:monkey_management/model/cardFront.dart';
@@ -9,6 +10,7 @@ import 'package:monkey_management/view/common_view/loading_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
 
 import 'package:flip_card/flip_card.dart';
+import 'package:provider/provider.dart';
 
 class ClientPaymentScreen extends StatefulWidget {
   static const routeName = "/client_payment_screen";
@@ -35,20 +37,22 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
   void initState() {
     super.initState();
     con = Controller(this);
+
   }
 
   void render(fn) => setState(fn);
 
   @override
   void didChangeDependencies() {
+    print('didChangeDependencies');
     super.didChangeDependencies();
-    // print(tempProfile!.firstName);
   }
 
   @override
   void didUpdateWidget(covariant ClientPaymentScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print(tempProfile!.firstName);
+    print('didUpdateWidget');
+    // print(tempProfile!.firstName);
   }
 
   @override
@@ -57,6 +61,8 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
     clientProfile = args!['one_clientProfile'] ?? Client();
 
     tempProfile = Client.clone(clientProfile!);
+
+
 
     return FutureBuilder(
         future: con!.fetchData(),
@@ -91,70 +97,10 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                         ),
                 ],
               ),
-              body: SingleChildScrollView(
-                //   child: Form(
-                //     key: formKey,
-                //     child:
-                //     Stack(
-                //       children: [
-                //         Container(
-                //         child:
-
-                //           ClipRRect(
-                //             child:  Image.asset('assets/images/bg.png', fit: BoxFit.cover),
-                //             borderRadius: BorderRadius.circular(16),
-                //           ),
-                //           height: MediaQuery.of(context).size.height/3,
-                //           width: MediaQuery.of(context).size.width-20,
-                //           decoration: BoxDecoration(
-                //             color: Color(0xffa29bfe),
-                //             boxShadow: [
-                //               BoxShadow(
-                //                   color: Colors.grey.withOpacity(0.8),
-                //                   spreadRadius: 5,
-                //                   blurRadius: 18,
-                //                   offset: Offset(0, 1), // changes position of shadow
-                //                 ),
-                //             ],
-                //             borderRadius: BorderRadius.circular(16)
-                //           ),
-                //         ),
-
-                //       Positioned(
-                //         left: 20,
-                //         child:
-                //           Image.asset('assets/images/MonkeyLogo.png',
-                //             width: 90,
-                //             height:90
-                //           ),
-                //       ),
-                //       Positioned(
-                //         left: 20,
-                //         top:100,
-                //         child: Column(
-                //           crossAxisAlignment: CrossAxisAlignment.start,
-                //           children: <Widget>[
-                //             Text(
-                //               "1111 2222 3333 4444",//clientProfile!.cardNum,
-                //               style: TextStyle(fontSize:24, color: Colors.white)
-                //             ),
-                //             Text(
-                //               "Caitlyn Bell", //clientProfile!.cardName,
-                //               style: TextStyle(fontSize: 20, color: Colors.white)
-                //             ),
-                //           ],
-                //     )
-                //     ),
-                //     ]),
-
-                //   ),
-                // ),
-                child: Form(
-                  key: formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: <Widget>[
+              body: Column(
+                children: [
+                  Consumer<CreditCardProvider>(
+                    builder: (context, card, _) =>
                         Container(
                           // padding: const EdgeInsets.all( 20.0),
                           // margin: const EdgeInsets.all( 20.0),
@@ -163,95 +109,97 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                             flipOnTouch: false,
                             controller: flipCardController,
                             front: CreditCardFront(
-                              cardName: tempProfile!.cardName == '' ? 'Card Holder Name' : tempProfile!.cardName,
-                              cardNum: tempProfile!.cardNum == '' ? '____ ____ ____ ____' : tempProfile!.cardNum,
-                              cardExp: tempProfile!.cardExp == '' ? 'MM/YY' : tempProfile!.cardExp,
+                              cardName: card.name == '' ? 'Card Holder Name' : card.name,
+                              cardNum: card.number == '' ? '---- ---- ---- ----' : card.number,
+                              cardExp: card.expDate == '' ? 'MM/YY' : card.expDate,
                             ),
-                            back: CreditCardBack(cardCVV: tempProfile!.cardCVV ?? '123'),
+                            back: CreditCardBack(cardCVV: card.cvv == '' ? '---' : card.cvv),
                           ),
                         ),
-                        TextFormField(
-                          initialValue: clientProfile!.cardName,
-                          enabled: editMode,
-                          onChanged: (value) {
-                            setState(() {
-                              tempProfile!.cardName = value;
-                            });
-                          },
-                          onTap: () {
-                            setState(() {
-                              if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
-                            });
-                          },
-                          decoration: InputDecoration(labelText: "Enter name"),
-                          onSaved: con?.saveCardName,
-                        ),
-                        TextFormField(
-                          initialValue: clientProfile!.cardNum,
-                          enabled: editMode,
-                          onChanged: (value) {
-                            setState(() {
-                              tempProfile!.cardNum = value;
-                            });
-                          },
-                          onTap: () {
-                            setState(() {
-                              if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
-                            });
-                          },
-                          decoration:
-                              InputDecoration(labelText: "Enter credit card number"),
-                          validator: con?.validateCardNum,
-                          onSaved: con?.saveCardNum,
-                        ),
-                        TextFormField(
-                          initialValue: clientProfile!.cardExp,
-                          enabled: editMode,
-                          onChanged: (value) {
-                            setState(() {
-                              tempProfile!.cardExp = value;
-                            });
-                          },
-                          onTap: () {
-                            setState(() {
-                              if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
-                            });
-                          },
-                          decoration: InputDecoration(labelText: "Enter expiration date"),
-                          validator: con?.validateCardExp,
-                          onSaved: con?.saveCardExp,
-                        ),
-                        TextFormField(
-                          initialValue: clientProfile!.cardCVV,
-                          enabled: editMode,
-                          onChanged: (value) {
-                            setState(() {
-                              tempProfile!.cardCVV = value;
-                            });
-                          },
+                  ),
+                  Form(
+                    key: formKey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: <Widget>[
 
-                          onSaved: (value) {
-                            setState(() {
-                              cardKey.currentState!.toggleCard();
-                            });
-                            con?.saveCardCVV(value); //Does this work?
-                          },
-                          // onSubmitted: (value) {
-                          //   setState(() {
-                          //     cardKey.currentState!.toggleCard();
-                          //   });
-                          // },
-                          onTap: () {
-                            setState(() {
-                              if (cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
-                            });
-                          },
-                          decoration: InputDecoration(labelText: "Enter security code"),
-                        )
-                      ],
+
+                          TextFormField(
+                            initialValue: clientProfile!.cardName,
+                            enabled: editMode,
+                            onChanged: (value) {
+                                tempProfile!.cardName = value;
+                                Provider.of<CreditCardProvider>(context, listen: false).setName(value);
+                            },
+                            onTap: () {
+                              setState(() {
+                                if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                              });
+                            },
+                            decoration: InputDecoration(labelText: "Enter name"),
+                            onSaved: con?.saveCardName,
+                          ),
+
+                          TextFormField(
+                            initialValue: clientProfile!.cardNum,
+                            enabled: editMode,
+                            onChanged: (value) {
+                                tempProfile!.cardNum = value;
+                                Provider.of<CreditCardProvider>(context, listen: false).setNumber(value);
+                            },
+                            onTap: () {
+                              setState(() {
+                                if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                              });
+                            },
+                            decoration:
+                                InputDecoration(labelText: "Enter credit card number"),
+                            validator: con?.validateCardNum,
+                            onSaved: con?.saveCardNum,
+                          ),
+                          TextFormField(
+                            initialValue: clientProfile!.cardExp,
+                            enabled: editMode,
+                            onChanged: (value) {
+                                tempProfile!.cardExp = value;
+                                Provider.of<CreditCardProvider>(context, listen: false).setExpDate(value);
+                            },
+                            onTap: () {
+                              setState(() {
+                                if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                              });
+                            },
+                            decoration: InputDecoration(labelText: "Enter expiration date"),
+                            validator: con?.validateCardExp,
+                            onSaved: con?.saveCardExp,
+                          ),
+                          TextFormField(
+                            initialValue: clientProfile!.cardCVV,
+                            enabled: editMode,
+                            onChanged: (value) {
+                                tempProfile!.cardCVV = value;
+                                Provider.of<CreditCardProvider>(context, listen: false).setCVV(value);
+                            },
+
+                            onSaved: (value) {
+                              setState(() {
+                                cardKey.currentState!.toggleCard();
+                              });
+                              con?.saveCardCVV(value); //Does this work?
+                            },
+                            onTap: () {
+                              setState(() {
+                                if (cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                              });
+                            },
+                            decoration: InputDecoration(labelText: "Enter security code"),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           );
@@ -274,6 +222,11 @@ class Controller {
   Future<void> fetchData() async {
     clientProfile =
         await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
+
+    Provider.of<CreditCardProvider>(state.context, listen: false).number = clientProfile.cardNum!;
+    Provider.of<CreditCardProvider>(state.context, listen: false).name = clientProfile.cardName!;
+    Provider.of<CreditCardProvider>(state.context, listen: false).expDate = clientProfile.cardExp!;
+    Provider.of<CreditCardProvider>(state.context, listen: false).cvv = clientProfile.cardCVV!;
   }
 
   void saveCardName(String? value) {
