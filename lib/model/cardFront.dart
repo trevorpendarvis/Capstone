@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CreditCardFront extends StatelessWidget {
   String? cardNum;
@@ -43,7 +44,8 @@ class CreditCardFront extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(cardNum!,
-                    style: TextStyle(fontSize: 24, color: Colors.white)),
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                ),
                  
               ],
             )),
