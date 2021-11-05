@@ -75,6 +75,9 @@ flutter:
         - asset: fonts/BowlbyOneSC-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
+    - family: DS-DIGIB
+      fonts:
+        - asset: fonts/ds-digib.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
