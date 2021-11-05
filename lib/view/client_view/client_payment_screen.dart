@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:monkey_management/controller/credit_card_provider.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/cardBack.dart';
@@ -97,109 +98,119 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                         ),
                 ],
               ),
-              body: Column(
-                children: [
-                  Consumer<CreditCardProvider>(
-                    builder: (context, card, _) =>
-                        Container(
-                          // padding: const EdgeInsets.all( 20.0),
-                          // margin: const EdgeInsets.all( 20.0),
-                          child: FlipCard(
-                            key: cardKey, //Will I need form key instead???
-                            flipOnTouch: false,
-                            controller: flipCardController,
-                            front: CreditCardFront(
-                              cardName: card.name == '' ? 'Card Holder Name' : card.name,
-                              cardNum: card.number == '' ? '---- ---- ---- ----' : card.number,
-                              cardExp: card.expDate == '' ? 'MM/YY' : card.expDate,
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Consumer<CreditCardProvider>(
+                      builder: (context, card, _) =>
+                          Container(
+                            // padding: const EdgeInsets.all( 20.0),
+                            // margin: const EdgeInsets.all( 20.0),
+                            child: FlipCard(
+                              key: cardKey, //Will I need form key instead???
+                              flipOnTouch: false,
+                              controller: flipCardController,
+                              front: CreditCardFront(
+                                cardName: card.name == '' ? 'Card Holder Name' : card.name,
+                                cardNum: card.number == '' ? '---- ---- ---- ----' : card.number,
+                                cardExp: card.expDate == '' ? 'MM/YY' : card.expDate,
+                              ),
+                              back: CreditCardBack(cardCVV: card.cvv == '' ? '---' : card.cvv),
                             ),
-                            back: CreditCardBack(cardCVV: card.cvv == '' ? '---' : card.cvv),
                           ),
+                    ),
+                    Form(
+                      key: formKey,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: <Widget>[
+              
+              
+                            TextFormField(
+                              initialValue: clientProfile!.cardName,
+                              enabled: editMode,
+                              onChanged: (value) {
+                                  tempProfile!.cardName = value;
+                                  Provider.of<CreditCardProvider>(context, listen: false).setName(value);
+                              },
+                              onTap: () {
+                                setState(() {
+                                  if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                                });
+                              },
+                              decoration: InputDecoration(labelText: "Enter name"),
+                              onSaved: con?.saveCardName,
+                            ),
+              
+                            TextFormField(
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                new CardNumSpacing(),
+                              ],
+                              initialValue: clientProfile!.cardNum,
+                              enabled: editMode,
+                              onChanged: (value) {
+                                  tempProfile!.cardNum = value;
+                                  Provider.of<CreditCardProvider>(context, listen: false).setNumber(value);
+                              },
+                              onTap: () {
+                                setState(() {
+                                  if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                                });
+                              },
+                              decoration:
+                                  InputDecoration(labelText: "Enter credit card number"),
+                              validator: con?.validateCardNum,
+                              onSaved: con?.saveCardNum,
+                            ),
+                            TextFormField(
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                new CardExpFormat(),
+                              ],
+                              initialValue: clientProfile!.cardExp,
+                              enabled: editMode,
+                              onChanged: (value) {
+                                  tempProfile!.cardExp = value;
+                                  Provider.of<CreditCardProvider>(context, listen: false).setExpDate(value);
+                              },
+                              onTap: () {
+                                setState(() {
+                                  if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                                });
+                              },
+                              decoration: InputDecoration(labelText: "Enter expiration date"),
+                              validator: con?.validateCardExp,
+                              onSaved: con?.saveCardExp,
+                            ),
+                            TextFormField(
+                              initialValue: clientProfile!.cardCVV,
+                              enabled: editMode,
+                              onChanged: (value) {
+                                  tempProfile!.cardCVV = value;
+                                  Provider.of<CreditCardProvider>(context, listen: false).setCVV(value);
+                              },
+              
+                              onSaved: (value) {
+                                setState(() {
+                                  cardKey.currentState!.toggleCard();
+                                });
+                                con?.saveCardCVV(value); //Does this work?
+                              },
+                              onTap: () {
+                                setState(() {
+                                  if (cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                                });
+                              },
+                              decoration: InputDecoration(labelText: "Enter security code"),
+                            )
+                          ],
                         ),
-                  ),
-                  Form(
-                    key: formKey,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: <Widget>[
-
-
-                          TextFormField(
-                            initialValue: clientProfile!.cardName,
-                            enabled: editMode,
-                            onChanged: (value) {
-                                tempProfile!.cardName = value;
-                                Provider.of<CreditCardProvider>(context, listen: false).setName(value);
-                            },
-                            onTap: () {
-                              setState(() {
-                                if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
-                              });
-                            },
-                            decoration: InputDecoration(labelText: "Enter name"),
-                            onSaved: con?.saveCardName,
-                          ),
-
-                          TextFormField(
-                            initialValue: clientProfile!.cardNum,
-                            enabled: editMode,
-                            onChanged: (value) {
-                                tempProfile!.cardNum = value;
-                                Provider.of<CreditCardProvider>(context, listen: false).setNumber(value);
-                            },
-                            onTap: () {
-                              setState(() {
-                                if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
-                              });
-                            },
-                            decoration:
-                                InputDecoration(labelText: "Enter credit card number"),
-                            validator: con?.validateCardNum,
-                            onSaved: con?.saveCardNum,
-                          ),
-                          TextFormField(
-                            initialValue: clientProfile!.cardExp,
-                            enabled: editMode,
-                            onChanged: (value) {
-                                tempProfile!.cardExp = value;
-                                Provider.of<CreditCardProvider>(context, listen: false).setExpDate(value);
-                            },
-                            onTap: () {
-                              setState(() {
-                                if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
-                              });
-                            },
-                            decoration: InputDecoration(labelText: "Enter expiration date"),
-                            validator: con?.validateCardExp,
-                            onSaved: con?.saveCardExp,
-                          ),
-                          TextFormField(
-                            initialValue: clientProfile!.cardCVV,
-                            enabled: editMode,
-                            onChanged: (value) {
-                                tempProfile!.cardCVV = value;
-                                Provider.of<CreditCardProvider>(context, listen: false).setCVV(value);
-                            },
-
-                            onSaved: (value) {
-                              setState(() {
-                                cardKey.currentState!.toggleCard();
-                              });
-                              con?.saveCardCVV(value); //Does this work?
-                            },
-                            onTap: () {
-                              setState(() {
-                                if (cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
-                              });
-                            },
-                            decoration: InputDecoration(labelText: "Enter security code"),
-                          )
-                        ],
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
@@ -310,5 +321,58 @@ class Controller {
 
   void editCard() {
     state.render(() => state.editMode = true);
+  }
+}
+
+//Formatter for adding space after every four digits of credit card number
+class CardNumSpacing extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    var text = newValue.text;
+
+    if (newValue.selection.baseOffset == 0) {
+      return newValue;
+    }
+
+    var buffer = new StringBuffer();
+    for (int i = 0; i < text.length; i++) {
+      buffer.write(text[i]);
+      var nonZeroIndex = i + 1;
+      if (nonZeroIndex % 4 == 0 && nonZeroIndex != text.length) {
+        buffer.write(
+            ' '); // Replace this with anything you want to put after each 4 numbers
+      }
+    }
+
+    var string = buffer.toString();
+    return newValue.copyWith(
+        text: string, selection: new TextSelection.collapsed(offset: string.length));
+  }
+}
+
+//Formatter for adding slash between expiration date
+class CardExpFormat extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    var text = newValue.text;
+
+    if (newValue.selection.baseOffset == 0) {
+      return newValue;
+    }
+
+    var buffer = new StringBuffer();
+    for (int i = 0; i < text.length; i++) {
+      buffer.write(text[i]);
+      var nonZeroIndex = i + 1;
+      if (nonZeroIndex % 2 == 0 && nonZeroIndex != text.length) {
+        buffer.write('/');
+      }
+    }
+
+    var string = buffer.toString();
+    return newValue.copyWith(
+        text: string, selection: new TextSelection.collapsed(offset: string.length));
   }
 }
