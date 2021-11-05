@@ -30,18 +30,16 @@ class _StoreScreenState extends State<StoreScreen> {
   bool? isSorted = false;
   late BuildContext _buildContext;
 
-
   @override
   void initState() {
     super.initState();
     _buildContext = context;
     con = Controller(this);
     startTime();
-
   }
 
   startTime() async {
-    var duration = new Duration(seconds: 10);
+    var duration = new Duration(seconds: 60);
     return new Timer(duration, route);
   }
 
@@ -171,10 +169,8 @@ class _StoreScreenState extends State<StoreScreen> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                   stream: FirebaseController.appointmentsStreamForStore(),
                   builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                          appointmentsStreamSnapshot) {
-                    if (appointmentsStreamSnapshot.connectionState ==
-                        ConnectionState.waiting) {
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamSnapshot) {
+                    if (appointmentsStreamSnapshot.connectionState == ConnectionState.waiting) {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
@@ -193,179 +189,141 @@ class _StoreScreenState extends State<StoreScreen> {
                           ),
                         );
 
-                      con!.appointmentsSnapshot =
-                          appointmentsStreamSnapshot.data!;
+                      con!.appointmentsSnapshot = appointmentsStreamSnapshot.data!;
+
+                      con!.filteredAppointmentsSnapshot = con!.appointmentsSnapshot.docs
+                        ..sort((a, b) {
+                          if (b.data()[Appointment.IN_ROUTE] == null) return -1;
+                          if (b.data()[Appointment.IN_ROUTE])
+                            return 1;
+                          else
+                            return -1;
+                        });
 
                       return Container(
                         child: Column(
                           children: [
-                            Text(
-                                'Blue: Pending | Green: Completed | Red: Canceled'),
+                            Text('Blue: Pending | Green: Completed | Red: Canceled'),
                             Expanded(
                               child: ListView.builder(
-                                  itemCount:
-                                      con!.filteredAppointmentsSnapshot.length,
-                                  itemBuilder: (context, index) =>
-                                      FutureBuilder<Appointment>(
-                                          future: Appointment.deserialize(
-                                              con!.filteredAppointmentsSnapshot
-                                                  .elementAt(index)
-                                                  .data(),
-                                              con!.filteredAppointmentsSnapshot
-                                                  .elementAt(index)
-                                                  .id),
-                                          builder:
-                                              (context, appointmentSnapshot) {
-                                            if (appointmentSnapshot
-                                                    .connectionState ==
-                                                ConnectionState.waiting) {
-                                              return ListTile(
-                                                title: Text('Loading...'),
-                                              );
-                                            }
-                                            if (appointmentSnapshot.hasData) {
-                                              // print(appointmentSnapshot.data!.clientId);
-                                              Appointment appointment =
-                                                  appointmentSnapshot.data
-                                                      as Appointment;
-                                              return GestureDetector(
-                                                child: Container(
-                                                  // shape: RoundedRectangleBorder(
-                                                  //   borderRadius: BorderRadius.circular(15),
-                                                  // ),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black12,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            33),
-                                                  ),
+                                  itemCount: con!.filteredAppointmentsSnapshot.length,
+                                  itemBuilder: (context, index) => FutureBuilder<Appointment>(
+                                      future: Appointment.deserialize(
+                                          con!.filteredAppointmentsSnapshot.elementAt(index).data(),
+                                          con!.filteredAppointmentsSnapshot.elementAt(index).id),
+                                      builder: (context, appointmentSnapshot) {
+                                        if (appointmentSnapshot.connectionState == ConnectionState.waiting) {
+                                          return ListTile(
+                                            title: Text('Loading...'),
+                                          );
+                                        }
+                                        if (appointmentSnapshot.hasData) {
+                                          // print(appointmentSnapshot.data!.clientId);
+                                          Appointment appointment = appointmentSnapshot.data as Appointment;
+                                          return GestureDetector(
+                                            child: Container(
+                                              // shape: RoundedRectangleBorder(
+                                              //   borderRadius: BorderRadius.circular(15),
+                                              // ),
+                                              decoration: BoxDecoration(
+                                                color: appointment.inRoute
+                                                    ? Colors.amber.withOpacity(0.3)
+                                                    : Colors.black12,
+                                                borderRadius: BorderRadius.circular(33),
+                                              ),
 
-                                                  margin: const EdgeInsets.only(
-                                                      top: 8.0,
-                                                      right: 8.0,
-                                                      left: 8.0),
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 8.0,
-                                                          right: 8.0,
-                                                          left: 15.0,
-                                                          bottom: 8.0),
-                                                  height: 65.0,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                              margin: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
+                                              padding:
+                                                  const EdgeInsets.only(top: 8.0, right: 8.0, left: 15.0, bottom: 8.0),
+                                              height: 65.0,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Row(
                                                     children: [
-                                                      Row(
+                                                      Text(
+                                                        '${DateFormat('MMM dd').format(appointment.appointmentTime)}\n${DateFormat('h:mm aa').format(appointment.appointmentTime)}',
+                                                        style: TextStyle(
+                                                          fontWeight: FontWeight.w500,
+                                                          // color: Colors.black54,
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        height: 40.0,
+                                                        margin: EdgeInsets.only(right: 10.0, left: 10.0),
+                                                        decoration: BoxDecoration(
+                                                          color: appointment.isCompleted
+                                                              ? Colors.green
+                                                              : appointment.isCanceled
+                                                                  ? Colors.deepOrange
+                                                                  : Colors.blue,
+                                                          borderRadius: BorderRadius.circular(5),
+                                                        ),
+                                                        child: Text(' '),
+                                                      ),
+                                                      Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        mainAxisAlignment: MainAxisAlignment.center,
                                                         children: [
                                                           Text(
-                                                            '${DateFormat('MMM dd').format(appointment.appointmentTime)}\n${DateFormat('h:mm aa').format(appointment.appointmentTime)}',
+                                                            '${appointment.client.firstName!} ${appointment.client.lastName!}',
                                                             style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.blue,
+                                                              fontSize: 16.0,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            '${appointment.option.name} | ${appointment.option.price}',
+                                                            softWrap: true,
+                                                            overflow: TextOverflow.clip,
+                                                            style: TextStyle(
+                                                              fontWeight: FontWeight.w500,
                                                               // color: Colors.black54,
                                                             ),
                                                           ),
-                                                          Container(
-                                                            height: 40.0,
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    right: 10.0,
-                                                                    left: 10.0),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: appointment
-                                                                      .isCompleted
-                                                                  ? Colors.green
-                                                                  : appointment
-                                                                          .isCanceled
-                                                                      ? Colors
-                                                                          .deepOrange
-                                                                      : Colors
-                                                                          .blue,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                            ),
-                                                            child: Text(' '),
-                                                          ),
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                '${appointment.client.firstName!} ${appointment.client.lastName!}',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .blue,
-                                                                  fontSize:
-                                                                      16.0,
-                                                                ),
-                                                              ),
-                                                              Text(
-                                                                '${appointment.option.name} | ${appointment.option.price}',
-                                                                softWrap: true,
-                                                                overflow: TextOverflow.clip,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  // color: Colors.black54,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
                                                         ],
                                                       ),
-                                                      SingleChildScrollView(
-                                                        scrollDirection: Axis.horizontal,
-                                                        child: Row(
-                                                          children: [
-                                                            IconButton(
-                                                              icon: Icon(Icons.cancel_outlined),
-                                                              onPressed: () {},
-                                                              color: Colors.red,
-                                                            ),
-                                                            IconButton(
-                                                              icon: Icon(Icons.check_circle_outline_rounded),
-                                                              onPressed: () {},
-                                                              color: Colors.green,
-                                                            ),
-                                                            IconButton(
-                                                              icon: Icon(Icons.message_outlined),
-                                                              onPressed: () {
-                                                                Navigator.pushNamed(context, MessageScreen.routeName, arguments: {
+                                                    ],
+                                                  ),
+                                                  SingleChildScrollView(
+                                                    scrollDirection: Axis.horizontal,
+                                                    child: Row(
+                                                      children: [
+                                                        // IconButton(
+                                                        //   icon: Icon(Icons.cancel_outlined),
+                                                        //   onPressed: () {},
+                                                        //   color: Colors.red,
+                                                        // ),
+                                                        IconButton(
+                                                          icon: Icon(Icons.check_circle_outline_rounded),
+                                                          onPressed: () {},
+                                                          color: Colors.green,
+                                                        ),
+                                                        IconButton(
+                                                          icon: Icon(Icons.message_outlined),
+                                                          onPressed: () {
+                                                            Navigator.pushNamed(context, MessageScreen.routeName,
+                                                                arguments: {
                                                                   'my_name': appointment.store.name,
                                                                   'other_name': appointment.client.firstName,
                                                                   'other_id': appointment.client.docId,
                                                                 });
-                                                              },
-                                                              color: Colors.black54,
-                                                            ),
-                                                          ],
+                                                          },
+                                                          color: Colors.black54,
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
-
-                                                ),
-                                                onTap: () {},
-                                              );
-                                            }
-                                            print(appointmentSnapshot.error);
-                                            return Text('error!!!');
-                                          })),
+                                                ],
+                                              ),
+                                            ),
+                                            onTap: () {},
+                                          );
+                                        }
+                                        print(appointmentSnapshot.error);
+                                        return Text('error!!!');
+                                      })),
                             )
                           ],
                         ),
@@ -389,13 +347,12 @@ class Controller {
   Controller(this.state);
 
   late QuerySnapshot<Map<String, dynamic>> appointmentsSnapshot;
-  late Iterable<QueryDocumentSnapshot<Map<String, dynamic>>>
-      filteredAppointmentsSnapshot = appointmentsSnapshot.docs;
+  late Iterable<QueryDocumentSnapshot<Map<String, dynamic>>> filteredAppointmentsSnapshot = appointmentsSnapshot.docs;
 
   void onCompletedFilter() {
     state.setState(() {
-      filteredAppointmentsSnapshot = appointmentsSnapshot.docs
-          .where((element) => element.data()[Appointment.IS_COMPLETED] == true);
+      filteredAppointmentsSnapshot =
+          appointmentsSnapshot.docs.where((element) => element.data()[Appointment.IS_COMPLETED] == true);
     });
   }
 
@@ -404,18 +361,14 @@ class Controller {
     if (!state.isSorted!) {
       state.setState(() {
         filteredAppointmentsSnapshot = appointmentsSnapshot.docs
-          ..sort((a, b) => a
-              .data()[Appointment.CLIENT_ID]
-              .compareTo(b.data()[Appointment.CLIENT_ID]));
+          ..sort((a, b) => a.data()[Appointment.CLIENT_ID].compareTo(b.data()[Appointment.CLIENT_ID]));
       });
       state.isSorted = true;
       text = "You have sorted by client ID!";
     } else {
       state.setState(() {
         filteredAppointmentsSnapshot = appointmentsSnapshot.docs
-          ..sort((a, b) => a
-              .data()[Appointment.APPOINTMENT_TIME]
-              .compareTo(b.data()[Appointment.APPOINTMENT_TIME]));
+          ..sort((a, b) => a.data()[Appointment.APPOINTMENT_TIME].compareTo(b.data()[Appointment.APPOINTMENT_TIME]));
       });
       state.isSorted = false;
       text = "You have sorted by appointment time!";
@@ -436,9 +389,7 @@ class Controller {
   void onTimeFilter() {
     state.setState(() {
       filteredAppointmentsSnapshot = appointmentsSnapshot.docs
-        ..sort((a, b) => b
-            .data()[Appointment.APPOINTMENT_TIME]
-            .compareTo(a.data()[Appointment.APPOINTMENT_TIME]));
+        ..sort((a, b) => b.data()[Appointment.APPOINTMENT_TIME].compareTo(a.data()[Appointment.APPOINTMENT_TIME]));
     });
   }
 
