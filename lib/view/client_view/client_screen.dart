@@ -252,7 +252,8 @@ class _ClientScreenState extends State<ClientScreen> {
                                         ),
                                         Row(
                                           children: [
-                                            TextButton(
+                                            IconButton(
+                                              icon: Icon(Icons.message_outlined),
                                               onPressed: () {
                                                 Navigator.pushNamed(context,
                                                     MessageScreen.routeName,
@@ -266,14 +267,7 @@ class _ClientScreenState extends State<ClientScreen> {
                                                           con!.stores[index].id,
                                                     });
                                               },
-                                              child: Text(
-                                                'Message',
-                                                style: TextStyle(
-                                                  // fontWeight: FontWeight.bold,
-                                                  color: Colors.blue,
-                                                  // fontSize: 16.0,
-                                                ),
-                                              ),
+                                              color: Colors.black54,
                                             ),
                                           ],
                                         )
