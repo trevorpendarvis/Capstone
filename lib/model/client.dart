@@ -9,6 +9,10 @@ class Client {
   String? vehicleColor;
   String? vehicleMake;
   String? favLocation;
+  String? cardNum;
+  String? cardName;
+  String? cardExp;
+  String? cardCVV;
 
   //For firestore document
   static const COLLECTION = "clients";
@@ -21,6 +25,10 @@ class Client {
   static const VEHICLE_COLOR = "vehicleColor";
   static const VEHICLE_MAKE = "vehicleMake";
   static const FAV_LOCATION = "favLocation";
+  static const CARD_NUM = "cardNum";
+  static const CARD_NAME = "cardName";
+  static const CARD_EXP = "cardExp";
+  static const CARD_CVV = "cardCVV";
 
   Client({
     this.docId,
@@ -33,6 +41,10 @@ class Client {
     this.vehicleColor = '',
     this.vehicleMake = '',
     this.favLocation = '',
+    this.cardNum = '',
+    this.cardName = '',
+    this.cardExp = '',
+    this.cardCVV = '',
   });
 
   Client.clone(Client p) {
@@ -46,6 +58,10 @@ class Client {
     this.vehicleColor = p.vehicleColor;
     this.vehicleMake = p.vehicleMake;
     this.favLocation = p.favLocation;
+    this.cardNum = p.cardNum;
+    this.cardName = p.cardName;
+    this.cardExp = p.cardExp;
+    this.cardCVV = p.cardCVV;
   }
 
   void assign(Client p) {
@@ -59,6 +75,10 @@ class Client {
     this.vehicleColor = p.vehicleColor;
     this.vehicleMake = p.vehicleMake;
     this.favLocation = p.favLocation;
+    this.cardNum = p.cardNum;
+    this.cardName = p.cardName;
+    this.cardExp = p.cardExp;
+    this.cardCVV = p.cardCVV;
   }
 
   //From Dart object to Firestore doc
@@ -74,6 +94,10 @@ class Client {
       VEHICLE_COLOR: this.vehicleColor,
       VEHICLE_MAKE: this.vehicleMake,
       FAV_LOCATION: this.favLocation,
+      CARD_NUM: this.cardNum,
+      CARD_NAME: this.cardName,
+      CARD_EXP: this.cardExp,
+      CARD_CVV: this.cardCVV,
     };
   }
 
@@ -89,6 +113,10 @@ class Client {
       vehicleColor: doc?[VEHICLE_COLOR] ?? '',
       vehicleMake: doc?[VEHICLE_MAKE] ?? '',
       favLocation: doc?[FAV_LOCATION] ?? '',
+      cardNum: doc?[CARD_NUM] ?? '',
+      cardName: doc?[CARD_NAME] ?? '',
+      cardExp: doc?[CARD_EXP] ?? '',
+      cardCVV: doc?[CARD_CVV] ?? '',
     );
   }
 }
