@@ -246,7 +246,7 @@ class Controller {
   }
 
   String? validateCardNum(String? value) {
-    if (value == null || value.length < 16 || value.length > 16) {
+    if (value == null || value.length < 19 || value.length > 19) {
       return 'Card number must be 16 digits.';
     } else {
       return null;
@@ -259,7 +259,7 @@ class Controller {
   }
 
   String? validateCardExp(String? value) {
-    if (value == null || value.length < 4 || value.length > 4) {
+    if (value == null || value.length < 5 || value.length > 5) {
       return 'Expiration date must follow MM/YY format.';
     } else {
       return null;
