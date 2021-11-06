@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
@@ -5,9 +7,11 @@ import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/location.dart';
 import 'package:monkey_management/view/auth_view/signin_screen.dart';
 import 'package:monkey_management/view/common_view/message_screen.dart';
+import 'package:monkey_management/view/common_view/screen_saver.dart';
 import 'package:monkey_management/view/store_view/store_locations_screen.dart';
 import 'package:monkey_management/view/store_view/store_settings_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'options_screen.dart';
 
@@ -24,11 +28,31 @@ class _StoreScreenState extends State<StoreScreen> {
   int currentIndex = 0;
   Controller? con;
   bool? isSorted = false;
+  late BuildContext _buildContext;
 
   @override
   void initState() {
     super.initState();
+    _buildContext = context;
     con = Controller(this);
+    startTime();
+  }
+
+  startTime() async {
+    var duration = new Duration(seconds: 60);
+    return new Timer(duration, route);
+  }
+
+  Future<void> route() async {
+    // Navigator.pushReplacement(context, MaterialPageRoute(
+    //     builder: (context) => ScreenSaver()
+    // )
+    // );
+    SchedulerBinding.instance!.addPostFrameCallback((_) {});
+    Navigator.of(_buildContext).pushNamed(
+      ScreenSaver.routeName,
+      arguments: startTime,
+    );
   }
 
   void render(fn) => setState(fn);
@@ -40,11 +64,13 @@ class _StoreScreenState extends State<StoreScreen> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         appBar: AppBar(
-          title: Center(
-              child: Text(
-            'Store Home',
-            style: TextStyle(color: Colors.black),
-          )),
+          title: Padding(
+            padding: const EdgeInsets.only(left: 80, right: 20),
+            child: Text(
+              'Store Home',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
           // backgroundColor: Colors.amber,
 
 //           title: Padding(
@@ -165,6 +191,15 @@ class _StoreScreenState extends State<StoreScreen> {
 
                       con!.appointmentsSnapshot = appointmentsStreamSnapshot.data!;
 
+                      con!.filteredAppointmentsSnapshot = con!.appointmentsSnapshot.docs
+                        ..sort((a, b) {
+                          if (b.data()[Appointment.IN_ROUTE] == null) return -1;
+                          if (b.data()[Appointment.IN_ROUTE])
+                            return 1;
+                          else
+                            return -1;
+                        });
+
                       return Container(
                         child: Column(
                           children: [
@@ -191,7 +226,9 @@ class _StoreScreenState extends State<StoreScreen> {
                                               //   borderRadius: BorderRadius.circular(15),
                                               // ),
                                               decoration: BoxDecoration(
-                                                color: Colors.black12,
+                                                color: appointment.inRoute
+                                                    ? Colors.amber.withOpacity(0.3)
+                                                    : Colors.black12,
                                                 borderRadius: BorderRadius.circular(33),
                                               ),
 
@@ -238,6 +275,8 @@ class _StoreScreenState extends State<StoreScreen> {
                                                           ),
                                                           Text(
                                                             '${appointment.option.name} | ${appointment.option.price}',
+                                                            softWrap: true,
+                                                            overflow: TextOverflow.clip,
                                                             style: TextStyle(
                                                               fontWeight: FontWeight.w500,
                                                               // color: Colors.black54,
@@ -247,30 +286,34 @@ class _StoreScreenState extends State<StoreScreen> {
                                                       ),
                                                     ],
                                                   ),
-                                                  Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons.cancel_outlined),
-                                                        onPressed: () {},
-                                                        color: Colors.red,
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.check_circle_outline_rounded),
-                                                        onPressed: () {},
-                                                        color: Colors.green,
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.message_outlined),
-                                                        onPressed: () {
-                                                          Navigator.pushNamed(context, MessageScreen.routeName, arguments: {
-                                                            'my_name': appointment.store.name,
-                                                            'other_name': appointment.client.firstName,
-                                                            'other_id': appointment.client.docId,
-                                                          });
-                                                        },
-                                                        color: Colors.black54,
-                                                      ),
-                                                    ],
+                                                  SingleChildScrollView(
+                                                    scrollDirection: Axis.horizontal,
+                                                    child: Row(
+                                                      children: [
+                                                        // IconButton(
+                                                        //   icon: Icon(Icons.cancel_outlined),
+                                                        //   onPressed: () {},
+                                                        //   color: Colors.red,
+                                                        // ),
+                                                        IconButton(
+                                                          icon: Icon(Icons.check_circle_outline_rounded),
+                                                          onPressed: () {},
+                                                          color: Colors.green,
+                                                        ),
+                                                        IconButton(
+                                                          icon: Icon(Icons.message_outlined),
+                                                          onPressed: () {
+                                                            Navigator.pushNamed(context, MessageScreen.routeName,
+                                                                arguments: {
+                                                                  'my_name': appointment.store.name,
+                                                                  'other_name': appointment.client.firstName,
+                                                                  'other_id': appointment.client.docId,
+                                                                });
+                                                          },
+                                                          color: Colors.black54,
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ],
                                               ),

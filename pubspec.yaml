@@ -28,6 +28,7 @@ dependencies:
   firebase_auth: ^1.2.0
   cloud_firestore: ^2.2.0
   firebase_messaging: ^10.0.0
+  flip_card: ^0.6.0
 
   provider: ^5.0.0
   wakelock: ^0.5.2
@@ -56,6 +57,7 @@ flutter:
     - assets/images/MM.png
     - assets/images/MonkeyMGMT.png
     - assets/images/MonkeyLogo.png
+    - assets/images/bg.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -75,6 +77,9 @@ flutter:
         - asset: fonts/BowlbyOneSC-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
+    - family: DS-DIGIB
+      fonts:
+        - asset: fonts/ds-digib.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

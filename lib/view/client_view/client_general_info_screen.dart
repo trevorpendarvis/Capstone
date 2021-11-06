@@ -8,6 +8,7 @@ import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/data.dart';
 import 'package:monkey_management/model/client.dart';
 import 'package:monkey_management/model/store.dart';
+import 'package:monkey_management/view/client_view/client_payment_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
 import 'package:monkey_management/view/common_view/loading_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
@@ -383,8 +384,23 @@ class ClientGeneralInfoState extends State<ClientGeneralInfoScreen> {
                             children: [
                               //EMAIL
                               SizedBox(
-                                height: 7,
+                                height: 20,
                               ),
+
+                              ///PAYMENT INFO
+                              Container(
+                                width: 350,
+                                height: 50,
+                                child: ElevatedButton(
+                                  onPressed: () => con?.paymentInfo(
+                            FirebaseAuth.instance.currentUser!.uid),
+                                  child: Text("Payment Information"),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+
                               Container(
                                 margin: EdgeInsets.fromLTRB(4, 10, 0, 0),
                                 alignment: Alignment.centerLeft,
@@ -801,6 +817,17 @@ class Controller {
         vehicleMakeDropdown = clientProfile.vehicleMake;
       }
     }
+  }
+
+  Future<void> paymentInfo(String? uid) async {
+    await Navigator.pushNamed(state.context, ClientPaymentScreen.routeName,
+        arguments: {
+          // "user": state.user,
+          "one_clientProfile": clientProfile,
+          'isNewUser': false,
+        });
+    //Navigator.pop(state.context); //pop the drawer
+    //state.render(() {});
   }
 
   Future<void> accountSettings(String? uid) async {

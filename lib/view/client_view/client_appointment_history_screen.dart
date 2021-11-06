@@ -3,22 +3,50 @@ import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/appointment.dart';
 import 'package:intl/intl.dart';
+import 'package:monkey_management/model/option.dart';
+import 'package:monkey_management/model/store.dart';
+import 'package:monkey_management/view/common_view/mydialog.dart';
 
 class ClientAppointmentHistoryScreen extends StatefulWidget {
   static const routeName = "/client_appointment_history_screen";
 
   @override
-  _ClientAppointmentHistoryScreenState createState() =>
-      _ClientAppointmentHistoryScreenState();
+  State<StatefulWidget> createState() {
+    return _ClientAppointmentHistoryScreenState();
+  }
 }
 
 class _ClientAppointmentHistoryScreenState
     extends State<ClientAppointmentHistoryScreen> {
+  late _Controller controller;
+  late List<Option> storeOptions;
+  late Store selctedStore;
+  late DateTime pickedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = _Controller(this);
+  }
+
+  void render(fn) => setState(fn);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
-        title: Text("Past Appointments"),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 50, right: 20),
+          child: Text(
+            "Past Appointments",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.grey[250],
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseController.appointmentHistoryStreamForClient(),
@@ -149,30 +177,24 @@ class _ClientAppointmentHistoryScreenState
                                               ),
                                             ],
                                           ),
-                                          // Row(
-                                          //   children: [
-                                          //     TextButton(
-                                          //         onPressed: () {},
-                                          //         child: Text(
-                                          //           '${appointment.isCanceled ? 'Revert' : 'Cancel'}',
-                                          //           style: TextStyle(
-                                          //             // fontWeight: FontWeight.bold,
-                                          //             color: Colors.red,
-                                          //             // fontSize: 16.0,
-                                          //           ),
-                                          //         )),
-                                          //     TextButton(
-                                          //         onPressed: () {},
-                                          //         child: Text(
-                                          //           '${appointment.isCompleted ? 'Revert' : 'Done'}',
-                                          //           style: TextStyle(
-                                          //             // fontWeight: FontWeight.bold,
-                                          //             color: Colors.blue,
-                                          //             // fontSize: 16.0,
-                                          //           ),
-                                          //         )),
-                                          //   ],
-                                          // )
+                                          Row(
+                                            children: [
+                                              TextButton(
+                                                  onPressed: () async =>
+                                                      await controller
+                                                          .makeAppointment(
+                                                              context,
+                                                              appointment),
+                                                  child: Text(
+                                                    'Reschedule Appointment',
+                                                    style: TextStyle(
+                                                      // fontWeight: FontWeight.bold,
+                                                      color: Colors.blue,
+                                                      // fontSize: 16.0,
+                                                    ),
+                                                  )),
+                                            ],
+                                          )
                                         ],
                                       ),
                                     ),
@@ -187,10 +209,124 @@ class _ClientAppointmentHistoryScreenState
                 ),
               );
             }
-
             print(appointmentHistoryStreamSnapshot.error);
             return Text('error');
           }),
     );
+  }
+}
+
+class _Controller {
+  _ClientAppointmentHistoryScreenState state;
+
+  _Controller(this.state);
+  DateTime? date;
+  bool isUpdate = false;
+  late Store store;
+  TimeOfDay? timeOfDay = new TimeOfDay(hour: 7, minute: 15);
+
+  Future<void> makeAppointment(
+      BuildContext context, Appointment selectedAppointment) async {
+    state.pickedDate = DateTime.now();
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              content: Center(
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black87)),
+                      child: ListTile(
+                        title: Text('Select Date'),
+                        subtitle: Text(
+                            'Date: ${state.pickedDate.month}/${state.pickedDate.day}/${state.pickedDate.year}'),
+                        trailing: Icon(Icons.calendar_today_rounded),
+                        onTap: () async {
+                          date = await showDatePicker(
+                              context: context,
+                              initialDate: state.pickedDate,
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(DateTime.now().year + 5));
+
+                          if (date != null) {
+                            setState(() {
+                              state.pickedDate = date!;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black87)),
+                      child: ListTile(
+                        title: Text('Select a Time'),
+                        subtitle:
+                            Text('${timeOfDay!.hour}:${timeOfDay!.minute}'),
+                        trailing: Icon(Icons.access_time),
+                        onTap: () async {
+                          final TimeOfDay? tempTime = await showTimePicker(
+                              context: state.context,
+                              initialTime: TimeOfDay(hour: 7, minute: 15));
+
+                          if (tempTime != null) {
+                            setState(() {
+                              timeOfDay = tempTime;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      await handelAppointment(selectedAppointment);
+                    },
+                    child: Text('Confirm')),
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('Cancel'))
+              ],
+            );
+          });
+        });
+  }
+
+  Future<void> handelAppointment(Appointment selectedAppointment) async {
+    MyDialog.circularProgressStart(state.context);
+    try {
+      Appointment app = new Appointment();
+      app.client = selectedAppointment.client;
+      app.store = selectedAppointment.store;
+      app.option = selectedAppointment.option;
+      app.createdBy = selectedAppointment.client.docId!;
+      DateTime timeAppointment = new DateTime(
+          state.pickedDate.year,
+          state.pickedDate.month,
+          state.pickedDate.day,
+          timeOfDay!.hour,
+          timeOfDay!.minute);
+      app.appointmentTime = timeAppointment;
+      await FirebaseController.addAppointment(app);
+      MyDialog.circularProgressStop(state.context);
+      MyDialog.info(
+          context: state.context,
+          title: 'Successful',
+          content:
+              'Appointment made for ${state.pickedDate.month}/${state.pickedDate.day}/${state.pickedDate.year}  At: ${timeOfDay!.hour}:${timeOfDay!.minute}');
+    } catch (e) {
+      MyDialog.circularProgressStop(state.context);
+      MyDialog.info(
+          context: state.context,
+          title: 'handel appointment failed',
+          content: e.toString());
+    }
   }
 }
