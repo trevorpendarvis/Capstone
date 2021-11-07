@@ -218,14 +218,14 @@ class _StoreEditOptionScreenState extends State<StoreEditOptionScreen> {
                     ),
                     isNewLocation!
                         ?
-                        // Add new location
+                        // Add new Option
                         ElevatedButton(
                             onPressed: con?.onSave,
                             child:
                                 Text("Done", style: Theme.of(context).textTheme.button),
                           )
                         :
-                        // Update existing location
+                        // Update existing option
                         ElevatedButton(
                             onPressed: con?.onUpdate,
                             child:

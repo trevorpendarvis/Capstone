@@ -9,6 +9,7 @@ import 'package:monkey_management/view/auth_view/signin_screen.dart';
 import 'package:monkey_management/view/common_view/message_screen.dart';
 import 'package:monkey_management/view/common_view/screen_saver.dart';
 import 'package:monkey_management/view/store_view/store_locations_screen.dart';
+import 'package:monkey_management/view/store_view/store_profile_screen.dart';
 import 'package:monkey_management/view/store_view/store_settings_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/scheduler.dart';
@@ -169,8 +170,10 @@ class _StoreScreenState extends State<StoreScreen> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                   stream: FirebaseController.appointmentsStreamForStore(),
                   builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> appointmentsStreamSnapshot) {
-                    if (appointmentsStreamSnapshot.connectionState == ConnectionState.waiting) {
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          appointmentsStreamSnapshot) {
+                    if (appointmentsStreamSnapshot.connectionState ==
+                        ConnectionState.waiting) {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
@@ -207,19 +210,26 @@ class _StoreScreenState extends State<StoreScreen> {
                             Expanded(
                               child: ListView.builder(
                                   itemCount: con!.filteredAppointmentsSnapshot.length,
-                                  itemBuilder: (context, index) => FutureBuilder<Appointment>(
+                                  itemBuilder: (context, index) => FutureBuilder<
+                                          Appointment>(
                                       future: Appointment.deserialize(
-                                          con!.filteredAppointmentsSnapshot.elementAt(index).data(),
-                                          con!.filteredAppointmentsSnapshot.elementAt(index).id),
+                                          con!.filteredAppointmentsSnapshot
+                                              .elementAt(index)
+                                              .data(),
+                                          con!.filteredAppointmentsSnapshot
+                                              .elementAt(index)
+                                              .id),
                                       builder: (context, appointmentSnapshot) {
-                                        if (appointmentSnapshot.connectionState == ConnectionState.waiting) {
+                                        if (appointmentSnapshot.connectionState ==
+                                            ConnectionState.waiting) {
                                           return ListTile(
                                             title: Text('Loading...'),
                                           );
                                         }
                                         if (appointmentSnapshot.hasData) {
                                           // print(appointmentSnapshot.data!.clientId);
-                                          Appointment appointment = appointmentSnapshot.data as Appointment;
+                                          Appointment appointment =
+                                              appointmentSnapshot.data as Appointment;
                                           return GestureDetector(
                                             child: Container(
                                               // shape: RoundedRectangleBorder(
@@ -232,12 +242,17 @@ class _StoreScreenState extends State<StoreScreen> {
                                                 borderRadius: BorderRadius.circular(33),
                                               ),
 
-                                              margin: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
-                                              padding:
-                                                  const EdgeInsets.only(top: 8.0, right: 8.0, left: 15.0, bottom: 8.0),
+                                              margin: const EdgeInsets.only(
+                                                  top: 8.0, right: 8.0, left: 8.0),
+                                              padding: const EdgeInsets.only(
+                                                  top: 8.0,
+                                                  right: 8.0,
+                                                  left: 15.0,
+                                                  bottom: 8.0),
                                               height: 65.0,
                                               child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   Row(
                                                     children: [
@@ -250,20 +265,24 @@ class _StoreScreenState extends State<StoreScreen> {
                                                       ),
                                                       Container(
                                                         height: 40.0,
-                                                        margin: EdgeInsets.only(right: 10.0, left: 10.0),
+                                                        margin: EdgeInsets.only(
+                                                            right: 10.0, left: 10.0),
                                                         decoration: BoxDecoration(
                                                           color: appointment.isCompleted
                                                               ? Colors.green
                                                               : appointment.isCanceled
                                                                   ? Colors.deepOrange
                                                                   : Colors.blue,
-                                                          borderRadius: BorderRadius.circular(5),
+                                                          borderRadius:
+                                                              BorderRadius.circular(5),
                                                         ),
                                                         child: Text(' '),
                                                       ),
                                                       Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment.start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment.center,
                                                         children: [
                                                           Text(
                                                             '${appointment.client.firstName!} ${appointment.client.lastName!}',
@@ -296,18 +315,25 @@ class _StoreScreenState extends State<StoreScreen> {
                                                         //   color: Colors.red,
                                                         // ),
                                                         IconButton(
-                                                          icon: Icon(Icons.check_circle_outline_rounded),
+                                                          icon: Icon(Icons
+                                                              .check_circle_outline_rounded),
                                                           onPressed: () {},
                                                           color: Colors.green,
                                                         ),
                                                         IconButton(
-                                                          icon: Icon(Icons.message_outlined),
+                                                          icon: Icon(
+                                                              Icons.message_outlined),
                                                           onPressed: () {
-                                                            Navigator.pushNamed(context, MessageScreen.routeName,
+                                                            Navigator.pushNamed(context,
+                                                                MessageScreen.routeName,
                                                                 arguments: {
-                                                                  'my_name': appointment.store.name,
-                                                                  'other_name': appointment.client.firstName,
-                                                                  'other_id': appointment.client.docId,
+                                                                  'my_name': appointment
+                                                                      .store.name,
+                                                                  'other_name':
+                                                                      appointment.client
+                                                                          .firstName,
+                                                                  'other_id': appointment
+                                                                      .client.docId,
                                                                 });
                                                           },
                                                           color: Colors.black54,
@@ -347,12 +373,13 @@ class Controller {
   Controller(this.state);
 
   late QuerySnapshot<Map<String, dynamic>> appointmentsSnapshot;
-  late Iterable<QueryDocumentSnapshot<Map<String, dynamic>>> filteredAppointmentsSnapshot = appointmentsSnapshot.docs;
+  late Iterable<QueryDocumentSnapshot<Map<String, dynamic>>>
+      filteredAppointmentsSnapshot = appointmentsSnapshot.docs;
 
   void onCompletedFilter() {
     state.setState(() {
-      filteredAppointmentsSnapshot =
-          appointmentsSnapshot.docs.where((element) => element.data()[Appointment.IS_COMPLETED] == true);
+      filteredAppointmentsSnapshot = appointmentsSnapshot.docs
+          .where((element) => element.data()[Appointment.IS_COMPLETED] == true);
     });
   }
 
@@ -361,14 +388,17 @@ class Controller {
     if (!state.isSorted!) {
       state.setState(() {
         filteredAppointmentsSnapshot = appointmentsSnapshot.docs
-          ..sort((a, b) => a.data()[Appointment.CLIENT_ID].compareTo(b.data()[Appointment.CLIENT_ID]));
+          ..sort((a, b) =>
+              a.data()[Appointment.CLIENT_ID].compareTo(b.data()[Appointment.CLIENT_ID]));
       });
       state.isSorted = true;
       text = "You have sorted by client ID!";
     } else {
       state.setState(() {
         filteredAppointmentsSnapshot = appointmentsSnapshot.docs
-          ..sort((a, b) => a.data()[Appointment.APPOINTMENT_TIME].compareTo(b.data()[Appointment.APPOINTMENT_TIME]));
+          ..sort((a, b) => a
+              .data()[Appointment.APPOINTMENT_TIME]
+              .compareTo(b.data()[Appointment.APPOINTMENT_TIME]));
       });
       state.isSorted = false;
       text = "You have sorted by appointment time!";
@@ -389,7 +419,9 @@ class Controller {
   void onTimeFilter() {
     state.setState(() {
       filteredAppointmentsSnapshot = appointmentsSnapshot.docs
-        ..sort((a, b) => b.data()[Appointment.APPOINTMENT_TIME].compareTo(a.data()[Appointment.APPOINTMENT_TIME]));
+        ..sort((a, b) => b
+            .data()[Appointment.APPOINTMENT_TIME]
+            .compareTo(a.data()[Appointment.APPOINTMENT_TIME]));
     });
   }
 
@@ -399,7 +431,9 @@ class Controller {
     });
   }
 
-  Future<void> profile() async {}
+  Future<void> profile() async {
+    Navigator.pushNamed(state.context, StoreProfileScreen.routeName);
+  }
 
   Future<void> settings() async {
     Navigator.pushNamed(state.context, StoreSettingsScreen.routeName);

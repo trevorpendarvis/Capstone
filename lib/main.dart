@@ -23,6 +23,7 @@ import 'package:monkey_management/view/store_view/store_edit_options_screen.dart
 import 'package:monkey_management/view/store_view/store_general_info_screen.dart';
 import 'package:monkey_management/view/store_view/store_locations_screen.dart';
 import 'package:monkey_management/view/store_view/options_screen.dart';
+import 'package:monkey_management/view/store_view/store_profile_screen.dart';
 import 'package:monkey_management/view/store_view/store_screen.dart';
 import 'package:monkey_management/view/store_view/store_settings_screen.dart';
 import 'package:provider/provider.dart';
@@ -98,6 +99,7 @@ class MyApp extends StatelessWidget {
           ClientGeneralInfoScreen.routeName: (context) => ClientGeneralInfoScreen(),
           StoreGeneralInfoScreen.routeName: (context) => StoreGeneralInfoScreen(),
           StoreSettingsScreen.routeName: (context) => StoreSettingsScreen(),
+          StoreProfileScreen.routeName: (context) => StoreProfileScreen(),
           StoreOptionsScreen.routeName: (context) => StoreOptionsScreen(),
           // StoreEditOptionScreen.routeName: (context) => StoreEditOptionScreen(),
           AddUpdateOptionScreen.routeName: (context) => AddUpdateOptionScreen(),
