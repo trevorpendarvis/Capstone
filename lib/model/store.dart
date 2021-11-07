@@ -32,6 +32,15 @@ class Store {
     this.appointments = p.appointments;
   }
 
+  void assign(Store p) {
+    this.id = p.id;
+    //this.userName = p.userName;
+    this.address = p.address;
+    this.email = p.email;
+    this.name = p.name;
+    this.phone = p.phone;
+  }
+
   Map<String, dynamic> serialize() {
     return <String, dynamic>{
       NAME: this.name,
