@@ -41,4 +41,37 @@ class MyDialog {
           );
         });
   }
+
+  static void DeleteInfo({
+    @required BuildContext? context,
+    @required String? title,
+    @required String? content,
+    //@required bool? collectionId,
+  }) async {
+    showDialog(
+        context: context!,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(title!),
+            content: Text(content!),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  "Cancel",
+                  style: Theme.of(context).textTheme.button,
+                ),
+              ),
+              TextButton(
+                onPressed: () => print("Delete Button Pressed"),
+                child: Text(
+                  "Delete",
+                  style: Theme.of(context).textTheme.button,
+                ),
+              ),
+            ],
+          );
+        });
+  }
 }

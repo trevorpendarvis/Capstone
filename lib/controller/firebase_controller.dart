@@ -156,6 +156,13 @@ class FirebaseController {
         .update(updateInfo);
   }
 
+  static Future<void> updateOption(String? docId, Map<String, dynamic> updateInfo) async {
+    await FirebaseFirestore.instance
+        .collection(Option.COLLECTION)
+        .doc(docId)
+        .update(updateInfo);
+  }
+
   static Future<void> updateAppointment(
       String? docId, Map<String, dynamic> updateInfo) async {
     await FirebaseFirestore.instance
@@ -265,11 +272,32 @@ class FirebaseController {
         .snapshots();
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> optionsStream() {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+
+    return FirebaseFirestore.instance
+        .collection(Option.COLLECTION)
+        .where(Option.STORE_ID, isEqualTo: currentUser!.uid)
+        .snapshots();
+  }
+
   static Future<void> deleteLocation(String locationName) async {
     try {
       await FirebaseFirestore.instance
           .collection(Location.COLLECTION)
           .where(Location.STORE_NAME, isEqualTo: locationName)
+          .get()
+          .then((value) => value.docs.forEach((element) {
+                element.reference.delete();
+              }));
+    } catch (e) {}
+  }
+
+  static Future<void> deleteOption(String optionName) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(Option.COLLECTION)
+          .where(Option.NAME, isEqualTo: optionName)
           .get()
           .then((value) => value.docs.forEach((element) {
                 element.reference.delete();

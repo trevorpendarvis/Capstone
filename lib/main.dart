@@ -18,6 +18,7 @@ import 'package:monkey_management/view/common_view/screen_saver.dart';
 import 'package:monkey_management/view/store_view/store_edit_location_screen.dart';
 
 import 'package:monkey_management/view/store_view/add_update_option_screen.dart';
+import 'package:monkey_management/view/store_view/store_edit_options_screen.dart';
 
 import 'package:monkey_management/view/store_view/store_general_info_screen.dart';
 import 'package:monkey_management/view/store_view/store_locations_screen.dart';
@@ -70,16 +71,15 @@ class MyApp extends StatelessWidget {
               if (userSnapshot.hasData) {
                 return FutureBuilder(
                     future: FirebaseController.getAccountType(),
-                    builder: (context,
-                        AsyncSnapshot<AccountType> asyncSnapshotAccountType) {
+                    builder:
+                        (context, AsyncSnapshot<AccountType> asyncSnapshotAccountType) {
                       if (asyncSnapshotAccountType.connectionState ==
                           ConnectionState.waiting)
                         return LoadingScreen();
                       else {
                         if (asyncSnapshotAccountType.data == AccountType.STORE) {
                           return StoreScreen();
-                        } else if (asyncSnapshotAccountType.data ==
-                            AccountType.CLIENT) {
+                        } else if (asyncSnapshotAccountType.data == AccountType.CLIENT) {
                           return ClientScreen();
                         } else {
                           print('error');
@@ -95,21 +95,20 @@ class MyApp extends StatelessWidget {
           SignUpScreen.routeName: (context) => SignUpScreen(),
           StoreScreen.routeName: (context) => StoreScreen(),
           ClientScreen.routeName: (context) => ClientScreen(),
-          ClientGeneralInfoScreen.routeName: (context) =>
-              ClientGeneralInfoScreen(),
+          ClientGeneralInfoScreen.routeName: (context) => ClientGeneralInfoScreen(),
           StoreGeneralInfoScreen.routeName: (context) => StoreGeneralInfoScreen(),
           StoreSettingsScreen.routeName: (context) => StoreSettingsScreen(),
           StoreOptionsScreen.routeName: (context) => StoreOptionsScreen(),
           // StoreEditOptionScreen.routeName: (context) => StoreEditOptionScreen(),
           AddUpdateOptionScreen.routeName: (context) => AddUpdateOptionScreen(),
           StoreLocationsScreen.routeName: (context) => StoreLocationsScreen(),
-          StoreEditLocationScreen.routeName: (context) =>
-              StoreEditLocationScreen(),
+          StoreEditLocationScreen.routeName: (context) => StoreEditLocationScreen(),
+          StoreEditOptionScreen.routeName: (context) => StoreEditOptionScreen(),
           StoreInfoScreen.routeName: (context) => StoreInfoScreen(),
           ClientAppointmentsScreen.routeName: (context) => ClientAppointmentsScreen(),
-          ClientAppointmentHistoryScreen.routeName: (context) => ClientAppointmentHistoryScreen(),
-          AddUpdateAppointmentScreen.routeName: (context) =>
-              AddUpdateAppointmentScreen(),
+          ClientAppointmentHistoryScreen.routeName: (context) =>
+              ClientAppointmentHistoryScreen(),
+          AddUpdateAppointmentScreen.routeName: (context) => AddUpdateAppointmentScreen(),
           MessageScreen.routeName: (context) => MessageScreen(),
           ClientPaymentScreen.routeName: (context) => ClientPaymentScreen(),
         },
