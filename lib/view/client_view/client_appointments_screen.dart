@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/appointment.dart';
 import 'package:intl/intl.dart';
+import 'package:monkey_management/view/client_view/client_pay_appointment_screen.dart';
 import 'package:monkey_management/view/common_view/mydialog.dart';
 
 class ClientAppointmentsScreen extends StatefulWidget {
@@ -165,6 +166,13 @@ class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
                                           ),
                                           Row(
                                             children: [
+                                              IconButton(
+                                                  onPressed: () => {
+                                                        con.handlePayment(
+                                                            appointment)
+                                                      },
+                                                  icon:
+                                                      Icon(Icons.credit_card)),
                                               PopupMenuButton(
                                                 child: Icon(Icons.list),
                                                 itemBuilder: (context) {
@@ -300,5 +308,12 @@ class Controller {
     } else if (state.selectedChoice == 'Complete Appointment') {
       completeAppointment(appointment);
     }
+  }
+
+  void handlePayment(Appointment appointment) {
+    Navigator.pushNamed(
+      state.context,
+      ClientPayAppointmentScreen.routeName,
+    );
   }
 }
