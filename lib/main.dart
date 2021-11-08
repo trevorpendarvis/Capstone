@@ -8,6 +8,7 @@ import 'package:monkey_management/view/client_view/add_update_appointment_screen
 import 'package:monkey_management/view/client_view/client_appointments_screen.dart';
 import 'package:monkey_management/view/client_view/client_appointment_history_screen.dart';
 import 'package:monkey_management/view/client_view/client_general_info_screen.dart';
+import 'package:monkey_management/view/client_view/client_pay_appointment_screen.dart';
 import 'package:monkey_management/view/client_view/client_payment_screen.dart';
 import 'package:monkey_management/view/client_view/client_screen.dart';
 import 'package:monkey_management/view/client_view/store_info_screen.dart';
@@ -72,15 +73,17 @@ class MyApp extends StatelessWidget {
               if (userSnapshot.hasData) {
                 return FutureBuilder(
                     future: FirebaseController.getAccountType(),
-                    builder:
-                        (context, AsyncSnapshot<AccountType> asyncSnapshotAccountType) {
+                    builder: (context,
+                        AsyncSnapshot<AccountType> asyncSnapshotAccountType) {
                       if (asyncSnapshotAccountType.connectionState ==
                           ConnectionState.waiting)
                         return LoadingScreen();
                       else {
-                        if (asyncSnapshotAccountType.data == AccountType.STORE) {
+                        if (asyncSnapshotAccountType.data ==
+                            AccountType.STORE) {
                           return StoreScreen();
-                        } else if (asyncSnapshotAccountType.data == AccountType.CLIENT) {
+                        } else if (asyncSnapshotAccountType.data ==
+                            AccountType.CLIENT) {
                           return ClientScreen();
                         } else {
                           print('error');
@@ -96,23 +99,30 @@ class MyApp extends StatelessWidget {
           SignUpScreen.routeName: (context) => SignUpScreen(),
           StoreScreen.routeName: (context) => StoreScreen(),
           ClientScreen.routeName: (context) => ClientScreen(),
-          ClientGeneralInfoScreen.routeName: (context) => ClientGeneralInfoScreen(),
-          StoreGeneralInfoScreen.routeName: (context) => StoreGeneralInfoScreen(),
+          ClientGeneralInfoScreen.routeName: (context) =>
+              ClientGeneralInfoScreen(),
+          StoreGeneralInfoScreen.routeName: (context) =>
+              StoreGeneralInfoScreen(),
           StoreSettingsScreen.routeName: (context) => StoreSettingsScreen(),
           StoreProfileScreen.routeName: (context) => StoreProfileScreen(),
           StoreOptionsScreen.routeName: (context) => StoreOptionsScreen(),
           // StoreEditOptionScreen.routeName: (context) => StoreEditOptionScreen(),
           AddUpdateOptionScreen.routeName: (context) => AddUpdateOptionScreen(),
           StoreLocationsScreen.routeName: (context) => StoreLocationsScreen(),
-          StoreEditLocationScreen.routeName: (context) => StoreEditLocationScreen(),
+          StoreEditLocationScreen.routeName: (context) =>
+              StoreEditLocationScreen(),
           StoreEditOptionScreen.routeName: (context) => StoreEditOptionScreen(),
           StoreInfoScreen.routeName: (context) => StoreInfoScreen(),
-          ClientAppointmentsScreen.routeName: (context) => ClientAppointmentsScreen(),
+          ClientAppointmentsScreen.routeName: (context) =>
+              ClientAppointmentsScreen(),
           ClientAppointmentHistoryScreen.routeName: (context) =>
               ClientAppointmentHistoryScreen(),
-          AddUpdateAppointmentScreen.routeName: (context) => AddUpdateAppointmentScreen(),
+          AddUpdateAppointmentScreen.routeName: (context) =>
+              AddUpdateAppointmentScreen(),
           MessageScreen.routeName: (context) => MessageScreen(),
           ClientPaymentScreen.routeName: (context) => ClientPaymentScreen(),
+          ClientPayAppointmentScreen.routeName: (context) =>
+              ClientPayAppointmentScreen(),
         },
       ),
     );
