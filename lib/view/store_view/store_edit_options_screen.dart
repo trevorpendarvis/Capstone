@@ -49,7 +49,7 @@ class _StoreEditOptionScreenState extends State<StoreEditOptionScreen> {
         title: Padding(
           padding: const EdgeInsets.only(left: 70, right: 20),
           child: Text(
-            'Edit Product',
+            'Add/Edit Product',
             style: TextStyle(color: Colors.black),
           ),
         ),

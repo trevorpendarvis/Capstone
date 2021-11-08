@@ -49,7 +49,7 @@ class _StoreProfileScreenState extends State<StoreProfileScreen> {
                     title: Padding(
                       padding: const EdgeInsets.only(left: 70, right: 20),
                       child: Text(
-                        'Edit Store Options',
+                        'Edit Profile',
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
