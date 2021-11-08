@@ -311,9 +311,12 @@ class Controller {
   }
 
   void handlePayment(Appointment appointment) {
-    Navigator.pushNamed(
-      state.context,
-      ClientPayAppointmentScreen.routeName,
-    );
+    Navigator.pushNamed(state.context, ClientPayAppointmentScreen.routeName,
+        arguments: {
+          "appointmentName": appointment.option.name,
+          "appointmentPrice": appointment.option.price.toString(),
+          "isPaid": appointment.isPaid,
+          "appointmentID": appointment.docId
+        });
   }
 }

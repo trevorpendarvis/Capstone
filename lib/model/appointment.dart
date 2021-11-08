@@ -15,6 +15,7 @@ class Appointment {
   bool isCanceled = false;
   bool isCompleted = false;
   bool inRoute = false;
+  bool isPaid = false;
   String docId = '';
 
   static const COLLECTION = 'appointments';
@@ -27,6 +28,7 @@ class Appointment {
   static const IS_CANCELED = 'is_canceled';
   static const IS_COMPLETED = 'is_completed';
   static const IN_ROUTE = 'in_route';
+  static const IS_PAID = 'is_paid';
   static const DOC_ID = 'doc_id';
 
   Appointment();
@@ -42,6 +44,7 @@ class Appointment {
       IS_CANCELED: this.isCanceled,
       IS_COMPLETED: this.isCompleted,
       IN_ROUTE: this.inRoute,
+      IS_PAID: this.isPaid,
       DOC_ID: this.docId,
     };
   }
@@ -64,6 +67,7 @@ class Appointment {
     appointment.isCanceled = doc[IS_CANCELED] ?? false;
     appointment.isCompleted = doc[IS_COMPLETED] ?? false;
     appointment.inRoute = doc[IN_ROUTE] ?? false;
+    appointment.isPaid = doc[IS_PAID] ?? false;
 
     return appointment;
   }
