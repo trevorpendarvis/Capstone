@@ -28,7 +28,6 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
   GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
   FlipCardController flipCardController = FlipCardController();
 
-
   Client? clientProfile;
   Client? tempProfile;
   bool? editMode = false;
@@ -38,7 +37,6 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
   void initState() {
     super.initState();
     con = Controller(this);
-
   }
 
   void render(fn) => setState(fn);
@@ -62,8 +60,6 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
     clientProfile = args!['one_clientProfile'] ?? Client();
 
     tempProfile = Client.clone(clientProfile!);
-
-
 
     return FutureBuilder(
         future: con!.fetchData(),
@@ -102,22 +98,27 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                 child: Column(
                   children: [
                     Consumer<CreditCardProvider>(
-                      builder: (context, card, _) =>
-                          Container(
-                            // padding: const EdgeInsets.all( 20.0),
-                            // margin: const EdgeInsets.all( 20.0),
-                            child: FlipCard(
-                              key: cardKey, //Will I need form key instead???
-                              flipOnTouch: false,
-                              controller: flipCardController,
-                              front: CreditCardFront(
-                                cardName: card.name == '' ? 'Card Holder Name' : card.name,
-                                cardNum: card.number == '' ? '---- ---- ---- ----' : card.number,
-                                cardExp: card.expDate == '' ? 'MM/YY' : card.expDate,
-                              ),
-                              back: CreditCardBack(cardCVV: card.cvv == '' ? '---' : card.cvv),
-                            ),
+                      builder: (context, card, _) => Container(
+                        // padding: const EdgeInsets.all( 20.0),
+                        // margin: const EdgeInsets.all( 20.0),
+                        child: FlipCard(
+                          key: cardKey, //Will I need form key instead???
+                          flipOnTouch: false,
+                          controller: flipCardController,
+                          front: CreditCardFront(
+                            cardName: card.name == ''
+                                ? 'Card Holder Name'
+                                : card.name,
+                            cardNum: card.number == ''
+                                ? '---- ---- ---- ----'
+                                : card.number,
+                            cardExp:
+                                card.expDate == '' ? 'MM/YY' : card.expDate,
                           ),
+                          back: CreditCardBack(
+                              cardCVV: card.cvv == '' ? '---' : card.cvv),
+                        ),
+                      ),
                     ),
                     Form(
                       key: formKey,
@@ -125,24 +126,25 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
                           children: <Widget>[
-              
-              
                             TextFormField(
                               initialValue: clientProfile!.cardName,
                               enabled: editMode,
                               onChanged: (value) {
-                                  tempProfile!.cardName = value;
-                                  Provider.of<CreditCardProvider>(context, listen: false).setName(value);
+                                tempProfile!.cardName = value;
+                                Provider.of<CreditCardProvider>(context,
+                                        listen: false)
+                                    .setName(value);
                               },
                               onTap: () {
                                 setState(() {
-                                  if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                                  if (!cardKey.currentState!.isFront)
+                                    cardKey.currentState!.toggleCard();
                                 });
                               },
-                              decoration: InputDecoration(labelText: "Enter name"),
+                              decoration:
+                                  InputDecoration(labelText: "Enter name"),
                               onSaved: con?.saveCardName,
                             ),
-              
                             TextFormField(
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
@@ -151,16 +153,19 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                               initialValue: clientProfile!.cardNum,
                               enabled: editMode,
                               onChanged: (value) {
-                                  tempProfile!.cardNum = value;
-                                  Provider.of<CreditCardProvider>(context, listen: false).setNumber(value);
+                                tempProfile!.cardNum = value;
+                                Provider.of<CreditCardProvider>(context,
+                                        listen: false)
+                                    .setNumber(value);
                               },
                               onTap: () {
                                 setState(() {
-                                  if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                                  if (!cardKey.currentState!.isFront)
+                                    cardKey.currentState!.toggleCard();
                                 });
                               },
-                              decoration:
-                                  InputDecoration(labelText: "Enter credit card number"),
+                              decoration: InputDecoration(
+                                  labelText: "Enter credit card number"),
                               validator: con?.validateCardNum,
                               onSaved: con?.saveCardNum,
                             ),
@@ -172,15 +177,19 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                               initialValue: clientProfile!.cardExp,
                               enabled: editMode,
                               onChanged: (value) {
-                                  tempProfile!.cardExp = value;
-                                  Provider.of<CreditCardProvider>(context, listen: false).setExpDate(value);
+                                tempProfile!.cardExp = value;
+                                Provider.of<CreditCardProvider>(context,
+                                        listen: false)
+                                    .setExpDate(value);
                               },
                               onTap: () {
                                 setState(() {
-                                  if (!cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                                  if (!cardKey.currentState!.isFront)
+                                    cardKey.currentState!.toggleCard();
                                 });
                               },
-                              decoration: InputDecoration(labelText: "Enter expiration date"),
+                              decoration: InputDecoration(
+                                  labelText: "Enter expiration date"),
                               validator: con?.validateCardExp,
                               onSaved: con?.saveCardExp,
                             ),
@@ -188,10 +197,11 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                               initialValue: clientProfile!.cardCVV,
                               enabled: editMode,
                               onChanged: (value) {
-                                  tempProfile!.cardCVV = value;
-                                  Provider.of<CreditCardProvider>(context, listen: false).setCVV(value);
+                                tempProfile!.cardCVV = value;
+                                Provider.of<CreditCardProvider>(context,
+                                        listen: false)
+                                    .setCVV(value);
                               },
-              
                               onSaved: (value) {
                                 setState(() {
                                   cardKey.currentState!.toggleCard();
@@ -200,10 +210,12 @@ class _ClientPaymentScreenState extends State<ClientPaymentScreen> {
                               },
                               onTap: () {
                                 setState(() {
-                                  if (cardKey.currentState!.isFront) cardKey.currentState!.toggleCard();
+                                  if (cardKey.currentState!.isFront)
+                                    cardKey.currentState!.toggleCard();
                                 });
                               },
-                              decoration: InputDecoration(labelText: "Enter security code"),
+                              decoration: InputDecoration(
+                                  labelText: "Enter security code"),
                             )
                           ],
                         ),
@@ -231,13 +243,17 @@ class Controller {
   String? cardCVV;
 
   Future<void> fetchData() async {
-    clientProfile =
-        await FirebaseController.getClientProfile(FirebaseAuth.instance.currentUser!.uid);
+    clientProfile = await FirebaseController.getClientProfile(
+        FirebaseAuth.instance.currentUser!.uid);
 
-    Provider.of<CreditCardProvider>(state.context, listen: false).number = clientProfile.cardNum!;
-    Provider.of<CreditCardProvider>(state.context, listen: false).name = clientProfile.cardName!;
-    Provider.of<CreditCardProvider>(state.context, listen: false).expDate = clientProfile.cardExp!;
-    Provider.of<CreditCardProvider>(state.context, listen: false).cvv = clientProfile.cardCVV!;
+    Provider.of<CreditCardProvider>(state.context, listen: false).number =
+        clientProfile.cardNum!;
+    Provider.of<CreditCardProvider>(state.context, listen: false).name =
+        clientProfile.cardName!;
+    Provider.of<CreditCardProvider>(state.context, listen: false).expDate =
+        clientProfile.cardExp!;
+    Provider.of<CreditCardProvider>(state.context, listen: false).cvv =
+        clientProfile.cardCVV!;
   }
 
   void saveCardName(String? value) {
@@ -315,7 +331,9 @@ class Controller {
     } catch (e) {
       MyDialog.circularProgressStop(state.context);
       MyDialog.info(
-          context: state.context, title: "Error Updating Payment Info", content: "$e");
+          context: state.context,
+          title: "Error Updating Payment Info",
+          content: "$e");
     }
   }
 
@@ -347,7 +365,8 @@ class CardNumSpacing extends TextInputFormatter {
 
     var string = buffer.toString();
     return newValue.copyWith(
-        text: string, selection: new TextSelection.collapsed(offset: string.length));
+        text: string,
+        selection: new TextSelection.collapsed(offset: string.length));
   }
 }
 
@@ -373,6 +392,7 @@ class CardExpFormat extends TextInputFormatter {
 
     var string = buffer.toString();
     return newValue.copyWith(
-        text: string, selection: new TextSelection.collapsed(offset: string.length));
+        text: string,
+        selection: new TextSelection.collapsed(offset: string.length));
   }
 }
