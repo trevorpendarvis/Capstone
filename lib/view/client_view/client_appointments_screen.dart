@@ -171,10 +171,15 @@ class _ClientAppointmentsScreenState extends State<ClientAppointmentsScreen> {
                                                         con.handlePayment(
                                                             appointment)
                                                       },
-                                                  icon:
-                                                      Icon(Icons.credit_card)),
+                                                  icon: Icon(
+                                                    Icons.credit_card,
+                                                    color: Colors.green[700],
+                                                  )),
                                               PopupMenuButton(
-                                                child: Icon(Icons.list),
+                                                child: Icon(
+                                                  Icons.list,
+                                                  color: Colors.blue[600],
+                                                ),
                                                 itemBuilder: (context) {
                                                   List<String> options =
                                                       !appointment.isCanceled

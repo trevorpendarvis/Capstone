@@ -37,11 +37,10 @@ class _ClientPayAppointmentScreenState
 
     // isPaid = args!['isPaid'] ?? true;
 
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Padding(
-          padding: const EdgeInsets.only(left: 70, right: 20),
+          padding: const EdgeInsets.only(left: 50, right: 20),
           child: Text(
             'Appointment Payment',
             style: TextStyle(color: Colors.black),
@@ -56,43 +55,73 @@ class _ClientPayAppointmentScreenState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SingleChildScrollView(
-                child: !isPaid!
-                    ? // If this is a new location
-                    Form(
-                        key: formKey,
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: appointmentName,
-                                  border: OutlineInputBorder(),
-                                  enabled: false,
-                                ),
-                                //validator: con?.validateStoreName,
-                                //onSaved: con?.saveStoreName,
+              child: !isPaid!
+                  ? // If this is a new location
+                  Form(
+                      key: formKey,
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                hintText: appointmentName,
+                                border: OutlineInputBorder(),
+                                enabled: false,
                               ),
+                              //validator: con?.validateStoreName,
+                              //onSaved: con?.saveStoreName,
                             ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: appointmentPrice,
-                                  border: OutlineInputBorder(),
-                                  enabled: false,
-                                ),
-                                //validator: con?.validateStoreAddress,
-                                //onSaved: con?.saveStoreAddress,
+                          ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                hintText: appointmentPrice,
+                                border: OutlineInputBorder(),
+                                enabled: false,
                               ),
+                              //validator: con?.validateStoreAddress,
+                              //onSaved: con?.saveStoreAddress,
                             ),
-                          ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : // If it's an existing location
+                  Column(
+                      children: [
+                        SizedBox(
+                          height: 50.0,
                         ),
-                      )
-                    : // If it's an existing location
-                    Column(
-                        children: [Text("is paid for")],
-                      )),
+                        Text(
+                          "Would you look at that!",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 50.0,
+                        ),
+                        Image.asset(
+                          'assets/images/MonkeyLogo.png',
+                          height: 100.0,
+                          width: 100.0,
+                        ),
+                        SizedBox(
+                          height: 50.0,
+                        ),
+                        Text(
+                          "This appoinment has already been paid for!",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -105,6 +134,7 @@ class _ClientPayAppointmentScreenState
           ],
         ),
       ),
+      backgroundColor: Colors.grey[200],
     );
   }
 }
@@ -120,11 +150,13 @@ class Controller {
     try {
       await FirebaseController.updateAppointment(appointmentID, updateInfo);
       MyDialog.info(
-          context: state.context, title: 'Payment Successful', content: "");
+          context: state.context,
+          title: 'Transaction Successful',
+          content: "Thank you for your payment! Enjoy your appointment!");
     } catch (e) {
       MyDialog.info(
           context: state.context,
-          title: 'Update appointment error',
+          title: 'Transaction error',
           content: e.toString());
     }
   }
