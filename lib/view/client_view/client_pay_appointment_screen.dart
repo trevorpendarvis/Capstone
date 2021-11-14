@@ -35,8 +35,6 @@ class _ClientPayAppointmentScreenState
     appointmentID = args['appointmentID'];
     isPaid = args['isPaid'];
 
-    // isPaid = args!['isPaid'] ?? true;
-
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -56,39 +54,35 @@ class _ClientPayAppointmentScreenState
           children: [
             SingleChildScrollView(
               child: !isPaid!
-                  ? // If this is a new location
+                  ? // If this is not paid
                   Form(
                       key: formKey,
                       child: Column(
                         children: [
-                          Container(
-                            margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                hintText: appointmentName,
-                                border: OutlineInputBorder(),
-                                enabled: false,
-                              ),
-                              //validator: con?.validateStoreName,
-                              //onSaved: con?.saveStoreName,
-                            ),
+                          SizedBox(
+                            height: 50.0,
                           ),
-                          Container(
-                            margin: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                hintText: appointmentPrice,
-                                border: OutlineInputBorder(),
-                                enabled: false,
-                              ),
-                              //validator: con?.validateStoreAddress,
-                              //onSaved: con?.saveStoreAddress,
-                            ),
+                          Text(
+                            "$appointmentName",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 50.0,
+                          ),
+                          Text(
+                            "\$$appointmentPrice",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
                     )
-                  : // If it's an existing location
+                  : // If it's been paid
                   Column(
                       children: [
                         SizedBox(
@@ -122,15 +116,20 @@ class _ClientPayAppointmentScreenState
                       ],
                     ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () => con!.payAppointment(appointmentID),
-                  child: Text("Pay", style: Theme.of(context).textTheme.button),
-                ),
-              ],
-            )
+            !isPaid!
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => con!.payAppointment(appointmentID),
+                        child: Text("Pay",
+                            style: Theme.of(context).textTheme.button),
+                      ),
+                    ],
+                  )
+                : SizedBox(
+                    height: 1.0,
+                  ),
           ],
         ),
       ),
