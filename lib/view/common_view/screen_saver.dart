@@ -5,7 +5,7 @@ import 'package:wakelock/wakelock.dart';
 import 'package:intl/intl.dart';
 
 class ScreenSaver extends StatefulWidget {
-  static const routeName = '/screen_saver';
+  static const routeName = 'screen_saver';
 
   const ScreenSaver({Key? key}) : super(key: key);
 
