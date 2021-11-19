@@ -123,6 +123,7 @@ class MyApp extends StatelessWidget {
           ClientPaymentScreen.routeName: (context) => ClientPaymentScreen(),
           ClientPayAppointmentScreen.routeName: (context) =>
               ClientPayAppointmentScreen(),
+          ScreenSaver.routeName: (context) => ScreenSaver(),
         },
       ),
     );

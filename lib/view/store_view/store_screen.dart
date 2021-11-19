@@ -40,7 +40,7 @@ class _StoreScreenState extends State<StoreScreen> {
   }
 
   startTime() async {
-    var duration = new Duration(seconds: 60);
+    var duration = new Duration(seconds: 120);
     return new Timer(duration, route);
   }
 
