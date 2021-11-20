@@ -10,6 +10,8 @@ class Store {
   String phone = '';
   String email = '';
   String address = '';
+  double lat = 0;
+  double lng = 0;
 
   List<Option> options = [];
   List<Appointment> appointments = [];
@@ -19,6 +21,8 @@ class Store {
   static const EMAIL = "email";
   static const PHONE = "phone";
   static const ADDRESS = "address";
+  static const LAT = "lat";
+  static const LNG = "lng";
 
   Store();
 
@@ -30,6 +34,8 @@ class Store {
     this.address = p.address;
     this.options = p.options;
     this.appointments = p.appointments;
+    this.lat = p.lat;
+    this.lng = p.lng;
   }
 
   void assign(Store p) {
@@ -39,6 +45,8 @@ class Store {
     this.email = p.email;
     this.name = p.name;
     this.phone = p.phone;
+    this.lat = p.lat;
+    this.lng = p.lng;
   }
 
   Map<String, dynamic> serialize() {
@@ -47,6 +55,8 @@ class Store {
       EMAIL: this.email,
       PHONE: this.phone,
       ADDRESS: this.address,
+      LAT: this.lat,
+      LNG: this.lng,
     };
   }
 
@@ -57,6 +67,8 @@ class Store {
     store.email = doc?[EMAIL] ?? 'Unknown';
     store.phone = doc?[PHONE] ?? 'Unknown';
     store.address = doc?[ADDRESS] ?? 'Unknown';
+    store.lat = doc?[LAT] ?? 0;
+    store.lng = doc?[LNG] ?? 0;
     return store;
   }
 }

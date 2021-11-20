@@ -29,6 +29,9 @@ dependencies:
   cloud_firestore: ^2.2.0
   firebase_messaging: ^10.0.0
   flip_card: ^0.6.0
+  dio: ^4.0.1
+  flutter_polyline_points: ^1.0.0
+  google_maps_flutter: ^2.0.2
 
   provider: ^5.0.0
   wakelock: ^0.5.2
