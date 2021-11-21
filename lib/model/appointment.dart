@@ -17,6 +17,7 @@ class Appointment {
   bool inRoute = false;
   bool isPaid = false;
   String docId = '';
+  bool clientSideSoftDelete = false;
 
   static const COLLECTION = 'appointments';
   static const CLIENT_ID = 'client_id';
@@ -30,6 +31,7 @@ class Appointment {
   static const IN_ROUTE = 'in_route';
   static const IS_PAID = 'is_paid';
   static const DOC_ID = 'doc_id';
+  static const CLIENT_SIDE_SOFT_DELETE = 'client_side_soft_delete';
 
   Appointment();
 
@@ -46,6 +48,7 @@ class Appointment {
       IN_ROUTE: this.inRoute,
       IS_PAID: this.isPaid,
       DOC_ID: this.docId,
+      CLIENT_SIDE_SOFT_DELETE: this.clientSideSoftDelete,
     };
   }
 
@@ -68,6 +71,7 @@ class Appointment {
     appointment.isCompleted = doc[IS_COMPLETED] ?? false;
     appointment.inRoute = doc[IN_ROUTE] ?? false;
     appointment.isPaid = doc[IS_PAID] ?? false;
+    appointment.clientSideSoftDelete = doc[CLIENT_SIDE_SOFT_DELETE] ?? false;
 
     return appointment;
   }

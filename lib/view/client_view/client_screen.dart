@@ -2,9 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:monkey_management/controller/directions_controller.dart';
 import 'package:monkey_management/controller/firebase_controller.dart';
 import 'package:monkey_management/model/appointment.dart';
 import 'package:monkey_management/model/client.dart';
+import 'package:monkey_management/model/directions.dart';
 import 'package:monkey_management/model/store.dart';
 import 'package:monkey_management/view/client_view/client_appointment_history_screen.dart';
 import 'package:monkey_management/view/client_view/client_appointments_screen.dart';
@@ -253,7 +256,8 @@ class _ClientScreenState extends State<ClientScreen> {
                                         Row(
                                           children: [
                                             IconButton(
-                                              icon: Icon(Icons.message_outlined),
+                                              icon:
+                                                  Icon(Icons.message_outlined),
                                               onPressed: () {
                                                 Navigator.pushNamed(context,
                                                     MessageScreen.routeName,
@@ -324,10 +328,36 @@ class Controller {
   }
 
   Future<void> handleStoreOnTap(Store store) async {
-    await Navigator.pushNamed(state.context, StoreInfoScreen.routeName,
-        arguments: {
-          "store": store,
-        });
+    LatLng usersLocation = LatLng(35.63928515618401, -97.47120686519042);
+    Marker origin = Marker(
+        markerId: const MarkerId("UsersLocation"),
+        infoWindow: const InfoWindow(title: "Your Location"),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        position: usersLocation);
+    Marker storesLocation = Marker(
+        markerId: const MarkerId('StoresLocation'),
+        infoWindow: InfoWindow(title: "${store.name} Location"),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        position: LatLng(store.lat, store.lng));
+    Directions? info;
+    MyDialog.circularProgressStart(state.context);
+    try {
+      info = await DirectionsController().getDirections(
+          userLocation: usersLocation, storesLocation: storesLocation.position);
+      MyDialog.circularProgressStop(state.context);
+       Navigator.pushNamed(state.context, StoreInfoScreen.routeName,
+          arguments: {
+            "store": store,
+            "usersLocation": usersLocation,
+            "info": info,
+          });
+    } catch (e) {
+      MyDialog.circularProgressStop(state.context);
+      MyDialog.info(
+          context: state.context,
+          title: "Try again later",
+          content: e.toString());
+    }
   }
 
   Future<void> accountSettingsUsingNavigator(String? uid) async {

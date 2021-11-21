@@ -22,6 +22,7 @@ class _ClientAppointmentHistoryScreenState
   late List<Option> storeOptions;
   late Store selctedStore;
   late DateTime pickedDate;
+  String selectedChoice = '';
 
   @override
   void initState() {
@@ -127,11 +128,14 @@ class _ClientAppointmentHistoryScreenState
                                         children: [
                                           Row(
                                             children: [
-                                              Text(
-                                                '${DateFormat('MMM dd').format(appointment.appointmentTime)}\n${DateFormat('h:mm aa').format(appointment.appointmentTime)}',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  // color: Colors.black54,
+                                              Container(
+
+                                                child: Text(
+                                                  '${DateFormat('MMM dd').format(appointment.appointmentTime)}\n${DateFormat('h:mm aa').format(appointment.appointmentTime)}',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    // color: Colors.black54,
+                                                  ),
                                                 ),
                                               ),
                                               Container(
@@ -179,7 +183,7 @@ class _ClientAppointmentHistoryScreenState
                                           ),
                                           Row(
                                             children: [
-                                              TextButton(
+                                              /*TextButton(
                                                   onPressed: () async =>
                                                       await controller
                                                           .makeAppointment(
@@ -192,7 +196,33 @@ class _ClientAppointmentHistoryScreenState
                                                       color: Colors.blue,
                                                       // fontSize: 16.0,
                                                     ),
-                                                  )),
+                                                  )),*/
+                                              PopupMenuButton(
+                                                child: Icon(
+                                                  Icons.list,
+                                                  color: Colors.blue[600],
+                                                ),
+                                                itemBuilder: (context) {
+                                                  List<String> options =['Reschedule Appointment','Delete'];
+
+                                                  return options
+                                                      .map((choice) =>
+                                                      PopupMenuItem(
+                                                        child: Text(choice),
+                                                        value: choice,
+                                                      ))
+                                                      .toList();
+                                                },
+                                                onSelected: (String value) {
+                                                  selectedChoice = value;
+                                                  controller.handelOptions(
+                                                      appointment);
+                                                },
+                                                onCanceled: () {
+                                                  selectedChoice = '';
+                                                },
+                                              ),
+
                                             ],
                                           )
                                         ],
@@ -327,6 +357,21 @@ class _Controller {
           context: state.context,
           title: 'handel appointment failed',
           content: e.toString());
+    }
+  }
+
+
+  void handelOptions(Appointment appointment) async {
+    if(state.selectedChoice == 'Reschedule Appointment'){
+      await makeAppointment(state.context, appointment);
+    }else if(state.selectedChoice == 'Delete'){
+      try {
+        Map<String, dynamic> updateInfo = {};
+        updateInfo[Appointment.CLIENT_SIDE_SOFT_DELETE] = true;
+        await FirebaseController.updateAppointment(appointment.docId, updateInfo);
+      }catch(e){
+        MyDialog.info(context: state.context, title: 'Can not delete at this time', content: e.toString());
+      }
     }
   }
 }
