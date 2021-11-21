@@ -345,7 +345,7 @@ class Controller {
       info = await DirectionsController().getDirections(
           userLocation: usersLocation, storesLocation: storesLocation.position);
       MyDialog.circularProgressStop(state.context);
-      await Navigator.pushNamed(state.context, StoreInfoScreen.routeName,
+       Navigator.pushNamed(state.context, StoreInfoScreen.routeName,
           arguments: {
             "store": store,
             "usersLocation": usersLocation,

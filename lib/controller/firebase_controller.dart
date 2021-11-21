@@ -358,6 +358,7 @@ class FirebaseController {
         .collection(Appointment.COLLECTION)
         .where(Appointment.CLIENT_ID, isEqualTo: currentClient!.uid)
         .where(Appointment.IS_COMPLETED, isEqualTo: true)
+        .where(Appointment.CLIENT_SIDE_SOFT_DELETE,isEqualTo: false)
         .snapshots();
   }
   //Might need to order by time?
@@ -382,5 +383,10 @@ class FirebaseController {
         FirebaseFirestore.instance.collection(Message.COLLECTION).doc();
 
     await ref.set(message.serialize());
+  }
+
+
+  static Future<void> deleteAppointment(String appId) async{
+    await FirebaseFirestore.instance.collection(Appointment.COLLECTION).doc(appId).delete();
   }
 }
